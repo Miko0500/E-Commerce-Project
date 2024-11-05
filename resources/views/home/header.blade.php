@@ -70,7 +70,7 @@
     padding-top: -100px;
     margin-top: -60px;
   ">
-          Shee Auto Polish & Ceramic Coating
+       titi ni shahaff maliit   Shee Auto Polish & Ceramic Coating
       </span>
   </a>
 
