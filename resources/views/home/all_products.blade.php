@@ -104,7 +104,7 @@
   }
 
   .shop_section .box {
-    transition: transform 2s ease-out, opacity 2s ease-out;
+    transition: transform .5s ease-out, opacity .5s ease-out;
     opacity: 0;
     transform: translateY(150px);
   }
@@ -156,9 +156,9 @@
     </form>
 
     <div style="padding-bottom: 10px;" class="heading_container heading_center">
-      <a class="navbar-brand" href="index.html">
+      <a class="navbar-brand" >
       <span style="font-size: 40px;
-  font-weight: 900;
+  font-weight: 600;
   margin: 0;
   letter-spacing: 3px;
   text-transform: uppercase;

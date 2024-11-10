@@ -35,6 +35,7 @@ button:hover {
   opacity: 0;
   animation: bubble-rise 8s infinite ease-in-out;
   filter: blur(1px); /* Slight blur to simulate a bubble */
+  
 }
 
 /* Additional Bubbles */
@@ -318,17 +319,9 @@ a:focus {
 
 .custom_nav-container .navbar-toggler {
   outline: none;
-}
-
-.custom_nav-container .navbar-toggler {
-  outline: none;
-}
-
-.custom_nav-container .navbar-toggler {
   padding: 0;
   width: 37px;
   height: 42px;
-  -webkit-transition: all .3s;
   transition: all .3s;
 }
 
@@ -338,46 +331,46 @@ a:focus {
   height: 4px;
   background-color: #000000;
   margin: 7px 0;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
   position: relative;
   border-radius: 5px;
-  -webkit-transition: all .3s;
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
-.custom_nav-container .navbar-toggler span::before, .custom_nav-container .navbar-toggler span::after {
+.custom_nav-container .navbar-toggler span::before, 
+.custom_nav-container .navbar-toggler span::after {
   content: "";
   position: absolute;
   left: 0;
-  height: 100%;
   width: 100%;
+  height: 100%;
   background-color: #000000;
-  top: -10px;
   border-radius: 5px;
-  -webkit-transition: all .3s;
-  transition: all .3s;
+  transition: all 0.3s;
+}
+
+.custom_nav-container .navbar-toggler span::before {
+  top: -10px;
 }
 
 .custom_nav-container .navbar-toggler span::after {
   top: 10px;
 }
 
-.custom_nav-container .navbar-toggler[aria-expanded="true"] {
-  -webkit-transform: rotate(360deg);
-          transform: rotate(360deg);
+/* Toggled state for the "X" icon */
+.custom_nav-container .navbar-toggler.toggled span {
+  background-color: transparent;
 }
 
-.custom_nav-container .navbar-toggler[aria-expanded="true"] span {
-  -webkit-transform: rotate(45deg);
-          transform: rotate(45deg);
-}
-
-.custom_nav-container .navbar-toggler[aria-expanded="true"] span::before, .custom_nav-container .navbar-toggler[aria-expanded="true"] span::after {
-  -webkit-transform: rotate(90deg);
-          transform: rotate(90deg);
+.custom_nav-container .navbar-toggler.toggled span::before {
   top: 0;
+  transform: rotate(45deg);
 }
+
+.custom_nav-container .navbar-toggler.toggled span::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
 
 .user_option {
   display: -webkit-box;

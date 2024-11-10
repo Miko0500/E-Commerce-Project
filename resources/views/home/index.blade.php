@@ -151,7 +151,7 @@
       <div style="padding-bottom: 60px;" class="heading_container heading_center">
       <a class="navbar-brand" href="index.html">
       <span style="font-size: 40px;
-  font-weight: 900;
+  font-weight: 600;
   margin: 0;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -368,7 +368,7 @@ margin-top: -60px;">WHY OUR SERVICES?</span>
       <div class="heading_container heading_center">
       <a class="navbar-brand" href="index.html">
       <span style="font-size: 40px;
-  font-weight: 900;
+  font-weight: 600;
   margin: 0;
   letter-spacing: 3px;
   text-transform: uppercase;

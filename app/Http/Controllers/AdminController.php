@@ -24,6 +24,8 @@ use Carbon\Carbon;
 
 use App\Models\User;
 
+use App\Models\OrderFinalization;
+
 
 
 
@@ -645,11 +647,15 @@ public function search_staff(Request $request)
 
 
 
+
+
+
 public function view_orders(Request $request)
 {
-    // Get the selected status and sort from the request
+    // Get the selected status, sort, and date filter from the request
     $selectedStatus = $request->input('status');
     $selectedSort = $request->input('sort');
+    $dateFilter = $request->input('date_filter');
 
     $data = Order::with(['product', 'staff', 'vehicle'])
         ->when($selectedStatus && $selectedStatus !== 'all', function ($query) use ($selectedStatus) {
@@ -664,10 +670,20 @@ public function view_orders(Request $request)
                 return $query->orderBy('status');
             }
         })
+        ->when($dateFilter, function ($query) use ($dateFilter) {
+            if ($dateFilter == 'today') {
+                return $query->whereDate('created_at', today());
+            } elseif ($dateFilter == 'week') {
+                return $query->whereDate('created_at', '>=', now()->subWeek());
+            } elseif ($dateFilter == 'month') {
+                return $query->whereDate('created_at', '>=', now()->subMonth());
+            }
+        })
         ->paginate(10); // Adjust the pagination as needed
 
     return view('admin.order', compact('data'));
 }
+
 
 
     public function ongoing_service($id)
@@ -705,6 +721,82 @@ public function view_orders(Request $request)
         return $pdf->download('invoice.pdf');
 
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);  // Retrieve the order
+        $newStatus = $request->input('status');
+    
+        // Validate and update status based on the input
+        if ($newStatus === 'Ongoing Service') {
+            $order->status = 'Ongoing Service';
+        } elseif ($newStatus === 'Finished') {
+            $order->status = 'Finished';
+        } else {
+            toastr()->error('Invalid status provided.');
+            return redirect()->back();
+        }
+    
+        $order->save();  // Save the updated status to the database
+    
+        // Use Toastr for a success message
+        toastr()->timeOut(10000)->closeButton()->success('Status changed successfully.');
+    
+        // Redirect back to refresh the page and show the new status
+        return redirect()->back();
+    }
+    
+
+    
+    
+    public function finalizeOrder(Request $request, $id)
+    {
+        // Validate the inputs
+        $request->validate([
+            'total_price' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+    
+        // Find or create the order finalization record for this order
+        OrderFinalization::updateOrCreate(
+            ['order_id' => $id],
+            ['total_price' => $request->input('total_price'), 'description' => $request->input('description')]
+        );
+    
+        // Use Toastr for a success message
+        toastr()->timeOut(10000)->closeButton()->success('Order finalized successfully.');
+    
+        return redirect()->back();
+    }
+    
+    public function updateOrderFinalization(Request $request, $id)
+{
+    // Validate the inputs
+    $request->validate([
+        'total_price' => 'required|string|max:255',
+        'description' => 'nullable|string',
+    ]);
+
+    // Find and update the existing order finalization record
+    $finalization = OrderFinalization::where('order_id', $id)->first();
+
+    if ($finalization) {
+        $finalization->update([
+            'total_price' => $request->input('total_price'),
+            'description' => $request->input('description'),
+        ]);
+
+        // Use Toastr for a success message
+        toastr()->timeOut(10000)->closeButton()->success('Order finalization updated successfully.');
+    } else {
+        toastr()->error('No finalization record found for this order.');
+    }
+
+    return redirect()->back();
+}
+
+
+    
 
     
 }

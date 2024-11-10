@@ -136,6 +136,14 @@
                 {{$orders->status}}
             </span>
 
+             <!-- Display finalized data if the order is "Finished" -->
+             @if($orders->finalization)
+                <div class="finalization-details mt-3">
+                    <h4>Finalized Details</h4>
+                    <p><strong>Total Price:</strong> ${{ $orders->finalization->total_price }}</p>
+                    <p><strong>Description:</strong> {{ $orders->finalization->description }}</p>
+                </div>
+            @endif
             <!-- Rating and Comment Form for Finished Orders -->
             @if($orders->status === 'Finished' && !$orders->rating)
                 <div class="rating-comment-section" style="margin-top: 20px;">

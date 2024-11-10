@@ -40,7 +40,7 @@
 }
 
 .staff-card.show {
-    animation: slideUp 1.5s ease-out forwards; /* Apply animation on scroll */
+    animation: slideUp .5s ease-out forwards; /* Apply animation on scroll */
 }
 
 .staff-card:hover {
@@ -82,7 +82,7 @@
 .top-title{
     
     font-size: 40px;
-    font-weight: 900;
+    font-weight: 600;
     margin: 0;
     letter-spacing: 3px;
     text-transform: uppercase;

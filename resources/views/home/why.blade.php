@@ -53,7 +53,7 @@
         }
 
         .reason_section .card.show {
-            animation: slideUp 1.5s ease-out forwards;
+            animation: slideUp .5s ease-out forwards;
         }
 
         .reason_section .card-body {
@@ -104,7 +104,7 @@
         .top-title{
     
     font-size: 40px;
-    font-weight: 900;
+    font-weight: 600;
     margin: 0;
     letter-spacing: 3px;
     text-transform: uppercase;
@@ -112,7 +112,7 @@
     
   padding: 10px;
   padding-top: -100px;
-  margin-top: -60px;
+  margin-top: -70px;
   }
     </style>
 </head>
@@ -128,11 +128,12 @@
     <!-- Reason Section -->
     <section class="reason_section layout_padding">
         <div class="container">
-            <div class="heading_container heading_center">
+            <div style="padding-top: -110px;" class="heading_container heading_center">
                 <a class="top-title" href="">
                     <span style="color: #000;">WHY OUR SERVICES?</span>
                 </a>
             </div>
+            
             <div class="row">
                 <!-- Reason 1 -->
                 <div class="col-md-4">

@@ -53,7 +53,7 @@
         }
 
         .reason_section .card.show {
-            animation: slideUp 1.5s ease-out forwards;
+            animation: slideUp .5s ease-out forwards;
         }
 
         .reason_section .card-body {
@@ -96,18 +96,51 @@
             color: #00d3e0;
             border: 2px solid #ffffff;
         }
-        .top-title{
-    
-    font-size: 40px;
-    font-weight: 900;
-    margin: 0;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #000;
-  padding: 10px;
-  padding-top: -100px;
-  margin-top: -60px;
-  }
+
+        .top-title {
+            font-size: 40px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #000;
+            padding: 10px;
+            padding-top: -100px;
+            margin-top: -70px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .reason_section .card-title {
+                font-size: 22px;
+            }
+
+            .reason_section .card-text {
+                font-size: 16px;
+            }
+
+            .top-title {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .reason_section .card {
+                margin-bottom: 20px;
+            }
+            
+            .reason_section .card-body {
+                padding: 20px;
+            }
+
+            .reason_section .card-title {
+                font-size: 20px;
+            }
+
+            .reason_section .card-text {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 
@@ -129,43 +162,39 @@
             </div>
             <div class="row">
                 <!-- Reason 1 -->
-                <div class="col-md-4">
+                <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">We're experts in:</h5>
-                            <p class="card-text">Auto Polish:  We use premium polish to remove scratches, swirl marks, and other imperfections, restoring your car's original luster.</p>
-                            <p class="card-text">Ceramic Coating:  Our ceramic coating provides long-lasting protection against the elements, UV rays, and scratches, keeping your car looking new for longer.</p>
-                            
-                            
+                            <p class="card-text">Auto Polish: We use premium polish to remove scratches, swirl marks, and other imperfections, restoring your car's original luster.</p>
+                            <p class="card-text">Ceramic Coating: Our ceramic coating provides long-lasting protection against the elements, UV rays, and scratches, keeping your car looking new for longer.</p>
                         </div>
                     </div>
                 </div>
                 <!-- Reason 2 -->
-                <div class="col-md-4">
+                <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">We cater to:</h5>
                             <p class="card-text">We cater to a variety of vehicles, specializing in motorcycles, tricycles, and cars. Our services are designed to be fast and efficient:</p>
-                            <p class="card-text">Motorcycles & Tricycles:  In and out in just 10 minutes!</p>
-                            <p class="card-text">Cars:  Get that showroom shine in 30 minutes!</p>
-                            
+                            <p class="card-text">Motorcycles & Tricycles: In and out in just 10 minutes!</p>
+                            <p class="card-text">Cars: Get that showroom shine in 30 minutes!</p>
                         </div>
                     </div>
                 </div>
                 <!-- Reason 3 -->
-                <div class="col-md-4">
+                <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Our commitment:</h5>
                             <p class="card-text">Our commitment to customer satisfaction is at the heart of everything we do. We strive to provide a friendly and professional service, ensuring your vehicle receives the best possible care.</p>
-                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </section>
+
     @include('home.css')
 
     <section> @include('home.footer')</section>

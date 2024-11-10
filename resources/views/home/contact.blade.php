@@ -90,13 +90,13 @@
     .top-title{
     
     font-size: 40px;
-    font-weight: 900;
+    font-weight: 600;
     margin: 0;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: #000;
   padding: 10px;
   padding-top: -100px;
-  margin-top: -60px;
+  margin-top: -70px;
   }
 </style>

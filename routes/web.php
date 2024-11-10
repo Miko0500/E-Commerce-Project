@@ -21,6 +21,13 @@ Route::get('/privacy', [HomeController::class, 'privacy']);
 
 Route::get('/profile_app', [HomeController::class, 'profile_app']);
 
+Route::middleware('auth')->group(function () {
+    Route::patch('/profile_update', [ProfileController::class, 'update'])->name('profile_update');
+});
+
+
+
+
 Route::get('/edit_profile', [HomeController::class, 'edit_profile']);
 
 Route::get('/dashboard', [HomeController::class, 'login_home'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -35,11 +42,7 @@ Route::get('/vehicles', [HomeController::class, 'vehicles']);
 
 
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+
 
 require __DIR__.'/auth.php';
 
@@ -139,6 +142,13 @@ Route::get('delete_cart/{id}', [HomeController::class, 'delete_cart'])->middlewa
 Route::post('confirm_order', [HomeController::class, 'confirm_order'])->middleware(['auth', 'verified']);
 
 Route::post('/orders/{order}/rate', [HomeController::class, 'rate'])->name('orders.rate');
+
+Route::post('/orders/{id}/finalize', [AdminController::class, 'finalizeOrder'])->name('finalize_order');
+
+Route::post('/update_status/{id}', [AdminController::class, 'updateStatus'])->name('update_status');
+
+Route::patch('/update_order_finalization/{id}', [AdminController::class, 'updateOrderFinalization'])->name('update_order_finalization');
+
 
 
 

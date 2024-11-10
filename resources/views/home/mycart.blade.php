@@ -3,45 +3,73 @@
 
     <head>
     
-   
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <style type="text/css">
 
-        .div_deg
-        {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 60px;
+.div_deg {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 60px;
+    }
+
+    /* Table Styling */
+    table {
+        border-collapse: collapse;
+        width: 100%; /* Full width */
+        max-width: 100%; /* Max width set to 100% to make it as wide as the container */
+        margin: 20px auto;
+        background-color: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th {
+        background-color: #333333;
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 15px;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    td {
+        padding: 15px;
+        text-align: center;
+        font-size: 16px;
+        color: #333333;
+        font-weight: 500;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Remove border on the last row */
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Hover effect on table rows */
+    tr:hover {
+        background-color: #f2f2f2;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Responsive styling */
+    @media (max-width: 768px) {
+        table, th, td {
+            font-size: 14px;
         }
 
-        table
-        {
-            border: 2px solid black;
-            text-align: center;
-            width: 800px;
+        th, td {
+            padding: 10px;
         }
-
-        th
-        {
-            border: 2px solid gray;
-            text-align: center;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            background-color: grey;
-        }
-
-        td
-        {
-            border: 2px solid gray;
-            color: black;
-            font-size: large;
-            font-weight: bold;
-        }
+    }
 
         .cart_value
         {
@@ -112,6 +140,35 @@
             padding-left: 15px;
             padding-right: 15px;
         }
+
+        /* Custom Flatpickr styling */
+.flatpickr-calendar {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.flatpickr-time input, .flatpickr-time .flatpickr-time-separator {
+    font-size: 16px;
+    color: #333;
+}
+
+.flatpickr-calendar .flatpickr-day {
+    font-weight: bold;
+    color: #333;
+}
+
+.flatpickr-calendar .flatpickr-day.today {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.flatpickr-calendar .flatpickr-day:hover, .flatpickr-calendar .flatpickr-day.selected {
+    background-color: #0056b3;
+    color: #fff;
+}
+
     </style>
 
 
@@ -157,9 +214,7 @@
                 </td>
             </tr>
 
-            @php
-                $totalValue += $carts->product->price;
-            @endphp
+           
 
             @endforeach
         </table>
@@ -228,9 +283,9 @@
 
 
     <div class="form-group">
-                <label for="service_datetime">Preferred Date & Time</label>
-                <input type="datetime-local" name="service_datetime" id="service_datetime" class="form-control" required>
-            </div>
+    <label for="service_datetime">Preferred Date & Time</label>
+    <input type="text" name="service_datetime" id="service_datetime" class="form-control" placeholder="Select Date & Time" required>
+</div>
             <div class="form-group">
                 <button type="button" class="btn btn-primary" onclick="fetchServiceDatetimes()">View All Taken Datetimes</button>
             </div>
@@ -396,47 +451,47 @@
     </script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const dateTimeInput = document.getElementById('service_datetime');
 
-    // Set min attribute to current date and time in the format "YYYY-MM-DDTHH:MM"
-    function setMinDateTime() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-      const day = String(now.getDate()).padStart(2, '0');
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
+    flatpickr(dateTimeInput, {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        minDate: "today",  // Set minimum date to today
+        defaultHour: 8,  // Default to 8 AM
+        defaultMinute: 0,
+        time_24hr: true,
+        disableMobile: true,
+        minTime: "08:00",  // Set minimum time to 8 AM
+        maxTime: "17:00",  // Set maximum time to 5 PM
 
-      // Format: "YYYY-MM-DDTHH:MM"
-      const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-      dateTimeInput.min = minDateTime;
-    }
-
-    // Restrict selection to times between 8 AM and 5 PM
-    function restrictTimeRange() {
-      const selectedDateTime = new Date(dateTimeInput.value);
-      const selectedHours = selectedDateTime.getHours();
-
-      // Check if the selected time is outside 8 AM - 5 PM
-      if (selectedHours < 8 || selectedHours > 17 || (selectedHours === 17 && selectedDateTime.getMinutes() > 0)) {
-        alert("Working hours are 8:00 AM to 5:00 PM. Please select a time between 8:00 AM and 5:00 PM.");
-        dateTimeInput.value = ""; // Clear the input if invalid
-      }
-    }
-
-    // Initial set of min date-time
-    setMinDateTime();
-
-    // Update the min date-time every minute in case the user opens the form later
-    setInterval(setMinDateTime, 60000); // Update every 60 seconds
-
-    // Add event listener to validate time range on change
-    dateTimeInput.addEventListener('change', restrictTimeRange);
-  });
+        onChange: function(selectedDates, dateStr, instance) {
+            const selectedDate = selectedDates[0];
+            const selectedHour = selectedDate.getHours();
+            
+            // Check if selected time is before 8 AM
+            if (selectedHour < 8) {
+                alert("Please wait until 8 AM.");
+                // Reset to 8 AM of the selected date
+                instance.setDate(new Date(selectedDate.setHours(8, 0)));
+            }
+            // Check if selected time is after 5 PM
+            else if (selectedHour >= 17) {
+                alert("Selected time exceeds working hours. Moving to the next day at 8 AM.");
+                // Set the date to the next day at 8 AM
+                const nextDay = new Date(selectedDate);
+                nextDay.setDate(selectedDate.getDate() + 1);
+                nextDay.setHours(8, 0);  // Set time to 8 AM
+                instance.setDate(nextDay);
+            }
+        }
+    });
+});
 </script>
 
 
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>

@@ -18,6 +18,8 @@ use App\Models\Order;
 
 use Carbon\Carbon;  
 
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -277,8 +279,8 @@ public function add_cart($id)
 
 public function fetchServiceDatetimes()
 {
-    // Fetch only orders with status 'Ongoing Service' and format the service_datetime field
-    $orders = Order::where('status', ['In Queue', 'Ongoing Service'])
+    // Fetch orders with status 'In Queue' or 'Ongoing Service' and format the service_datetime field
+    $orders = Order::whereIn('status', ['In Queue', 'Ongoing Service'])
         ->select('service_datetime')
         ->get()
         ->map(function ($order) {
@@ -289,6 +291,7 @@ public function fetchServiceDatetimes()
     // Return the formatted data as JSON for the AJAX request
     return response()->json($orders);
 }
+
 
     
 
@@ -496,30 +499,34 @@ public function rate(Request $request, $orderId)
         return view('home.profile',compact('product','count','counts'));
     }
 
-    public function edit_profile(Request $request)
+    public function update(Request $request)
 {
-    $user = Auth::user();
-
-    // Validation for name and phone only
+    // Validate the request data
     $request->validate([
         'name' => 'required|string|max:255',
-        'phone' => 'required|string|max:15',
+        'email' => 'required|email|max:255|unique:users,email,' . Auth::id(),
+        'phone' => 'nullable|string|max:15',
+        'address' => 'nullable|string|max:255',
     ]);
 
-    // Update user details
-    $user->name = $request->name;
-    $user->phone = $request->phone;
+    $user = Auth::user();
+    $user->name = $request->input('name');
+    $user->email = $request->input('email');
+    $user->phone = $request->input('phone');
+    $user->address = $request->input('address');
 
-    // Save changes
     try {
         $user->save();
     } catch (\Exception $e) {
-        return redirect()->back()->withErrors(['error' => 'Profile update failed: ' . $e->getMessage()]);
+        Log::error("Error saving user profile: " . $e->getMessage());
+        return redirect()->back()->withErrors('There was an error saving your profile. Please try again.');
     }
 
     return redirect()->back()->with('success', 'Profile updated successfully.');
 }
 
+
+    
 
     public function staffs()
     {

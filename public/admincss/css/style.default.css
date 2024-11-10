@@ -2974,16 +2974,18 @@ a.text-primary:focus, a.text-primary:hover {
   border-bottom-right-radius: 0.25rem;
 }
 
-.page-item.active .page-link {
-  color: #fff;
-  background-color: #DB6574;
-  border-color: #DB6574;
+.pagination li a {
+  padding: 10px 15px;
+  color: #007bff;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  margin: 0 5px;
+  border-radius: 5px;
 }
 
-.page-item.disabled .page-link {
-  color: #868e96;
-  background-color: #22252a;
-  border-color: #8a8d93;
+.pagination li.active a {
+  background-color: #007bff;
+  color: white;
 }
 
 .page-link {

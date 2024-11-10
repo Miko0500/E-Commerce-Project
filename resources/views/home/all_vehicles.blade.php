@@ -40,7 +40,7 @@
         }
 
         .vehicle-card.show {
-            animation: slideUp 1.5s ease-out forwards; /* Apply animation on scroll */
+            animation: slideUp .5s ease-out forwards; /* Apply animation on scroll */
         }
 
         .vehicle-card:hover {
@@ -82,7 +82,7 @@
 
         .top-title {
             font-size: 40px;
-            font-weight: 900;
+            font-weight: 600;
             margin: 0;
             letter-spacing: 3px;
             text-transform: uppercase;
@@ -97,7 +97,7 @@
     <section class="vehicle_section layout_padding">
         <div class="container">
             <div style="padding-bottom: 10px;" class="heading_container heading_center">
-                <a class="top-title" href="index.html">
+                <a class="top-title" style="color: #000;">
                     <span>Vehicle Information</span> <!-- Neon blue for the heading -->
                 </a>
             </div>

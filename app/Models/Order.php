@@ -42,4 +42,9 @@ public function rating()
     return $this->hasOne(Rating::class);
 }
 
+public function finalization()
+{
+    return $this->hasOne(OrderFinalization::class);
+}
+
 }
