@@ -91,6 +91,38 @@
   padding-top: -100px;
   margin-top: 10px;
   }
+
+  .staff_section form {
+    margin-top: 10px;
+    margin-bottom: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.staff_section form input[type="search"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 300px;
+    margin-right: 10px;
+}
+
+.staff_section form input[type="submit"] {
+    background-color: grey;
+    color: #ffffff;
+    border: none;
+    padding: 13px 20px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.staff_section form input[type="submit"]:hover {
+    background-color: black;
+}
+
     </style>
 </head>
 <body>
@@ -101,6 +133,12 @@
                     <span>Staff Information</span> <!-- Neon blue for the heading -->
                 </a>
             </div>
+
+            <form action="{{ url('search_staff') }}" method="get">
+            @csrf
+            <input type="search" name="search" placeholder="Search staff" />
+            <input type="submit" class="btn btn-secondary" value="Search" />
+        </form>
 
             <div class="row">
                 @foreach($staff as $member)

@@ -16,7 +16,11 @@ use App\Models\Cart;
 
 use App\Models\Order;
 
-use Carbon\Carbon;  
+use App\Models\Rating;
+
+use Carbon\Carbon; 
+
+
 
 use Illuminate\Support\Facades\Log;
 
@@ -25,45 +29,56 @@ use Illuminate\Support\Facades\Auth;
 class HomeController extends Controller
 {
     
-    public function index() 
-{
-    // Get count of users who are customers
-    $user = User::where('usertype', 'user')->count();
-
-    // Get total products and orders
-    $product = Product::count();
-    $order = Order::count();
-
-    // Count orders with status 'Delivered'
-    $delivered = Order::where('status', 'Finished')->count();
-
-    // Get today's distinct users who have booked, ensuring each user is counted only once
-    $todaysBookings = Order::whereDate('created_at', Carbon::today('Asia/Manila'))
-                            ->distinct('user_id') // Ensures that only distinct users are counted
-                            ->count('user_id'); // Count only distinct users
-
-    // Count all services booked today, even if the same service was booked multiple times
-    $todaysServices = Order::whereDate('created_at', Carbon::today('Asia/Manila'))
-                            ->count();
-
-    $finishedServicesToday = Order::where('status', 'Finished')
-                                    ->whereDate('updated_at', Carbon::today('Asia/Manila')) // Assuming updated_at is when status is changed to Delivered
-                                    ->count();
-
-    // Pass all data to the view
-    return view('admin.index', compact('user', 'product', 'order', 'delivered', 'todaysBookings', 'todaysServices', 'finishedServicesToday'));
-}
-
+    public function index()
+    {
+        // Get count of users who are customers
+        $user = User::where('usertype', 'user')->count();
+    
+        // Get total products and orders
+        $product = Product::count(); // Load ratings relationship here
+    
+        
+    
+        $order = Order::count();
+    
+        // Count orders with status 'Delivered'
+        $delivered = Order::where('status', 'Finished')->count();
+    
+        // Get today's distinct users who have booked, ensuring each user is counted only once
+        $todaysBookings = Order::whereDate('created_at', Carbon::today('Asia/Manila'))
+                                ->distinct('user_id')
+                                ->count('user_id');
+    
+        // Count all services booked today, even if the same service was booked multiple times
+        $todaysServices = Order::whereDate('created_at', Carbon::today('Asia/Manila'))
+                                ->count();
+    
+        $finishedServicesToday = Order::where('status', 'Finished')
+                                        ->whereDate('updated_at', Carbon::today('Asia/Manila'))
+                                        ->count();
+    
+        // Pass all data to the view
+        return view('admin.index', compact('user', 'product', 'order', 'delivered', 'todaysBookings', 'todaysServices', 'finishedServicesToday'));
+    }
+    
     
 
 
     public function home()
 {
-    $product = Product::latest()->paginate(4);
+    // Fetch products with ratings
+    $product = Product::with('ratings')->latest()->paginate(4);
+
+    $product->map(function ($products) {
+        // Calculate the average rating for each product
+        $averageRating = $products->ratings->isNotEmpty() ? $products->ratings->avg('rating') : null;
+        $products->average_rating = $averageRating ? number_format($averageRating, 1) : null; // Format if available
+        return $products;
+    });
 
     $count = '';
-    $counts = null; // Set $counts to null by default
-    
+    $counts = null;
+
     if (Auth::id()) {
         $user = Auth::user();
         $userid = $user->id;
@@ -74,30 +89,34 @@ class HomeController extends Controller
     return view('home.index', compact('product', 'count', 'counts'));
 }
 
-    public function product()
-    {
-        
-        $product = Product::all();
 
-        $count = '';
-        $counts = null; // Set $counts to null by default
-        if(Auth::id())
-        {
+public function product()
+{
+    // Fetch all products with their ratings
+    $product = Product::with('ratings')->get();
 
+    $product = $product->map(function ($products) {
+        // Calculate the average rating for each product
+        $averageRating = $products->ratings->isNotEmpty() ? $products->ratings->avg('rating') : null;
+        $products->average_rating = $averageRating ? number_format($averageRating, 1) : null; // Format if available
+        return $products;
+    });
+
+    $count = '';
+    $counts = null; // Set $counts to null by default
+    if (Auth::id()) {
         $user = Auth::user();
-
         $userid = $user->id;
 
-        $count = Cart::where('user_id',$userid)->count();
-
-        $counts = Order::where('user_id',$userid)->count();
-        }
-
-        
-        
-
-        return view('home.view_product',compact('product','count','counts'));
+        $count = Cart::where('user_id', $userid)->count();
+        $counts = Order::where('user_id', $userid)->count();
     }
+
+    // Pass products with attached average ratings to the view
+    return view('home.view_product', compact('product', 'count', 'counts'));
+}
+
+
 
     public function why()
     {
@@ -178,7 +197,14 @@ class HomeController extends Controller
 
     public function login_home()
     {
-        $product = Product::all();
+        $product = Product::with('ratings')->latest()->paginate(4);
+
+        $product = $product->map(function ($products) {
+            // Calculate the average rating for each product
+            $averageRating = $products->ratings->isNotEmpty() ? $products->ratings->avg('rating') : null;
+            $products->average_rating = $averageRating ? number_format($averageRating, 1) : null; // Format if available
+            return $products;
+        });
 
         $count = '';
         $counts = null; // Set $counts to null by default
@@ -200,32 +226,37 @@ class HomeController extends Controller
 
     public function product_details($id)
     {
-
-        $data = Product::find($id);
-
-    // Get all products (if you need it for other parts of the view)
-    $product = Product::all();
-
-    // Initialize count variables
-    $count = 0;
-    $counts = null; 
-
-    // Check if the user is authenticated
-    if (Auth::check()) {
-        $user = Auth::user();
-        $userid = $user->id;
-
-        // Count items in the user's cart
-        $count = Cart::where('user_id', $userid)->count();
-
-        // Count the user's orders
-        $counts = Order::where('user_id', $userid)->count();
+        // Fetch the product details
+        $data = Product::findOrFail($id);
+    
+        // Fetch ratings related to this product through orders
+        $ratings = Rating::whereHas('order', function ($query) use ($id) {
+            $query->where('product_id', $id);
+        })->get();
+    
+        // Get all products for other parts of the view if necessary
+        $product = Product::all();
+    
+        // Initialize count variables
+        $count = 0;
+        $counts = null;
+    
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            $user = Auth::user();
+            $userid = $user->id;
+    
+            // Count items in the user's cart
+            $count = Cart::where('user_id', $userid)->count();
+    
+            // Count the user's orders
+            $counts = Order::where('user_id', $userid)->count();
+        }
+    
+        // Return the view with product details, ratings, and counts
+        return view('home.product_details', compact('data', 'count', 'counts', 'product', 'ratings'));
     }
-
-    // Return the view with the product details and counts
-    return view('home.product_details', compact('data', 'count', 'counts', 'product'));
-}
-
+    
 public function add_cart($id)
 {
     // Get the authenticated user
@@ -279,9 +310,10 @@ public function add_cart($id)
 
 public function fetchServiceDatetimes()
 {
-    // Fetch orders with status 'In Queue' or 'Ongoing Service' and format the service_datetime field
+    // Fetch orders, prioritize 'Ongoing Service', and format the `service_datetime`
     $orders = Order::whereIn('status', ['In Queue', 'Ongoing Service'])
-        ->select('service_datetime')
+        ->orderByRaw("FIELD(status, 'Ongoing Service', 'In Queue')") // Ensure 'Ongoing Service' appears first
+        ->select('service_datetime', 'status')  // Include status
         ->get()
         ->map(function ($order) {
             $order->service_datetime = \Carbon\Carbon::parse($order->service_datetime)->format('F j, Y - h:i A');
@@ -291,6 +323,7 @@ public function fetchServiceDatetimes()
     // Return the formatted data as JSON for the AJAX request
     return response()->json($orders);
 }
+
 
 
     
@@ -389,18 +422,49 @@ public function delete_cart($id)
 }
 
 
-public function myorders()
+public function myorders(Request $request)
 {
     $user = Auth::user()->id;
-    
     $count = Cart::where('user_id', $user)->count();
     $counts = Order::where('user_id', $user)->count();
 
-    // Get orders with staff information
-    $order = Order::where('user_id', $user)->with('staff')->paginate(6); // Ensure 'staff' relationship is loaded
+    // Get sort and filter parameters from the request
+    $status = $request->input('status', 'all');
+    $sort = $request->input('sort', 'newest');
+    $date_filter = $request->input('date_filter', '');
 
-    return view('home.order', compact('count', 'order', 'counts'));
+    // Build the query with sorting and filtering
+    $query = Order::where('user_id', $user)->with('staff');
+
+    // Apply status filter
+    if ($status !== 'all') {
+        $query->where('status', $status);
+    }
+
+    // Apply date filtering based on selection
+    if ($date_filter === 'today') {
+        $query->whereDate('created_at', now()->toDateString());
+    } elseif ($date_filter === 'week') {
+        $query->whereDate('created_at', '>=', now()->subDays(7));
+    } elseif ($date_filter === 'month') {
+        $query->whereDate('created_at', '>=', now()->subDays(30));
+    }
+
+    // Apply sorting
+    if ($sort === 'newest') {
+        $query->orderBy('created_at', 'desc');
+    } elseif ($sort === 'oldest') {
+        $query->orderBy('created_at', 'asc');
+    } elseif ($sort === 'status') {
+        $query->orderBy('status', 'asc');
+    }
+
+    $order = $query->paginate(6)->appends($request->except('page'));
+
+    return view('home.order', compact('count', 'order', 'counts', 'status', 'sort', 'date_filter'));
 }
+
+
 
 
 public function rate(Request $request, $orderId)
@@ -422,6 +486,20 @@ public function rate(Request $request, $orderId)
     toastr()->timeOut(10000)->closeButton()->success('Thank you for your feedback!');
 
     return redirect()->back();
+}
+
+public function serviceDetails($productId)
+{
+    // Fetch the service (product) details by ID
+    $data = Product::findOrFail($productId);
+
+    // Fetch ratings for the product (linked through orders)
+    $ratings = Rating::whereHas('order', function ($query) use ($productId) {
+        $query->where('product_id', $productId);
+    })->get();
+
+    // Pass the product data and associated ratings to the view
+    return view('home.service_details', compact('data', 'ratings'));
 }
 
 
@@ -499,31 +577,7 @@ public function rate(Request $request, $orderId)
         return view('home.profile',compact('product','count','counts'));
     }
 
-    public function update(Request $request)
-{
-    // Validate the request data
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255|unique:users,email,' . Auth::id(),
-        'phone' => 'nullable|string|max:15',
-        'address' => 'nullable|string|max:255',
-    ]);
-
-    $user = Auth::user();
-    $user->name = $request->input('name');
-    $user->email = $request->input('email');
-    $user->phone = $request->input('phone');
-    $user->address = $request->input('address');
-
-    try {
-        $user->save();
-    } catch (\Exception $e) {
-        Log::error("Error saving user profile: " . $e->getMessage());
-        return redirect()->back()->withErrors('There was an error saving your profile. Please try again.');
-    }
-
-    return redirect()->back()->with('success', 'Profile updated successfully.');
-}
+    
 
 
     
@@ -550,28 +604,89 @@ public function rate(Request $request, $orderId)
         return view('home.staffs',compact('staff','count','counts'));
     }
 
-    public function vehicle()
+    public function vehicle(Request $request)
+    {
+        $count = $counts = 0;
+    
+        if (Auth::id()) {
+            $user = Auth::user();
+            $userid = $user->id;
+    
+            $count = Cart::where('user_id', $userid)->count();
+            $counts = Order::where('user_id', $userid)->count();
+        }
+    
+        // Retrieve the status filter from the request
+        $status = $request->input('status');
+    
+        // Query vehicles based on the status filter
+        $vehicles = Vehicle::when($status, function ($query, $status) {
+            if (strtolower($status) === 'available') {
+                return $query->where('status', true);
+            } elseif (strtolower($status) === 'not available') {
+                return $query->where('status', false);
+            }
+        })->get();
+    
+        return view('home.vehicle', compact('vehicles', 'count', 'counts'));
+    }
+    
+
+public function search_vehicle(Request $request)
 {
-    $vehicles = Vehicle::all(); // Assuming you have a Vehicle model to fetch vehicle data
+    $count = $counts = 0;
 
-    $product = Product::all();
-
-    $count = '';
-    $counts = null; // Set $counts to null by default
+    // Check if the user is authenticated
     if(Auth::id())
     {
+        $user = Auth::user();
+        $userid = $user->id;
 
-    $user = Auth::user();
-
-    $userid = $user->id;
-
-    $count = Cart::where('user_id',$userid)->count();
-
-    $counts = Order::where('user_id',$userid)->count();
+        $count = Cart::where('user_id', $userid)->count();
+        $counts = Order::where('user_id', $userid)->count();
     }
 
-    // Pass the vehicles, cart count, and order count to the vehicles view
-    return view('home.vehicle', compact('vehicles', 'count', 'counts'));
+    $search = $request->search;
+
+    // Query vehicles based on type, sizes, or status
+    $vehicles = Vehicle::where('type', 'LIKE', '%' . $search . '%')
+        ->orWhereJsonContains('sizes', $search)
+        ->orWhere(function ($query) use ($search) {
+            if (strtolower($search) === 'available') {
+                $query->where('status', true);
+            } elseif (strtolower($search) === 'not available') {
+                $query->where('status', false);
+            }
+        })
+        ->paginate(5);
+
+    return view('home.vehicle', compact('count', 'vehicles', 'counts'));
+}
+
+public function search_staff(Request $request)
+{
+    $count = $counts = 0;
+
+    // Check if the user is authenticated
+    if(Auth::id())
+    {
+        $user = Auth::user();
+        $userid = $user->id;
+
+        $count = Cart::where('user_id', $userid)->count();
+        $counts = Order::where('user_id', $userid)->count();
+    }
+
+    $search = $request->search;
+
+    // Query staff based on name, age, sex, or contact
+    $staff = Staff::where('name', 'LIKE', '%' . $search . '%')
+        ->orWhere('age', 'LIKE', '%' . $search . '%')
+        ->orWhere('sex', 'LIKE', '%' . strtolower($search) . '%')
+        ->orWhere('contact', 'LIKE', '%' . $search . '%')
+        ->paginate(5);
+
+    return view('home.staffs', compact('count', 'staff', 'counts'));
 }
 
     

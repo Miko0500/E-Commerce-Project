@@ -19,4 +19,12 @@ public function hasOngoingOrders()
     return $this->orders()->where('status', 'Ongoing Service', 'Finished')->exists();
 }
 
+// In Product.php model
+public function ratings()
+{
+    return $this->hasManyThrough(Rating::class, Order::class, 'product_id', 'order_id', 'id', 'id');
+}
+
+
+
 }

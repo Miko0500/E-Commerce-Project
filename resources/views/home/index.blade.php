@@ -24,7 +24,7 @@
 
   @include('home.product')
 
-  <!-- end shop section -->
+  end shop section
   <div id="bubble-container">
   <div class="bubble"></div>
   <div class="bubble"></div>

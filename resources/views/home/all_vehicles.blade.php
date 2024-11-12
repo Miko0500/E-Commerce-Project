@@ -91,6 +91,67 @@
             padding-top: -100px;
             margin-top: 10px;
         }
+
+        .vehicle_section form {
+    margin-top: 10px;
+    margin-bottom: 20px; /* Space below the search form */
+    display: flex;
+    justify-content: center;
+}
+
+.vehicle_section form input[type="search"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 25px; /* Rounded corners */
+    font-size: 16px;
+    width: 100%; /* Full width */
+    max-width: 300px; /* Limit width */
+    margin-right: 10px; /* Space between inputs */
+}
+
+.vehicle_section form input[type="submit"] {
+    background-color: grey; /* Accent color */
+    color: #ffffff; /* White text */
+    border: none; /* Remove border */
+    padding: 13px 20px; /* Padding */
+    border-radius: 25px; /* Rounded corners */
+    font-size: 16px;
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.vehicle_section form input[type="submit"]:hover {
+    background-color: black; /* Darker shade on hover */
+}
+
+.sorting-form {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.sorting-form select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    width: 100%;
+    max-width: 160px;
+    color: #333;
+    background-color: #fff;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.sorting-form select:hover,
+.sorting-form select:focus {
+    border-color: #007bff; /* Accent color on hover */
+    background-color: #f0f8ff; /* Slightly lighter background on focus */
+}
+
+.sorting-form select option {
+    color: #333; /* Text color for options */
+}
+
     </style>
 </head>
 <body>
@@ -101,6 +162,23 @@
                     <span>Vehicle Information</span> <!-- Neon blue for the heading -->
                 </a>
             </div>
+
+            <form action="{{ url('search_vehicle') }}" method="get">
+            @csrf
+            <input type="search" name="search" placeholder="Search vehicles">
+            <input type="submit" class="btn btn-secondary" value="Search">
+        </form>
+
+        <form action="{{ url('/vehicle') }}" method="GET" class="sorting-form">
+    <select name="status" onchange="this.form.submit()">
+        <option value="" disabled selected>Filter by Status</option>
+        <option value="Available" {{ request('status') == 'Available' ? 'selected' : '' }}>Available</option>
+        <option value="Not Available" {{ request('status') == 'Not Available' ? 'selected' : '' }}>Not Available</option>
+    </select>
+</form>
+
+
+
 
             <div class="row">
                 @foreach($vehicles as $vehicle)

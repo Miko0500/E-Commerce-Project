@@ -47,4 +47,9 @@ public function finalization()
     return $this->hasOne(OrderFinalization::class);
 }
 
+public function countdownTimer()
+{
+    return $this->hasOne(CountdownTimer::class);
+}
+
 }

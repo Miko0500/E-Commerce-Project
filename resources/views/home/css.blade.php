@@ -7,7 +7,7 @@
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <link rel="shortcut icon" href="images/mainlogo1.png" type="image/x-icon">
+  <link rel="shortcut icon" href="images/car.jpg" type="image/x-icon">
 
   <title>
   Shee Auto Polish & Ceramic Coating

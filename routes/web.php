@@ -32,13 +32,15 @@ Route::get('/edit_profile', [HomeController::class, 'edit_profile']);
 
 Route::get('/dashboard', [HomeController::class, 'login_home'])->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/myorders', [HomeController::class, 'myorders'])->middleware(['auth', 'verified']);
+Route::get('/myorders', [HomeController::class, 'myorders'])->name('myorders')->middleware(['auth', 'verified']);
+
 
 Route::get('/staffs', [HomeController::class, 'staffs']);
 
 Route::get('/vehicle', [HomeController::class, 'vehicle']);
 
-Route::get('/vehicles', [HomeController::class, 'vehicles']);
+Route::get('/vehicles', [HomeController::class, 'vehicle'])->name('vehicles');
+
 
 
 
@@ -143,7 +145,12 @@ Route::post('confirm_order', [HomeController::class, 'confirm_order'])->middlewa
 
 Route::post('/orders/{order}/rate', [HomeController::class, 'rate'])->name('orders.rate');
 
+Route::get('/service-details/{productId}', [HomeController::class, 'serviceDetails'])->name('service.details');
+
+
 Route::post('/orders/{id}/finalize', [AdminController::class, 'finalizeOrder'])->name('finalize_order');
+
+
 
 Route::post('/update_status/{id}', [AdminController::class, 'updateStatus'])->name('update_status');
 
@@ -164,13 +171,29 @@ Route::get('view_orders', [AdminController::class, 'view_orders'])
     ->name('view_orders'); // This should match the name used in the form action
 
 
+    Route::get('reports', [AdminController::class, 'reports'])
+    ->middleware(['auth', 'admin'])
+    ->name('reports'); // This should match the name used in the form action
+
+    Route::post('cancel/{id}', [AdminController::class, 'cancel'])->name('cancel')->middleware(['auth', 'admin']);
+
+
+
 Route::get('ongoing_service/{id}', [AdminController::class, 'ongoing_service'])->middleware(['auth','admin']);
 
 Route::get('finished/{id}', [AdminController::class, 'finished'])->middleware(['auth','admin']);
 
 Route::get('print_pdf/{id}', [AdminController::class, 'print_pdf'])->middleware(['auth','admin']);
 
+
+
+
 Route::get('search_product', [HomeController::class, 'search_product'])->middleware(['auth', 'verified']);
+
+Route::get('search_vehicle', [HomeController::class, 'search_vehicle'])->middleware(['auth', 'verified']);
+
+Route::get('search_staff', [HomeController::class, 'search_staff'])->middleware(['auth', 'verified']);
+
 
 
 

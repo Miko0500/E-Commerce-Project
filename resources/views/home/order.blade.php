@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booked Services</title>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <style type="text/css">
         body {
             font-family: "Poppins", sans-serif;
@@ -90,7 +91,7 @@
         .pagination {
             display: flex;
             justify-content: center;
-            margin-top: 30px;
+            margin-top: 10px;
         }
 
         .pagination li a {
@@ -110,6 +111,36 @@
         .pagination li a:hover {
             background-color: #ddd;
         }
+
+         /* Existing and additional CSS */
+         .filter-sort-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+        .form-select {
+            width: 170px;
+            padding: 8px;
+            font-size: 14px;
+            color: #333;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            background: #ffffff;
+            outline: none;
+        }
     </style>
 </head>
 
@@ -120,6 +151,38 @@
     @include('home.header')
 
     @include('home.css')
+
+     <!-- Sorting and Filtering Form -->
+     <div class="filter-sort-container">
+    <form method="GET" action="{{ route('myorders') }}" style="display: flex; align-items: center; gap: 15px;">
+        <div class="form-group">
+            <label for="status" class="form-label">Filter by Status:</label>
+            <select name="status" class="form-select" onchange="this.form.submit()">
+                <option value="all" {{ request('status', 'all') == 'all' ? 'selected' : '' }}>All</option>
+                <option value="In Queue" {{ request('status') == 'In Queue' ? 'selected' : '' }}>In Queue</option>
+                <option value="Ongoing Service" {{ request('status') == 'Ongoing Service' ? 'selected' : '' }}>Ongoing Service</option>
+                <option value="Finished" {{ request('status') == 'Finished' ? 'selected' : '' }}>Finished</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="sort" class="form-label">Sort By:</label>
+            <select name="sort" class="form-select" onchange="this.form.submit()">
+                <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>Newest Orders</option>
+                <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest Orders</option>
+                <option value="status" {{ request('sort') == 'status' ? 'selected' : '' }}>Status</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="date_filter" class="form-label">Filter By Date:</label>
+            <select name="date_filter" class="form-select" onchange="this.form.submit()">
+                <option value="" disabled {{ request('date_filter') == '' ? 'selected' : '' }}>Select Date Range</option>
+                <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Today</option>
+                <option value="week" {{ request('date_filter') == 'week' ? 'selected' : '' }}>Last 7 Days</option>
+                <option value="month" {{ request('date_filter') == 'month' ? 'selected' : '' }}>Last 30 Days</option>
+            </select>
+        </div>
+    </form>
+</div>
 
     <div class="div_center">
     @foreach($order as $orders)
@@ -132,9 +195,35 @@
             <p>Vehicle Type: {{ $orders->vehicle ? $orders->vehicle->type : 'N/A' }}</p>
             <p>Vehicle Size: {{ $orders->size ? $orders->size : 'N/A' }}</p>
             <p>Service Date & Time: {{ $orders->service_datetime ? \Carbon\Carbon::parse($orders->service_datetime)->format('F j, Y \a\t g:i A') : 'Not scheduled' }}</p>
-            <span class="status-btn @if($orders->status == 'In Queue') btn-warning @elseif($orders->status == 'Ongoing Service') btn-info @else btn-success @endif" style="display: flex; justify-content: center;">
-                {{$orders->status}}
-            </span>
+
+            <!-- Countdown display -->
+            <div style="color: #000;" id="countdown-{{ $orders->id }}">
+            @if($orders->status === 'Ongoing Service')
+    Service Ongoing
+@elseif($orders->status === 'Finished')
+    Service Completed
+@elseif($orders->countdownTimer && $orders->countdownTimer->countdown_ends_at)
+    <span class="countdown-timer" data-countdown="{{ $orders->countdownTimer->countdown_ends_at }}">Loading...</span>
+@else
+    Not finalized
+@endif
+
+            </div>
+
+            <span class="status-btn 
+    @if($orders->status == 'In Queue') 
+        btn-warning 
+    @elseif($orders->status == 'Ongoing Service') 
+        btn-info 
+    @elseif($orders->status == 'Finished') 
+        btn-success 
+    @elseif($orders->status == 'Cancelled') 
+        btn-danger
+    @endif" 
+    style="display: flex; justify-content: center;">
+    {{$orders->status}}
+</span>
+
 
              <!-- Display finalized data if the order is "Finished" -->
              @if($orders->finalization)
@@ -181,16 +270,13 @@
     @endforeach
 </div>
 
-    <div class="div_center">
-        {{$order->onEachSide(1)->links()}}
-    </div>
+<div class="pagination">
+    {{ $order->links() }}
+</div>
 
 </div>
 
-  <!-- info section -->
-  <section class="info_section layout_padding2-top">
-    @include('home.footer')
-  </section>
+  
 
   @yield('content')
 
@@ -224,5 +310,39 @@
     });
 </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Iterate over each countdown timer in the cards
+        document.querySelectorAll('.countdown-timer').forEach(function(timerElement) {
+            const countdownEndTime = new Date(timerElement.getAttribute('data-countdown')).getTime();
+            const countdownDisplay = timerElement.parentElement;
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = countdownEndTime - now;
+
+                // Check if the countdown has ended
+                if (distance < 0) {
+                    countdownDisplay.innerHTML = "Time Expired";
+                    return;
+                }
+
+                // Calculate minutes and seconds remaining
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                countdownDisplay.innerHTML = `${minutes}m ${seconds}s`;
+
+                // Refresh every second
+                setTimeout(updateCountdown, 1000);
+            }
+
+            updateCountdown();
+        });
+    });
+</script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </body>
 </html>

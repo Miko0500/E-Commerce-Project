@@ -26,6 +26,8 @@ use App\Models\User;
 
 use App\Models\OrderFinalization;
 
+use App\Models\CountdownTimer;
+
 
 
 
@@ -482,14 +484,21 @@ public function update_staff($id)
 
 
     public function view_product()
-    {
+{
+    // Paginate the products and eager load the ratings
+    $product = Product::with('ratings')->paginate(10);
+    
+    // Calculate the average rating for each product
+    $product->getCollection()->transform(function ($products) {
+        // Calculate the average rating for each product
+        $averageRating = $products->ratings->isNotEmpty() ? $products->ratings->avg('rating') : null;
+        $products->average_rating = $averageRating ? number_format($averageRating, 1) : null; // Format if available
+        return $products;
+    });
 
-        
+    return view('admin.view_product', compact('product'));
+}
 
-        $product = Product::latest()->paginate(6);
-
-        return view('admin.view_product',compact('product'));
-    }
 
     public function delete_product($id)
     {
@@ -653,12 +662,13 @@ public function search_staff(Request $request)
 public function view_orders(Request $request)
 {
     // Get the selected status, sort, and date filter from the request
-    $selectedStatus = $request->input('status');
-    $selectedSort = $request->input('sort');
-    $dateFilter = $request->input('date_filter');
+    $selectedStatus = $request->input('status', 'all');
+    $selectedSort = $request->input('sort', 'newest');
+    $dateFilter = $request->input('date_filter', '');
 
-    $data = Order::with(['product', 'staff', 'vehicle'])
-        ->when($selectedStatus && $selectedStatus !== 'all', function ($query) use ($selectedStatus) {
+    // Build the query with filters and include the countdownTimer relationship
+    $data = Order::with(['product', 'staff', 'vehicle', 'countdownTimer'])
+        ->when($selectedStatus !== 'all', function ($query) use ($selectedStatus) {
             return $query->where('status', $selectedStatus);
         })
         ->when($selectedSort, function ($query) use ($selectedSort) {
@@ -679,10 +689,68 @@ public function view_orders(Request $request)
                 return $query->whereDate('created_at', '>=', now()->subMonth());
             }
         })
-        ->paginate(10); // Adjust the pagination as needed
+        ->paginate(10) // Adjust pagination as needed
+        ->appends($request->except('page')); // Retain filters on pagination
 
-    return view('admin.order', compact('data'));
+    return view('admin.order', compact('data', 'selectedStatus', 'selectedSort', 'dateFilter'));
 }
+
+public function reports(Request $request)
+{
+    // Get the selected status, sort, and date filter from the request
+    $selectedStatus = $request->input('status', 'all');
+    $selectedSort = $request->input('sort', 'newest');
+    $dateFilter = $request->input('date_filter', '');
+
+    // Build the query with filters and include the countdownTimer relationship
+    $data = Order::with(['product', 'staff', 'vehicle', 'countdownTimer'])
+        ->when($selectedStatus !== 'all', function ($query) use ($selectedStatus) {
+            return $query->where('status', $selectedStatus);
+        })
+        ->when($selectedSort, function ($query) use ($selectedSort) {
+            if ($selectedSort == 'newest') {
+                return $query->orderBy('created_at', 'desc');
+            } elseif ($selectedSort == 'oldest') {
+                return $query->orderBy('created_at', 'asc');
+            } elseif ($selectedSort == 'status') {
+                return $query->orderBy('status');
+            }
+        })
+        ->when($dateFilter, function ($query) use ($dateFilter) {
+            if ($dateFilter == 'today') {
+                return $query->whereDate('created_at', today());
+            } elseif ($dateFilter == 'week') {
+                return $query->whereDate('created_at', '>=', now()->subWeek());
+            } elseif ($dateFilter == 'month') {
+                return $query->whereDate('created_at', '>=', now()->subMonth());
+            }
+        })
+        ->paginate(10)  // Ensure you're using paginate instead of get
+        ->appends($request->except('page')); // Retain filters on pagination
+
+    return view('admin.reports', compact('data', 'selectedStatus', 'selectedSort', 'dateFilter'));
+}
+
+
+
+
+
+public function cancel($id)
+{
+    // Find the order by its ID
+    $order = Order::find($id);
+
+    // Change the status to "Cancelled"
+    $order->status = 'Cancelled';
+
+    // Save the updated status
+    $order->save();
+
+    // Redirect back with a success message
+    toastr()->timeOut(10000)->closeButton()->success('Order has been cancelled successfully.');
+    return redirect()->back();
+}
+
 
 
 
@@ -722,11 +790,15 @@ public function view_orders(Request $request)
 
     }
 
+
+   
+
+
     public function updateStatus(Request $request, $id)
     {
         $order = Order::findOrFail($id);  // Retrieve the order
         $newStatus = $request->input('status');
-    
+        
         // Validate and update status based on the input
         if ($newStatus === 'Ongoing Service') {
             $order->status = 'Ongoing Service';
@@ -739,35 +811,50 @@ public function view_orders(Request $request)
     
         $order->save();  // Save the updated status to the database
     
+        // Clear countdown if the status is not "In Queue" or "Finalized"
+        if ($newStatus !== 'In Queue' && $newStatus !== 'Finalized') {
+            $order->countdownTimer()->update(['countdown_ends_at' => null]);
+        }
+    
         // Use Toastr for a success message
         toastr()->timeOut(10000)->closeButton()->success('Status changed successfully.');
     
-        // Redirect back to refresh the page and show the new status
         return redirect()->back();
     }
+    
     
 
     
     
     public function finalizeOrder(Request $request, $id)
-    {
-        // Validate the inputs
-        $request->validate([
-            'total_price' => 'required|string|max:255',
-            'description' => 'nullable|string',
-        ]);
-    
-        // Find or create the order finalization record for this order
-        OrderFinalization::updateOrCreate(
-            ['order_id' => $id],
-            ['total_price' => $request->input('total_price'), 'description' => $request->input('description')]
-        );
-    
-        // Use Toastr for a success message
-        toastr()->timeOut(10000)->closeButton()->success('Order finalized successfully.');
-    
-        return redirect()->back();
-    }
+{
+    // Validate the inputs
+    $request->validate([
+        'total_price' => 'required|string|max:255',
+        'description' => 'nullable|string',
+    ]);
+
+    // Finalize the order by creating or updating the finalization record
+    OrderFinalization::updateOrCreate(
+        ['order_id' => $id],
+        [
+            'total_price' => $request->input('total_price'),
+            'description' => $request->input('description')
+        ]
+    );
+
+    // Start countdown timer: Set `countdown_ends_at` to 20 minutes from now
+    CountdownTimer::updateOrCreate(
+        ['order_id' => $id],
+        ['countdown_ends_at' => now()->addMinutes(20)]
+    );
+
+    // Use Toastr for a success message
+    toastr()->timeOut(10000)->closeButton()->success('Order finalized successfully. Countdown started.');
+
+    return redirect()->back();
+}
+
     
     public function updateOrderFinalization(Request $request, $id)
 {

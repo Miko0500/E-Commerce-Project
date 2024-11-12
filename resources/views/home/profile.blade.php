@@ -163,59 +163,16 @@
               </div>
             </div>
 
-            <!-- Edit Profile Button -->
-            <!-- Edit Profile Button to Open Modal -->
-            <div class="form-group row mb-0">
-              <div class="col-md-6 offset-md-4">
-                <button type="button" class="btn-get-started" data-toggle="modal" data-target="#editProfileModal">Edit Profile</button>
-              </div>
-            </div>
+           
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Edit Profile Modal -->
-  <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="text-dark modal-title" id="editProfileModalLabel">Edit Profile</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+  
         </div>
-        <form method="POST" action="{{ route('profile_update') }}">
-    @csrf
-    @method('PATCH') <!-- Method spoofing to use PATCH -->
-    
-    <!-- Form fields -->
-    <div class="form-group">
-        <label for="edit-name">Name</label>
-        <input type="text" id="edit-name" class="form-control" name="name" value="{{ Auth::user()->name }}" required>
-    </div>
-    
-    <div class="form-group">
-        <label for="edit-email">Email</label>
-        <input type="email" id="edit-email" class="form-control" name="email" value="{{ Auth::user()->email }}" required>
-    </div>
-    
-    <div class="form-group">
-        <label for="edit-phone">Phone</label>
-        <input type="text" id="edit-phone" class="form-control" name="phone" value="{{ Auth::user()->phone }}">
-    </div>
-    
-    <div class="form-group">
-        <label for="edit-address">Address</label>
-        <input type="text" id="edit-address" class="form-control" name="address" value="{{ Auth::user()->address }}">
-    </div>
-
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-    </div>
-</form>
+      
 
 
       </div>

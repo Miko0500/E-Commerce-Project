@@ -134,7 +134,7 @@
     background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
     width: fit-content;
-    margin: 20px; /* Add some spacing around the card */
+    margin: -40px; /* Add some spacing around the card */
 }
 .container {
             padding-left: 15px;
@@ -169,6 +169,58 @@
     color: #fff;
 }
 
+
+.btn-primary {
+            
+    background-color: #007BFF; /* Accent color */
+    color: #ffffff; /* White text */
+    border: none; /* Remove border */
+    padding: 6px 12px; /* Smaller padding */
+    border-radius: 5px; /* Slightly rounded corners */
+    font-size: 13px; /* Smaller font size */
+    font-weight: bold;
+    text-transform: uppercase; /* Uppercase text */
+    letter-spacing: 0.5px;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-1px); /* Gentle lift effect */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow */
+        }
+
+        .btn-warning {
+            
+    background-color: #007BFF; /* Accent color */
+    color: #ffffff; /* White text */
+    border: none; /* Remove border */
+    padding: 6px 12px; /* Smaller padding */
+    border-radius: 5px; /* Slightly rounded corners */
+    font-size: 13px; /* Smaller font size */
+    font-weight: bold;
+    text-transform: uppercase; /* Uppercase text */
+    letter-spacing: 0.5px;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    
+        }
+
+        .btn-warning:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-1px); /* Gentle lift effect */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow */
+        }
     </style>
 
 
@@ -287,10 +339,10 @@
     <input type="text" name="service_datetime" id="service_datetime" class="form-control" placeholder="Select Date & Time" required>
 </div>
             <div class="form-group">
-                <button type="button" class="btn btn-primary" onclick="fetchServiceDatetimes()">View All Taken Datetimes</button>
+                <button type="button" class="btn2 btn-warning" onclick="fetchServiceDatetimes()">All Occupied Datetimes</button>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Place Order</button>
+                <button type="submit" class="btn2 btn-primary">Book Now</button>
             </div>
                     </form>
                 </div>
@@ -377,78 +429,86 @@
     </script>
 
 <script>
-        let unavailableDatetimes = [];
+    let unavailableDatetimes = [];
 
-        // Fetch unavailable datetimes on page load
-        function loadUnavailableDatetimes() {
-            $.ajax({
-                url: "{{ url('/fetch-unavailable-datetimes') }}",
-                method: "GET",
-                success: function(data) {
-                    unavailableDatetimes = data;
-                },
-                error: function() {
-                    toastr.error("Error loading unavailable datetimes.");
-                }
-            });
-        }
+    // Fetch unavailable datetimes on page load
+    function loadUnavailableDatetimes() {
+        $.ajax({
+            url: "{{ url('/fetch-unavailable-datetimes') }}",
+            method: "GET",
+            success: function(data) {
+                unavailableDatetimes = data;
+            },
+            error: function() {
+                toastr.error("Error loading unavailable datetimes.");
+            }
+        });
+    }
 
-        // Call this function to populate the modal with the latest unavailable datetimes
-        function fetchServiceDatetimes() {
-            $.ajax({
-                url: "{{ route('fetchServiceDatetimes') }}",
-                method: "GET",
-                success: function(data) {
-                    const datetimeList = $('#datetimeList');
-                    datetimeList.empty();
-                    data.forEach(order => {
-                        datetimeList.append(`<li class="list-group-item">Taken: ${order.service_datetime}</li>`);
-                    });
-                    $('#allDatetimesModal').modal('show');  // Show modal with updated data
-                },
-                error: function() {
-                    toastr.error("Failed to fetch datetimes.");
-                }
-            });
-        }
+    // Fetch service datetimes and statuses for modal display
+    function fetchServiceDatetimes() {
+        $.ajax({
+            url: "{{ route('fetchServiceDatetimes') }}",
+            method: "GET",
+            success: function(data) {
+                const datetimeList = $('#datetimeList');
+                datetimeList.empty();
+                data.forEach(order => {
+                    datetimeList.append(`
+    <li class="list-group-item">
+        Occupied: ${order.service_datetime} - 
+        Status: <span style="color: ${order.status === 'Ongoing Service' ? 'skyblue' : order.status === 'In Queue' ? 'orange' : 'black'}; font-weight: bold;">
+                    ${order.status}
+                </span>
+    </li>
+`);
+ });
+                $('#allDatetimesModal').modal('show');  // Show modal with updated data
+            },
+            error: function() {
+                toastr.error("Failed to fetch datetimes.");
+            }
+        });
+    }
 
-        // Attach modal loading to button
-        $(document).ready(function() {
-    loadUnavailableDatetimes();
+    // Attach modal loading to button
+    $(document).ready(function() {
+        loadUnavailableDatetimes();
 
-    $('#viewDatetimesBtn').on('click', function() {
-        fetchServiceDatetimes();  // Load data when button is clicked
+        $('#viewDatetimesBtn').on('click', function() {
+            fetchServiceDatetimes();  // Load data when button is clicked
+        });
+
+        $('#orderForm').on('submit', function(event) {
+            event.preventDefault();
+            const chosenDateTime = $('#service_datetime').val();
+
+            // Check if selected datetime is unavailable
+            if (unavailableDatetimes.includes(chosenDateTime)) {
+                toastr.error("The selected date and time is taken. Choose another.");
+            } else {
+                // AJAX order placement
+                $.ajax({
+                    url: "{{ url('confirm_order') }}",
+                    method: "POST",
+                    data: $(this).serialize(),
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    success: function() {
+                        toastr.success("Order placed successfully.");
+                        loadUnavailableDatetimes();  // Reload unavailable datetimes after order
+
+                        // Full page reload after successful order
+                        location.reload();  // Refreshes the page to show updated state
+                    },
+                    error: function() {
+                        toastr.error("Error placing order.");
+                    }
+                });
+            }
+        });
     });
+</script>
 
-    $('#orderForm').on('submit', function(event) {
-        event.preventDefault();
-        const chosenDateTime = $('#service_datetime').val();
-
-        // Check if selected datetime is unavailable
-        if (unavailableDatetimes.includes(chosenDateTime)) {
-            toastr.error("The selected date and time is taken. Choose another.");
-        } else {
-            // AJAX order placement
-            $.ajax({
-                url: "{{ url('confirm_order') }}",
-                method: "POST",
-                data: $(this).serialize(),
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                success: function() {
-                    toastr.success("Order placed successfully.");
-                    loadUnavailableDatetimes();  // Reload unavailable datetimes after order
-
-                    // Full page reload after successful order
-                    location.reload();  // Refreshes the page to show updated state
-                },
-                error: function() {
-                    toastr.error("Error placing order.");
-                }
-            });
-        }
-    });
-});
-    </script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -467,28 +527,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
         onChange: function(selectedDates, dateStr, instance) {
             const selectedDate = selectedDates[0];
-            const selectedHour = selectedDate.getHours();
+            const currentDate = new Date();
             
-            // Check if selected time is before 8 AM
-            if (selectedHour < 8) {
-                alert("Please wait until 8 AM.");
-                // Reset to 8 AM of the selected date
-                instance.setDate(new Date(selectedDate.setHours(8, 0)));
-            }
-            // Check if selected time is after 5 PM
-            else if (selectedHour >= 17) {
-                alert("Selected time exceeds working hours. Moving to the next day at 8 AM.");
-                // Set the date to the next day at 8 AM
-                const nextDay = new Date(selectedDate);
-                nextDay.setDate(selectedDate.getDate() + 1);
-                nextDay.setHours(8, 0);  // Set time to 8 AM
-                instance.setDate(nextDay);
+            // Check if selected date is today
+            if (selectedDate.toDateString() === currentDate.toDateString()) {
+                // Check if selected time is before the current time
+                if (selectedDate.getTime() < currentDate.getTime()) {
+                    alert("You cannot book a time earlier than the current time.");
+                    
+                    // Reset to the current time or the next available time
+                    const nextAvailableTime = new Date(currentDate);
+                    nextAvailableTime.setMinutes(Math.ceil(currentDate.getMinutes() / 15) * 15); // Round up to the next quarter hour
+
+                    if (nextAvailableTime.getHours() < 8) {
+                        nextAvailableTime.setHours(8, 0); // Set to 8 AM if before opening hours
+                    } else if (nextAvailableTime.getHours() >= 17) {
+                        nextAvailableTime.setDate(nextAvailableTime.getDate() + 1); // Move to the next day if past closing
+                        nextAvailableTime.setHours(8, 0); // Set to 8 AM
+                    }
+
+                    instance.setDate(nextAvailableTime);
+                }
             }
         }
     });
 });
 </script>
-
 
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -502,7 +566,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <section class="info_section  layout_padding2-top">
     
         
-        @include('home.footer')
+        
 
     </section>
 

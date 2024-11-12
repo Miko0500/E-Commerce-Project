@@ -60,6 +60,12 @@
 
                 </li>
 
+                <li style="color: white;">
+                    <a href="{{url('reports')}}"> <i style="color: #007bff;" class="bi bi-clipboard-data"></i>Reports 
+                </a>
+
+                </li>
+
                 
                 <li style="color: red;">
                     <a href="#" id="logout_button"> <i class="fa fa-sign-out"></i>Logout
