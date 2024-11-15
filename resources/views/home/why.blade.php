@@ -120,7 +120,7 @@
 <body>
     <div class="hero_area">
         <!-- Header Section -->
-        @include('home.header')
+       
         <!-- End Header Section -->
     </div>
     <!-- End Hero Area -->
@@ -174,7 +174,7 @@
     </section>
     @include('home.css')
 
-    <section> @include('home.footer')</section>
+    
     <!-- End Reason Section -->
 
     <!-- Scripts -->

@@ -1,162 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     @include('home.css')
     <style>
         /* Scroll animation keyframes */
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
 
-/* Dark theme for the staff section */
-.staff_section {
-    padding: 10px 0;
- 
-    color: #ffffff; /* Light text for contrast */
-    position: relative;
-    overflow: hidden;
-}
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-/* Staff card styling with dark theme */
-.staff-card {
-    position: relative;
-    border: 3px solid #000; /* Neon blue border */
-    border-radius: 15px;
-    background: #fff; /* Dark background for cards */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Darker shadow for a more intense look */
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin-bottom: 30px;
-    padding: 20px;
-    opacity: 0; /* Initially hidden */
-    transform: translateY(50px); /* Initially moved down */
-}
+        /* Staff Section */
+        .staff_section {
+            padding: 80px 0;
+            position: relative;
+        }
 
-.staff-card.show {
-    animation: slideUp .5s ease-out forwards; /* Apply animation on scroll */
-}
+        /* Staff Section Title */
+        .top-title {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #333;
+            padding-bottom: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.staff-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.7); /* Stronger shadow on hover */
-}
+        /* Staff Member Styling */
+        .staff-card {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 40px;
+            opacity: 0; /* Initially hidden */
+            transform: translateY(50px);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            border-radius: 15px;
+            background: #ffffff;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background-color: #fff;
+        }
 
-.staff-card .img-box {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-    margin-bottom: 15px;
-    border-bottom: 2px solid #000; /* Neon blue line separating image */
-}
+        .staff-card.show {
+            animation: slideUp 0.5s ease-out forwards; /* Apply animation on scroll */
+        }
 
-.staff-card .img-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
+        /* Image and Description Styling */
+        .staff-card .img-box {
+            flex: 1 1 40%;
+            padding: 15px;
+            text-align: center;
+        }
 
-.staff-card .detail-box {
-    text-align: left;
-}
+        .staff-card .img-box img {
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #00bcd4;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
 
-.staff-card .detail-box h6 {
-    margin: 10px 0;
-    font-size: 18px;
-    font-weight: 600;
-    color: #000; /* Neon blue text for names */
-}
+        .staff-card .img-box img:hover {
+            transform: scale(1.1);
+        }
 
-.staff-card .detail-box .info {
-    margin-top: 5px;
-    font-size: 14px;
-    color: #000; /* Light gray text for details */
-}
-.top-title{
-    
-    font-size: 40px;
-    font-weight: 600;
-    margin: 0;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #000;
-  padding: 10px;
-  padding-top: -100px;
-  margin-top: 10px;
-  }
+        .staff-card .detail-box {
+            flex: 1 1 60%;
+            padding: 15px;
+            text-align: left;
+        }
 
-  .staff_section form {
-    margin-top: 10px;
-    margin-bottom: 50px;
-    display: flex;
-    justify-content: center;
-}
+        .staff-card .detail-box h6 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
 
-.staff_section form input[type="search"] {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 25px;
-    font-size: 16px;
-    width: 100%;
-    max-width: 300px;
-    margin-right: 10px;
-}
+        .staff-card .detail-box .info {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
 
-.staff_section form input[type="submit"] {
-    background-color: grey;
-    color: #ffffff;
-    border: none;
-    padding: 13px 20px;
-    border-radius: 25px;
-    font-size: 16px;
-    cursor: pointer;
-}
+        .staff-card .detail-box .info strong {
+            color: #333;
+        }
 
-.staff_section form input[type="submit"]:hover {
-    background-color: black;
-}
+        /* Alternate layout: Image on the right, description on the left */
+        .staff-card.reverse {
+            flex-direction: row-reverse;
+        }
 
+        /* Hover Effect */
+        .staff-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Search Bar Styling */
+        .staff_section form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .staff_section form input[type="search"] {
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 320px;
+            margin-right: 12px;
+        }
+
+        .staff_section form input[type="submit"] {
+            background-color: #00bcd4;
+            color: #ffffff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .staff_section form input[type="submit"]:hover {
+            background-color: #0097a7;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .staff-card {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .staff-card.reverse {
+                flex-direction: column-reverse;
+            }
+
+            .staff-card .img-box,
+            .staff-card .detail-box {
+                flex: 1 1 100%;
+                text-align: center;
+            }
+
+            .staff-card .detail-box h6 {
+                font-size: 22px;
+            }
+
+            .staff-card .info {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
+
 <body>
     <section class="staff_section layout_padding">
         <div class="container">
-            <div style="padding-bottom: 10px;" class="heading_container heading_center">
-                <a class="top-title" href="index.html">
-                    <span>Staff Information</span> <!-- Neon blue for the heading -->
+            <div style="padding-bottom: 20px;" class="heading_container heading_center">
+                <a style="font-size: 40px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #000;
+            padding: 10px;
+            padding-top: -100px;
+            margin-top: -65px;
+            margin-bottom: 10px;
+            text-align: center;" class="top-title">
+                    <span>Staff Information</span>
                 </a>
             </div>
 
-            <form action="{{ url('search_staff') }}" method="get">
-            @csrf
-            <input type="search" name="search" placeholder="Search staff" />
-            <input type="submit" class="btn btn-secondary" value="Search" />
-        </form>
-
             <div class="row">
-                @foreach($staff as $member)
-                <div class="col-sm-6 col-md-4">
-                    <div class="box staff-card">
-                        <div class="img-box">
-                            <img src="{{ asset('staff/' . $member->image) }}" alt="{{ $member->name }}">
-                        </div>
-                        <div class="detail-box">
-                            <h6>{{ $member->name }}</h6>
-                            <p class="info"><strong>Age:</strong> {{ $member->age }}</p>
-                            <p class="info"><strong>Birthday:</strong> {{ \Carbon\Carbon::parse($member->birthday)->format('d M, Y') }}</p>
-                            <p class="info"><strong>Sex:</strong> {{ ucfirst($member->sex) }}</p>
-                            <p class="info"><strong>Contact:</strong> {{ $member->contact }}</p>
-                            <p class="info"><strong>Address:</strong> {{ $member->address }}</p>
+                @foreach($staff as $index => $member)
+                    <div class="col-sm-12">
+                        <!-- Staff Member 1 (Image on left, description on right) -->
+                        <div class="staff-card {{ $index % 2 == 0 ? '' : 'reverse' }}">
+                            <div class="img-box">
+                                <img src="{{ asset('staff/' . $member->image) }}" alt="{{ $member->name }}">
+                            </div>
+                            <div class="detail-box">
+                                <h6>{{ $member->name }}</h6>
+                                <p class="info"><strong>Age:</strong> {{ $member->age }}</p>
+                                <p class="info"><strong>Birthday:</strong> {{ \Carbon\Carbon::parse($member->birthday)->format('d M, Y') }}</p>
+                                <p class="info"><strong>Sex:</strong> {{ ucfirst($member->sex) }}</p>
+                                <p class="info"><strong>Contact:</strong> {{ $member->contact }}</p>
+                                <p class="info"><strong>Address:</strong> {{ $member->address }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
                 @endforeach
             </div>
         </div>
@@ -188,4 +239,5 @@
         window.addEventListener('load', handleScroll);
     </script>
 </body>
+
 </html>

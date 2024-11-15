@@ -145,6 +145,9 @@ public function product()
 
     public function about_us()
     {
+
+        $staff = Staff::all();
+
         $product = Product::all();
 
         $count = '';
@@ -164,7 +167,7 @@ public function product()
         
         
 
-        return view('home.about_us',compact('product','count','counts'));
+        return view('home.about_us',compact('product','count','counts', 'staff'));
     }
 
 
@@ -257,29 +260,32 @@ public function product()
         return view('home.product_details', compact('data', 'count', 'counts', 'product', 'ratings'));
     }
     
-public function add_cart($id)
-{
-    // Get the authenticated user
-    $user = Auth::user();
+    public function add_cart($id)
+    {
+        // Get the authenticated user
+        $user = Auth::user();
+        
+        // Check if the user already has a service in the cart
+        $existingCart = Cart::where('user_id', $user->id)->first();
+        
+        if ($existingCart) {
+            toastr()->timeOut(10000)->closeButton()->error('You can only add one service to the Pending Page at a time.');
+            return redirect()->back();
+        }
     
-    // Check if the user already has a service in the cart
-    $existingCart = Cart::where('user_id', $user->id)->first();
+        // Add the new service to the cart if no existing item is found
+        $data = new Cart;
+        $data->user_id = $user->id;
+        $data->product_id = $id;
+        $data->save();
     
-    if ($existingCart) {
-        // If there's already an item in the cart, show an error message
-        toastr()->timeOut(10000)->closeButton()->error('You can only add one service to the Pending Page at a time.');
-        return redirect()->back();
+        
+        
+        // Redirect to the "my cart" page directly using the URL
+        return redirect('mycart');  // Use the URL of your "My Cart" page
     }
-
-    // Add the new service to the cart if no existing item is found
-    $data = new Cart;
-    $data->user_id = $user->id;
-    $data->product_id = $id;
-    $data->save();
-
-    toastr()->timeOut(10000)->closeButton()->success('Service Added To The Pending Page Successfully');
-    return redirect()->back();
-}
+    
+    
 
 
     public function mycart()
@@ -402,8 +408,8 @@ public function confirm_order(Request $request)
     // Clear the cart after placing the order
     Cart::where('user_id', $userId)->delete();
 
-    toastr()->timeOut(10000)->closeButton()->success('Service Booked Successfully');
-    return redirect()->back();
+    toastr()->timeOut(10000)->closeButton()->success('Service Booked Succesfully');
+    return redirect()->route('myorders');
 }
 
 

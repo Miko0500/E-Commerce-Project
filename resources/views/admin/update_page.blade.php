@@ -156,10 +156,10 @@
                             <input type="text" name="price" id="price" value="{{ $data->price }}" required>
                         </div>
 
-                        <div class="input_deg">
+                        <!-- <div class="input_deg">
                             <label for="quantity">Quantity</label>
                             <input type="number" name="quantity" id="quantity" value="{{ $data->quantity }}" required>
-                        </div>
+                        </div> -->
 
                         <div class="input_deg">
                             <label for="category">Category</label>

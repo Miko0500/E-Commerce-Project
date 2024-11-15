@@ -569,6 +569,8 @@ public function update_staff($id)
     // If not in use, proceed with loading the edit form
     $data = Product::findOrFail($id);
     $category = Category::all();
+
+    
     return view('admin.update_page', compact('data', 'category'));
 }
 
@@ -701,9 +703,19 @@ public function reports(Request $request)
     $selectedStatus = $request->input('status', 'all');
     $selectedSort = $request->input('sort', 'newest');
     $dateFilter = $request->input('date_filter', '');
+    $staffFilter = $request->input('staff_filter', ''); // Get staff filter
 
-    // Build the query with filters and include the countdownTimer relationship
-    $data = Order::with(['product', 'staff', 'vehicle', 'countdownTimer'])
+    // Split the date_filter input by commas and trim any extra spaces
+    $dates = $dateFilter ? explode(',', $dateFilter) : [];
+
+    // Clean up the dates and remove any invalid date formats
+    $dates = array_map('trim', $dates);
+    $dates = array_filter($dates, function ($date) {
+        return \Carbon\Carbon::hasFormat($date, 'Y-m-d');
+    });
+
+    // Build the query with filters
+    $data = Order::with(['product', 'staff', 'vehicle', 'countdownTimer', 'finalization']) // Ensure finalization is included
         ->when($selectedStatus !== 'all', function ($query) use ($selectedStatus) {
             return $query->where('status', $selectedStatus);
         })
@@ -716,20 +728,28 @@ public function reports(Request $request)
                 return $query->orderBy('status');
             }
         })
-        ->when($dateFilter, function ($query) use ($dateFilter) {
-            if ($dateFilter == 'today') {
-                return $query->whereDate('created_at', today());
-            } elseif ($dateFilter == 'week') {
-                return $query->whereDate('created_at', '>=', now()->subWeek());
-            } elseif ($dateFilter == 'month') {
-                return $query->whereDate('created_at', '>=', now()->subMonth());
-            }
+        ->when($staffFilter, function ($query) use ($staffFilter) {
+            return $query->where('staff_id', $staffFilter);
         })
-        ->paginate(10)  // Ensure you're using paginate instead of get
+        ->when(!empty($dates), function ($query) use ($dates) {
+            return $query->whereIn(\DB::raw('DATE(service_datetime)'), $dates);
+        })
+        ->paginate(10)  // Paginate results
         ->appends($request->except('page')); // Retain filters on pagination
 
-    return view('admin.reports', compact('data', 'selectedStatus', 'selectedSort', 'dateFilter'));
+    // Calculate the total price of the orders
+    $totalPrice = $data->sum(function ($order) {
+        return $order->finalization ? $order->finalization->total_price : 0;
+    });
+
+    // Get the list of all staff members for the dropdown
+    $staffList = Staff::all(); // Replace with the correct model and relationship if necessary
+
+    return view('admin.reports', compact('data', 'selectedStatus', 'selectedSort', 'dateFilter', 'staffList', 'totalPrice'));
 }
+
+
+
 
 
 

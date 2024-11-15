@@ -197,7 +197,7 @@ margin-top: -60px;">LATEST SERVICES</span>
 
               @if(Auth::check())
                         <!-- If the user is logged in, allow adding to cart -->
-                        <a class="btn" onclick="confirmation(event)" href="{{ url('add_cart', $products->id) }}">Add Service</a>
+                        <a class="btn" onclick="confirmation(event)" href="{{ url('add_cart', $products->id) }}">Book Service</a>
                     @else
                         <!-- If the user is not logged in, direct them to the login page -->
                         <a class="btn" href="{{ route('login') }}">Add Service</a>
@@ -235,18 +235,21 @@ margin-top: -60px;">LATEST SERVICES</span>
 
 <script>
     function confirmation(ev) {
-            ev.preventDefault();
-            var urlToRedirect = ev.currentTarget.getAttribute('href');
-            swal({
-                title: "Are You Sure You Want To Add This Service?",
-                text: "This Will Be Added To The Pending Page",
-                icon: "info",
-                buttons: true,
-                dangerMode: true,
-            }).then((willCancel)=>{
-                if(willCancel) {
-                    window.location.href=urlToRedirect;
-                }
-            });
-        }
+        ev.preventDefault();  // Prevent the default link click action
+        var urlToRedirect = ev.currentTarget.getAttribute('href');
+        
+        // Show the confirmation popup using SweetAlert
+        swal({
+            title: "Are You Sure You Want To Add This Service?",
+            text: "This Will Be Added To The Pending Page",
+            icon: "info",
+            buttons: true,
+            dangerMode: true,
+        }).then((willAdd) => {
+            if (willAdd) {
+                // Redirect to the 'add_cart' URL
+                window.location.href = urlToRedirect;
+            }
+        });
+    }
   </script>

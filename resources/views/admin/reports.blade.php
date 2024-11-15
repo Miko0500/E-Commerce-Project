@@ -2,6 +2,11 @@
     <html>
     <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 
         @include('admin.css')
@@ -231,6 +236,26 @@ h1 {
     font-size: 1.5rem;
 }
 
+.total-price {
+        text-align: right;
+        font-size: 1.2rem;
+        font-weight: bold;
+        padding-top: 10px;
+        padding-right: 20px;
+        background-color: #f8f9fa;
+        color: green;
+    }
+
+    .total-price td {
+        font-size: 1.5rem;
+        color: #007bff;
+    }
+    
+    .total-price td:last-child {
+        font-size: 1.6rem;
+        color: green;
+        font-weight: bold;
+    }
         </style>
 
     </head>
@@ -243,26 +268,38 @@ h1 {
             <h1>Report of Customer Orders</h1>
             <div class="container-fluid">
                 <div class="filter-container">
-                    <form method="GET" action="{{ route('reports') }}">
-                        @csrf
-                        <div class="form-group">
-                            <label for="date_filter" class="form-label">Filter By Date:</label>
-                            <select name="date_filter" class="form-select" onchange="this.form.submit()">
-                                <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Today</option>
-                                <option value="week" {{ request('date_filter') == 'week' ? 'selected' : '' }}>This Week</option>
-                                <option value="month" {{ request('date_filter') == 'month' ? 'selected' : '' }}>This Month</option>
-                                <option value="year" {{ request('date_filter') == 'year' ? 'selected' : '' }}>This Year</option>
-                            </select>
-                        </div>
+                <form method="GET" action="{{ route('reports') }}">
+    @csrf
+    <div class="form-group">
+        <label for="date_filter" class="form-label">Filter By Date:</label>
+        <select name="date_filter" class="form-select" onchange="this.form.submit()">
+            <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Today</option>
+            <option value="week" {{ request('date_filter') == 'week' ? 'selected' : '' }}>This Week</option>
+            <option value="month" {{ request('date_filter') == 'month' ? 'selected' : '' }}>This Month</option>
+            
+        </select>
+    </div>
 
-                        <div class="form-group">
-                            <label for="sort" class="form-label">Sort By:</label>
-                            <select name="sort" class="form-select" onchange="this.form.submit()">
-                                <option value="customer_name" {{ request('sort') == 'customer_name' ? 'selected' : '' }}>Customer Name</option>
-                                <option value="service_date" {{ request('sort') == 'service_date' ? 'selected' : '' }}>Service Date</option>
-                            </select>
-                        </div>
-                    </form>
+    <div class="form-group">
+    <label for="date_filter" class="form-label">Filter By Date(s):</label>
+    <!-- Flatpickr Input -->
+    <input type="text" name="date_filter" id="date_filter" class="form-select" value="{{ request('date_filter') }}" placeholder="Select multiple dates" onchange="this.form.submit()">
+</div>
+
+
+<div class="form-group">
+    <label for="staff_filter" class="form-label">Filter By Staff:</label>
+    <select name="staff_filter" class="form-select" onchange="this.form.submit()">
+        <option value="">Select Staff</option>
+        @foreach($staffList as $staff)
+            <option value="{{ $staff->id }}" {{ request('staff_filter') == $staff->id ? 'selected' : '' }}>{{ $staff->name }}</option>
+        @endforeach
+    </select>
+</div>
+
+
+</form>
+
                 </div>
 
                 <div class="report-header">
@@ -280,6 +317,8 @@ h1 {
                                 <th>Product Title</th>
                                 <th>Status</th>
                                 <th>Service Date</th>
+                                <th>Staff Assigned</th> <!-- Added Staff Assigned column -->
+                                <th>Total Price</th> <!-- Added Total Price column -->
                             </tr>
                         </thead>
                         <tbody>
@@ -290,10 +329,23 @@ h1 {
                                     <td>{{ $order->product->title }}</td>
                                     <td>{{ $order->status }}</td>
                                     <td>{{ \Carbon\Carbon::parse($order->service_datetime)->format('F j, Y \a\t g:i A') }}</td>
+                                    <td>{{ $order->staff ? $order->staff->name : 'N/A' }}</td> <!-- Display staff assigned -->
+                                    <td>P{{ number_format($order->finalization ? $order->finalization->total_price : 0, 2) }}</td> <!-- Display total price -->
                                 </tr>
                             @endforeach
                         </tbody>
+
+                        <tfoot>
+            <tr>
+                <td colspan="6" style="text-align: right; font-weight: bold;">Total Price</td>
+                <td style="font-weight: bold; color: green;">P{{ number_format($totalPrice, 2) }}</td>
+            </tr>
+        </tfoot>
                     </table>
+
+                    <!-- Display Total Price -->
+    
+
                 </div>
 
                 <div class="pagination">
@@ -327,8 +379,24 @@ h1 {
             }
         </script>
 
+<script>
+    flatpickr("#date_filter", {
+        mode: "multiple", // Enable multiple date selection
+        dateFormat: "Y-m-d", // Set the date format (e.g. 2024-11-04)
+        onChange: function(selectedDates) {
+            // Automatically submit the form when dates are selected
+            document.querySelector("form").submit();
+        }
+    });
+</script>
 
 
+
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 
 

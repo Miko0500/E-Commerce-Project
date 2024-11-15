@@ -133,27 +133,33 @@
   }
 
   .shop_section form input[type="search"] {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 25px; /* Rounded corners */
-    font-size: 16px;
-    width: 100%; /* Full width */
-    max-width: 300px; /* Limit width */
-    margin-right: 10px; /* Space between inputs */
+    padding: 14px;
+            border-radius: 25px;
+            border: 2px solid #3498db;
+            font-size: 16px;
+            width: 100%;
+            max-width: 300px;
+            margin: 10px;
+            background-color: #fff;
+            color: #333;
+            margin-top: 20px;
+            margin-bottom: 20px;
   }
 
   .shop_section form input[type="submit"] {
-    background-color: grey; /* Accent color */
-    color: #ffffff; /* White text */
-    border: none; /* Remove border */
-    padding: 13px 20px; /* Padding */
-    border-radius: 25px; /* Rounded corners */
-    font-size: 16px;
-    cursor: pointer; /* Pointer cursor on hover */
+    background-color: #3498db;
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            margin-top: 20px;
+            margin-bottom: 20px;
   }
 
   .shop_section form input[type="submit"]:hover {
-    background-color: black; /* Darker shade on hover */
+    background-color: #2980b9;
   }
 
   .top-title {
@@ -231,7 +237,7 @@
             </div>
             <div class="detail-box">
               <h6>{!!Str::limit($products->title,15)!!}</h6>
-              <span class="price">${{$products->price}}</span>
+              <span class="price">{{$products->price}}</span>
 
               @if ($products->average_rating !== null)
     <div class="average-rating">
@@ -244,7 +250,7 @@
 
               @if(Auth::check())
                         <!-- If the user is logged in, allow adding to cart -->
-                        <a class="btn" onclick="confirmation(event)" href="{{ url('add_cart', $products->id) }}">Add Service</a>
+                        <a class="btn" onclick="confirmation(event)" href="{{ url('add_cart', $products->id) }}">Book Service</a>
                     @else
                         <!-- If the user is not logged in, direct them to the login page -->
                         <a class="btn" href="{{ route('login') }}">Add Service</a>
@@ -276,20 +282,23 @@
   }
 
   function confirmation(ev) {
-            ev.preventDefault();
-            var urlToRedirect = ev.currentTarget.getAttribute('href');
-            swal({
-                title: "Are You Sure You Want To Add This Service?",
-                text: "This Will Be Added To The Pending Page",
-                icon: "info",
-                buttons: true,
-                dangerMode: true,
-            }).then((willCancel)=>{
-                if(willCancel) {
-                    window.location.href=urlToRedirect;
-                }
-            });
-        }
+        ev.preventDefault();  // Prevent the default link click action
+        var urlToRedirect = ev.currentTarget.getAttribute('href');
+        
+        // Show the confirmation popup using SweetAlert
+        swal({
+            title: "Are You Sure You Want To Add This Service?",
+            text: "This Will Be Added To The Pending Page",
+            icon: "info",
+            buttons: true,
+            dangerMode: true,
+        }).then((willAdd) => {
+            if (willAdd) {
+                // Redirect to the 'add_cart' URL
+                window.location.href = urlToRedirect;
+            }
+        });
+    }
 
   window.addEventListener('scroll', handleScroll);
   window.addEventListener('load', handleScroll);

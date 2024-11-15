@@ -6,23 +6,23 @@
     <style type="text/css">
 
 .div_deg {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      margin-top: 60px;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 10px;
-  }
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 60px;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 10px;
+        }
 
-    h1 {
-        color: #333;
+        h1 {
+            color: #333;
             text-align: center;
             font-weight: bold;
             margin-bottom: 20px;
-    }
+        }
 
-    input[type='search'] {
+        input[type='search'] {
             width: 500px;
             height: 50px;
             padding: 10px;
@@ -33,93 +33,89 @@
             color: #333;
         }
 
-    /* Card layout for services */
-    .service-card {
-        background-color: #fff;
-        width: 300px;
-        padding: 20px;
-        border: 2px solid #000;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+        /* Table Styling */
+        .table-container {
+            margin: 40px auto;
+            max-width: 1200px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 20px;
         }
 
-    .service-image {
-        height: 120px;
-        width: 120px;
-        object-fit: cover;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        align-items: center;
-        text-align: center;
-    }
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    .service-info {
-        margin-bottom: 10px;
-        font-size: 16px;
-        color: black;
-        align-items: left;
-        text-align: left;
-    }
+        .custom-table thead th {
+            background-color: #007bff;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 15px;
+            text-align: center;
+        }
 
-    .service-info span {
-        font-weight: bold;
-    }
+        .custom-table tbody td {
+            padding: 12px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 0.95rem;
+            color: #333;
+            background-color: #ffffff;
+            border-bottom: 2px solid #ddd; /* Adds a bottom border */
+        }
 
-    .card-actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-    }
+        .custom-table tbody tr:hover {
+            background-color: #f5f5f5;
+        }
 
-    .btn-success,
-    .btn-danger {
-        padding: 10px 20px;
-        border-radius: 5px;
-        text-decoration: none;
-        color: white;
-    }
+        /* Status Badge Styling */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #fff;
+        }
 
-    .btn-success {
-        background-color: #28a745;
-    }
+        .status-badge.in-queue { background-color: #ffc107; }
+        .status-badge.ongoing-service { background-color: #17a2b8; }
+        .status-badge.finished { background-color: #28a745; }
 
-    .btn-success:hover {
-        background-color: #218838;
-    }
+        /* Button Styling */
+        .btn {
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0 3px;
+        }
 
-    .btn-danger {
-        background-color: #dc3545;
-    }
-
-    .btn-danger:hover {
-        background-color: #c82333;
-    }
+        .btn-primary { background-color: #007bff; }
+        .btn-primary:hover { background-color: #0056b3; }
+        .btn-warning { background-color: #ffc107; color: #333; }
+        .btn-warning:hover { background-color: #e0a800; }
 
 
     
-    .average-rating {
+        .average-rating {
     display: inline-flex;
     align-items: center;
-    padding: 5px 10px;
-    border: 2px solid #FFD700;
-    background-color: rgba(255, 215, 0, 0.3); /* 0.8 is the opacity level */
- /* Yellow background */
+    padding: 3px 8px; /* Smaller padding */
+    border: 1px solid #FFD700; /* Reduced border thickness */
+    background-color: rgba(255, 215, 0, 0.3); /* Slightly lighter background */
     color: #333; /* Dark text color for contrast */
     font-weight: bold;
-    font-size: 1.2rem;
-    border-radius: 5px;
-    margin-top: 10px;
+    font-size: 1rem; /* Smaller font size */
+    border-radius: 4px; /* Slightly smaller border radius */
+    margin-top: 5px; /* Reduced top margin */
 }
+
 
 .star-icon {
     color: #FF9800; /* Orange color for the star */
@@ -134,23 +130,26 @@
 .no-rating {
     background-color: #f0f0f0; /* Light gray for no rating */
     color: #888;
-    padding: 5px 10px;
+    padding: 3px 6px; /* Smaller padding */
     font-weight: normal;
+    font-size: 0.85rem; /* Smaller font size */
+    border-radius: 3px; /* Optional: slightly rounded corners */
 }
 
 
-.btn-warning {
+
+/* .btn-warning {
             margin-top: 10px;
-    background-color: #007BFF; /* Accent color */
-    color: #ffffff; /* White text */
-    border: none; /* Remove border */
-    padding: 6px 12px; /* Smaller padding */
-    border-radius: 5px; /* Slightly rounded corners */
-    font-size: 13px; /* Smaller font size */
+    background-color: #007BFF; 
+    color: #ffffff;
+    border: none; 
+    padding: 6px 12px; 
+    border-radius: 5px; 
+    font-size: 13px; 
     font-weight: bold;
-    text-transform: uppercase; /* Uppercase text */
+    text-transform: uppercase; 
     letter-spacing: 0.5px;
-    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1); 
     transition: background-color 0.3s ease, transform 0.2s ease;
     display: inline-flex;
     align-items: center;
@@ -160,10 +159,10 @@
         }
 
         .btn-warning:hover {
-            background-color: #0056b3; /* Darker blue on hover */
-    transform: translateY(-1px); /* Gentle lift effect */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow */
-        }
+            background-color: #0056b3; 
+    transform: translateY(-1px); 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); 
+        } */
 
 
     /* Modal styling */
@@ -256,6 +255,67 @@
     body.no-scroll {
         overflow: hidden;
     }
+    .btn-warning {
+    margin-top: 10px;
+    background-color: #007BFF; /* Accent color */
+    color: #ffffff; /* White text */
+    border: none; /* Remove border */
+    padding: 2px 6px; /* Even smaller padding */
+    border-radius: 3px; /* Smaller rounded corners */
+    font-size: 0.75rem; /* Smaller font size */
+    font-weight: bold;
+    text-transform: uppercase; /* Uppercase text */
+    letter-spacing: 0.5px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px; /* Smaller height */
+}
+
+.btn-warning:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-1px); /* Gentle lift effect */
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow */
+}
+
+
+
+        .button-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px; /* Space between buttons */
+    }
+
+    .button-group .btn {
+        width: 100%; /* Full width of the column */
+        padding: 4px 8px; /* Adjust padding for smaller buttons */
+        font-size: 0.85rem; /* Smaller font size */
+    }
+
+    /* Ensure toastr notifications have the correct text color */
+.toast-success {
+    background-color: #28a745 !important; /* Green background for success */
+    color: #fff !important; /* White text color */
+}
+
+.toast-error {
+    background-color: #dc3545 !important; /* Red background for error */
+    color: #fff !important; /* White text color */
+}
+
+.toast-info {
+    background-color: #17a2b8 !important; /* Blue background for info */
+    color: #fff !important; /* White text color */
+}
+
+.toast-warning {
+    background-color: #ffc107 !important; /* Yellow background for warning */
+    color: #333 !important; /* Dark text color */
+}
+
     </style>
   </head>
   <body>
@@ -266,53 +326,57 @@
 
     <div class="page-content">
   <div class="page-header">
-    <h1>All Services</h1>
+    <h1>All Products</h1>
     <div class="container-fluid">
       <form action="{{ url('product_search') }}" method="get">
         @csrf
-        <input type="search" name="search" placeholder="Search service">
+        <input type="search" name="search" placeholder="Search product">
         <input type="submit" class="btn btn-secondary" value="Search">
       </form>
 
-      <div class="div_deg">
-    @foreach($product as $products)
-        <div class="service-card">
-            <img class="service-image" src="{{ asset('products/' . $products->image) }}" alt="{{ $products->name }}">
-            <div class="service-info">
-                <span>Title:</span> {{ $products->title }}
-            </div>
-            <div class="service-info">
-                <span>Description:</span> {!! Str::limit($products->description, 50) !!}
-            </div>
-            <div class="service-info">
-                <span>Category:</span> {{ $products->category }}
-            </div>
-            <div class="service-info">
-                <span>Price:</span> ${{ $products->price }}
-            </div>
-            <div class="service-info">
-                <span>Quantity:</span> {{ $products->quantity }}
-            </div>
-            @if ($products->average_rating !== null)
-                <div class="average-rating">
-                    <span class="star-icon">★</span>
-                    <span class="rating-value">{{ number_format($products->average_rating, 1) }}</span>
-                </div>
-            @else
-                <div class="average-rating no-rating">No ratings yet</div>
-            @endif
+      <div class="table-container">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Product Image</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th>Price</th>
+              <!-- <th>Quantity</th> -->
+              <th>Average Rating</th>
+              <th>View Ratings</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($product as $products)
+            <tr>
+              <td><img src="{{ asset('products/' . $products->image) }}" alt="{{ $products->title }}" class="img-fluid" style="max-width: 100px; border-radius: 5px;"></td>
+              <td>{{ $products->title }}</td>
+              <td>{!! Str::limit($products->description, 50) !!}</td>
+              <td>{{ $products->category }}</td>
+              <td>${{ $products->price }}</td>
+              <!-- <td>{{ $products->quantity }}</td> -->
+              <td>
+                @if ($products->average_rating !== null)
+                    <span class="average-rating">{{ number_format($products->average_rating, 1) }} <span class="star-icon">★</span></span>
+                @else
+                    <span class="average-rating no-rating">No ratings yet</span>
+                @endif
+              </td>
+              <td><!-- Button to trigger the modal -->
+              <button class="btn-warning openModalBtn" data-toggle="modal" data-target="#reviewsModal{{$products->id}}">Ratings & Reviews</button></td>
+              <td>
+              <div class="button-group">
+              <button class="btn btn-success" onclick="checkEditCondition(event, {{ $products->id }})" href="{{ url('update_product', $products->id) }}">Edit</button>
+                <button class="btn btn-danger" onclick="confirmation(event, {{ $products->id }})" href="{{ url('delete_product', $products->id) }}">Delete</button>
+</div>
 
-            <!-- Button to trigger the modal -->
-            <button class="btn-warning openModalBtn" data-toggle="modal" data-target="#reviewsModal{{$products->id}}">Ratings & Reviews</button>
+            </td>
+            </tr>
 
-            <!-- Edit and Delete buttons placed outside the modal -->
-            <div class="card-actions">
-                <a class="btn btn-success" onclick="checkEditCondition(event, {{ $products->id }})" href="{{ url('update_product', $products->id) }}">Edit</a>
-                <a class="btn btn-danger" onclick="confirmation(event, {{ $products->id }})" href="{{ url('delete_product', $products->id) }}">Delete</a>
-            </div>
-        </div>
-
-        <!-- Ratings & Reviews Modal -->
+             <!-- Ratings & Reviews Modal -->
 <div id="reviewsModal{{ $products->id }}" class="modal">
     <div style="background-color: #fff;" class="modal-content">
         <div class="modal-header">
@@ -320,7 +384,7 @@
             
         </div>
 
-        <!-- Loop over ratings for the product -->
+                    <!-- Loop over ratings for the product -->
         @foreach ($products->ratings as $rating)
             <div class="review">
                 <div class="user-name">{{ $rating->order->user->name }}</div>
@@ -340,18 +404,17 @@
 @endforeach
 
 </div>
+          </tbody>
+        </table>
 
-        
-                
+        <div class="pagination">
+            {{ $product->onEachSide(1)->links() }}
+        </div>
 
-      <div class="div_deg">
-        {{ $product->onEachSide(1)->links() }}
       </div>
 
     </div>
-    
   </div>
-  
 </div>
 
 <!-- JavaScript for Modal -->

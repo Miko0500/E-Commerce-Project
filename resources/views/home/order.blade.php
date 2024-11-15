@@ -141,6 +141,48 @@
             background: #ffffff;
             outline: none;
         }
+
+          /* Modal Styling */
+          .modal-content {
+                border-radius: 8px;
+                background-color: #fff;
+                padding: 20px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .modal-header {
+                background-color: #007bff;
+                color: #ffffff;
+                border-bottom: none;
+                padding: 15px 20px;
+            }
+
+            .modal-body {
+                padding: 20px;
+            }
+
+            /* Product Image */
+            .product-image {
+                max-width: 100%;
+                max-height: 250px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                margin: 10px auto;
+                display: block;
+            }
+
+            /* Rating Display */
+            .rating-display {
+                margin-top: 10px;
+                font-size: 1rem;
+                border-top: 1px solid #ddd;
+                padding-top: 10px;
+            }
+
+            .rating-display span {
+                font-size: 1.5rem;
+                color: #FFD700;
+            }
     </style>
 </head>
 
@@ -169,7 +211,7 @@
             <select name="sort" class="form-select" onchange="this.form.submit()">
                 <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>Newest Orders</option>
                 <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest Orders</option>
-                <option value="status" {{ request('sort') == 'status' ? 'selected' : '' }}>Status</option>
+                
             </select>
         </div>
         <div class="form-group">
@@ -184,91 +226,203 @@
     </form>
 </div>
 
-    <div class="div_center">
-    @foreach($order as $orders)
-    <div class="card" style="border: 3px solid #000; border-radius: 15px; background: #fff; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); width: 350px; padding: 25px; transition: transform 0.3s ease, box-shadow 0.3s ease; margin: 15px;">
-        <img src="/products/{{$orders->product->image}}" alt="Service Image">
-        <div class="card-content">
-            <h3>{{$orders->product->title}}</h3>
-            <p>Price: ${{$orders->product->price}}</p>
-            <p>Staff Assigned: {{ $orders->staff ? $orders->staff->name : 'Not assigned' }}</p>
-            <p>Vehicle Type: {{ $orders->vehicle ? $orders->vehicle->type : 'N/A' }}</p>
-            <p>Vehicle Size: {{ $orders->size ? $orders->size : 'N/A' }}</p>
-            <p>Service Date & Time: {{ $orders->service_datetime ? \Carbon\Carbon::parse($orders->service_datetime)->format('F j, Y \a\t g:i A') : 'Not scheduled' }}</p>
+<div class="div_center" style="display: flex; flex-wrap: wrap; justify-content: center;">
+    @foreach($order as $index => $orders)
+    <div class="card" style="border: none; border-radius: 15px; background: #fff; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); width: 1100px; margin: 30px 15px; transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 25px; height: 400px;">
 
-            <!-- Countdown display -->
-            <div style="color: #000;" id="countdown-{{ $orders->id }}">
-            @if($orders->status === 'Ongoing Service')
-    Service Ongoing
-@elseif($orders->status === 'Finished')
-    Service Completed
-@elseif($orders->countdownTimer && $orders->countdownTimer->countdown_ends_at)
-    <span class="countdown-timer" data-countdown="{{ $orders->countdownTimer->countdown_ends_at }}">Loading...</span>
-@else
-    Not finalized
-@endif
+        <!-- Image Section -->
+        <div class="card-image" style="width: 45%; height: 100%; overflow: hidden; border-radius: 10px; flex-shrink: 0; order: {{ $index % 2 == 0 ? 1 : 2 }};">
+            <img src="/products/{{$orders->product->image}}" alt="Service Image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+        </div>
 
+        <!-- Card Content Section -->
+        <div class="card-content" style="padding-left: 30px; width: 50%; color: #333; display: flex; flex-direction: column; justify-content: space-between; order: {{ $index % 2 == 0 ? 2 : 1 }}; overflow: hidden;">
+
+            <!-- Title -->
+            <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 10px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{$orders->product->title}}</h3>
+
+            <!-- Service Date & Time -->
+            <p style="font-size: 14px; color: #333; margin-bottom: 10px; line-height: 1.4; font-weight: bold">Service Date & Time: 
+                {{ $orders->service_datetime ? \Carbon\Carbon::parse($orders->service_datetime)->format('F j, Y \a\t g:i A') : 'Not scheduled' }}
+            </p>
+
+            <!-- Countdown or Service Status -->
+            <div style="color: #333; font-weight: bold; margin-bottom: 10px;" id="countdown-{{ $orders->id }}">
+                @if($orders->status === 'Ongoing Service')
+                    Service Ongoing
+                @elseif($orders->status === 'Finished')
+                    Service Completed
+                @elseif($orders->countdownTimer && $orders->countdownTimer->countdown_ends_at)
+                    <span class="countdown-timer" data-countdown="{{ $orders->countdownTimer->countdown_ends_at }}">Loading...</span>
+                @else
+                    Not finalized
+                @endif
             </div>
 
+            <!-- Status Button -->
             <span class="status-btn 
-    @if($orders->status == 'In Queue') 
-        btn-warning 
-    @elseif($orders->status == 'Ongoing Service') 
-        btn-info 
-    @elseif($orders->status == 'Finished') 
-        btn-success 
-    @elseif($orders->status == 'Cancelled') 
-        btn-danger
-    @endif" 
-    style="display: flex; justify-content: center;">
-    {{$orders->status}}
-</span>
+                @if($orders->status == 'In Queue') 
+                    btn-warning 
+                @elseif($orders->status == 'Ongoing Service') 
+                    btn-info 
+                @elseif($orders->status == 'Finished') 
+                    btn-success 
+                @elseif($orders->status == 'Cancelled') 
+                    btn-danger 
+                @endif" 
+                style="padding: 6px 12px; font-size: 14px; border-radius: 20px; display: inline-block; margin-bottom: 10px; text-transform: capitalize; text-align: center;">
+                {{$orders->status}}
+            </span>
 
-
-             <!-- Display finalized data if the order is "Finished" -->
-             @if($orders->finalization)
-                <div class="finalization-details mt-3">
-                    <h4>Finalized Details</h4>
-                    <p><strong>Total Price:</strong> ${{ $orders->finalization->total_price }}</p>
-                    <p><strong>Description:</strong> {{ $orders->finalization->description }}</p>
+            <!-- Details Button -->
+            <button class="btn btn-primary btn-sm mb-3" data-toggle="modal" data-target="#detailsModal-{{ $orders->id }}" style="border-radius: 20px; font-weight: bold; font-size: 14px; padding: 6px 12px;">Details</button>
+            
+            <!-- Finalization Details -->
+            @if($orders->finalization)
+                <div class="finalization-details" style="text-align: left;">
+                    <h4 style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">Finalized Details</h4>
+                    <p style="font-size: 14px; margin-bottom: 5px;"><strong>Total Price:</strong> ${{ $orders->finalization->total_price }}</p>
+                    <p style="font-size: 14px;"><strong>Description:</strong> {{ $orders->finalization->description }}</p>
                 </div>
             @endif
-            <!-- Rating and Comment Form for Finished Orders -->
-            @if($orders->status === 'Finished' && !$orders->rating)
-                <div class="rating-comment-section" style="margin-top: 20px;">
-                    <form action="{{ route('orders.rate', $orders->id) }}" method="POST">
-                        @csrf
-                        <div class="rating-stars" style="display: flex; gap: 5px; align-items: center;">
-                            <label for="rating" style="font-weight: bold; color:#000">Rating:</label>
-                            <div id="star-rating-{{ $orders->id }}" class="star-rating" style="display: flex; gap: 10px; cursor: pointer; margin-bottom: 10px;">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <span class="star" data-value="{{ $i }}" style="font-size: 30px; color: #ddd;">&#9733;</span>
-                                @endfor
-                            </div>
-                            <input type="hidden" name="rating" id="rating-input-{{ $orders->id }}" required>
-                        </div>
 
-                        <label for="comment" style="font-weight: bold; display: block; margin-top: 10px; color:#000">Comment:</label>
-                        <textarea name="comment" id="comment" rows="3" placeholder="Write your comment here..." style="width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; margin-top: 5px;"></textarea>
+           <!-- Rate Now Button -->
+@if($orders->status === 'Finished' && !$orders->rating)
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ratingModal{{ $orders->id }}" style="font-size: 14px; padding: 6px 12px; border-radius: 20px; background-color: #007bff; color: #fff; font-weight: bold;">
+        Rate Now!
+    </button>
+@endif
 
-                        <button type="submit" class="btn btn-primary" style="margin-top: 10px; padding: 8px 15px; border-radius: 20px; background-color: #007bff; color: #fff; font-weight: bold; cursor: pointer;">Submit</button>
-                    </form>
-                </div>
-            @elseif($orders->status === 'Finished' && $orders->rating)
-                <!-- Display saved rating and comment if already submitted -->
-                <div class="rating-display" style="margin-top: 20px;">
-                    <p><strong>Rating:</strong> 
-                        @for($i = 1; $i <= 5; $i++)
-                            <span style="font-size: 20px; color: {{ $i <= $orders->rating->rating ? '#FFD700' : '#ddd' }};">&#9733;</span>
-                        @endfor
-                    </p>
-                    <p><strong>Comment:</strong> {{ $orders->rating->comment }}</p>
-                </div>
-            @endif
+
+
         </div>
     </div>
     @endforeach
 </div>
+
+@foreach($order as $index => $orders)
+<!-- Rating Modal -->
+<div class="modal fade" id="ratingModal{{ $orders->id }}" tabindex="-1" role="dialog" aria-labelledby="ratingModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ratingModalLabel">Rate Your Service</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('orders.rate', $orders->id) }}" method="POST">
+                    @csrf
+                    <div class="rating-stars" style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px;">
+                        <label for="rating" style="font-weight: bold; color:#333; font-size: 14px;">Rating:</label>
+                        <div id="star-rating-{{ $orders->id }}" class="star-rating" style="cursor: pointer;">
+                            @for($i = 1; $i <= 5; $i++)
+                                <span class="star" data-value="{{ $i }}" style="font-size: 24px; color: #ddd;">&#9733;</span>
+                            @endfor
+                        </div>
+                        <input type="hidden" name="rating" id="rating-input-{{ $orders->id }}" required>
+                    </div>
+
+                    <label for="comment" style="font-weight: bold; font-size: 14px; margin-top: 10px; color:#333;">Comment:</label>
+                    <textarea name="comment" id="comment" rows="3" placeholder="Write your comment here..." style="width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; margin-top: 5px;"></textarea>
+
+                    <button type="submit" class="btn btn-primary" style="margin-top: 10px; padding: 6px 12px; border-radius: 20px; background-color: #007bff; color: #fff; font-weight: bold; font-size: 14px;">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+@foreach($order as $orders)
+<!-- Details Modal -->
+<div class="modal fade" id="detailsModal-{{ $orders->id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div style="color: #000;" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark" id="detailsModalLabel">Order Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <h6 class="text-primary">Customer Information</h6>
+                            <p><strong>Name:</strong> {{ $orders->name }}</p>
+                            <p><strong>Address:</strong> {{ $orders->rec_address }}</p>
+                            <p><strong>Phone:</strong> {{ $orders->phone }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Product Information -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6 class="text-primary">Service Information</h6>
+                            <p><strong>Title:</strong> {{ $orders->product->title }}</p>
+                            <p><strong>Price:</strong> ${{ $orders->product->price }}</p>
+                            
+                            <p><strong>Assigned Staff:</strong> {{ $orders->staff_id ? $orders->staff->name : 'N/A' }}</p>
+                            <p><strong>Vehicle Type:</strong> {{ $orders->vehicle ? $orders->vehicle->type : 'N/A' }}</p>
+                            <p><strong>Size:</strong> {{ $orders->size ? $orders->size : 'N/A' }}</p>
+                            <p><strong>Service Date & Time:</strong> {{ \Carbon\Carbon::parse($orders->service_datetime)->format('F j, Y \a\t g:i A') }}</p>
+                            <p><strong>Status:</strong>
+                            @if($orders->status == 'In Queue')
+    <span class="badge badge-warning" style="font-size: 18px; padding: 10px 20px; border-radius: 20px;">{{ $orders->status }}</span>
+@elseif($orders->status == 'Ongoing Service')
+    <span class="badge badge-info" style="font-size: 18px; padding: 10px 20px; border-radius: 20px;">{{ $orders->status }}</span>
+@elseif($orders->status == 'Finished')
+    <span class="badge badge-success" style="font-size: 18px; padding: 10px 20px; border-radius: 20px;">{{ $orders->status }}</span>
+@elseif($orders->status == 'Cancelled')
+    <span class="badge badge-danger" style="font-size: 18px; padding: 10px 20px; border-radius: 20px;">{{ $orders->status }}</span>
+@endif
+
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <h6 class="text-primary">Product Image</h6>
+                            <img src="products/{{ $orders->product->image }}" alt="Product Image" class="img-fluid rounded product-image">
+                        </div>
+                    </div>
+
+                    
+
+                    <!-- Finalized Order Information -->
+                    @if($orders->finalization)
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <h6 class="text-primary">Finalized Order Information</h6>
+                            <p><strong>Total Price:</strong> {{ $orders->finalization->total_price }}</p>
+                            <p><strong>Description:</strong> {{ $orders->finalization->description }}</p>
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- Rating and Comment -->
+                    @if($orders->rating)
+                    <div class="row mb-3">
+                        <div class="col-md-12 rating-display">
+                            <h6 class="text-primary">Customer Feedback</h6>
+                            <p><strong>Rating:</strong>
+                                @for($i = 1; $i <= 5; $i++)
+                                    <span style="color: {{ $i <= $orders->rating->rating ? '#FFD700' : '#ddd' }};">&#9733;</span>
+                                @endfor
+                            </p>
+                            <p><strong>Comment:</strong> {{ $orders->rating->comment }}</p>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 
 <div class="pagination">
     {{ $order->links() }}
@@ -279,6 +433,7 @@
   
 
   @yield('content')
+  
 
 <script>
     (function() {

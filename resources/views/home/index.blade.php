@@ -131,7 +131,13 @@
     color: #000; /* Matching text color */
     border: 2px solid #ffffff; /* Light border on hover */
   }
-  
+  body {
+            font-family: 'Arial', sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
 </style>
 </head>
 

@@ -4,7 +4,7 @@
     @include('admin.css')
 
     <style type="text/css">
-        .div_deg {
+         .div_deg {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -29,81 +29,120 @@
             color: #333;
         }
 
-        /* Card layout for staff */
-        .card-container {
+        /* Table Styling */
+        .table-container {
+            margin: 40px auto;
+            max-width: 1000px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .custom-table thead th {
+            background-color: #007bff;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .custom-table tbody td {
+            padding: 12px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 0.95rem;
+            color: #333;
+            background-color: #ffffff;
+            border-bottom: 2px solid #ddd; /* Adds a bottom border */
+        }
+
+        .custom-table tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Status Badge Styling */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .status-badge.in-queue { background-color: #ffc107; }
+        .status-badge.ongoing-service { background-color: #17a2b8; }
+        .status-badge.finished { background-color: #28a745; }
+
+        /* Button Styling */
+        .btn {
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0 3px;
+        }
+
+        .btn-primary { background-color: #007bff; }
+        .btn-primary:hover { background-color: #0056b3; }
+        .btn-warning { background-color: #ffc107; color: #333; }
+        .btn-warning:hover { background-color: #e0a800; }
+
+        /* Modal Styling */
+        .modal-content {
+            border-radius: 8px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            background-color: #007bff;
+            color: #ffffff;
+            border-bottom: none;
+            padding: 15px 20px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* Pagination */
+        .pagination {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
             margin-top: 30px;
         }
 
-        .staff-card {
-            background-color: #fff;
-            width: 300px;
-            padding: 20px;
-            border: 2px solid #000;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .staff-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        .staff-image {
-            height: 120px;
-            width: 120px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-
-        .staff-info {
-            margin-bottom: 10px;
-            font-size: 16px;
-            color: black;
-        }
-
-        .staff-info span {
-            font-weight: bold;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-success,
-        .btn-danger {
-            padding: 10px 20px;
-            border-radius: 5px;
+        .pagination li a {
+            padding: 10px 15px;
+            color: #007bff;
             text-decoration: none;
+            border: 1px solid #ddd;
+            margin: 0 5px;
+            border-radius: 5px;
+        }
+
+        .pagination li.active a {
+            background-color: #007bff;
             color: white;
         }
 
-        .btn-success {
-            background-color: #28a745;
+        .pagination li a:hover {
+            background-color: #ddd;
         }
 
-        .btn-success:hover {
-            background-color: #218838;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
     </style>
+
 </head>
 <body>
 
@@ -122,46 +161,50 @@
                     <input type="submit" class="btn btn-secondary" value="Search">
                 </form>
 
-                <div class="card-container">
-                    @foreach($staff as $member)
-                    <div class="staff-card">
-                        <img class="staff-image" src="{{ $member->image ? asset('staff/' . $member->image) : asset('staff/default.png') }}" alt="Staff Image">
-                        
-                        <div class="staff-info">
-                            <span>Name:</span> {{ $member->name }}
-                        </div>
-                        <div class="staff-info">
-                            <span>Age:</span> {{ $member->age }}
-                        </div>
-                        <div class="staff-info">
-                            <span>Birthday:</span> {{ $member->birthday }}
-                        </div>
-                        <div class="staff-info">
-                            <span>Sex:</span> {{ $member->sex }}
-                        </div>
-                        <div class="staff-info">
-                            <span>Contact:</span> {{ $member->contact }}
-                        </div>
-                        <div class="staff-info">
-                            <span>Address:</span> {{ Str::limit($member->address, 50) }}
-                        </div>
-                        
-                        <div class="card-actions">
-                        <a class="btn btn-success" onclick="checkEditCondition(event, {{ $member->id }})" href="{{ url('update_staff', $member->id) }}">Edit</a>
+                <div class="table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Staff Image</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Birthday</th>
+                                <th>Sex</th>
+                                <th>Contact</th>
+                                <th>Address</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($staff as $member)
+                            <tr>
+                                <td><img src="{{ $member->image ? asset('staff/' . $member->image) : asset('staff/default.png') }}" alt="Staff Image" class="img-fluid" style="max-width: 100px; border-radius: 5px;"></td>
+                                <td>{{ $member->name }}</td>
+                                <td>{{ $member->age }}</td>
+                                <td>{{ $member->birthday }}</td>
+                                <td>{{ $member->sex }}</td>
+                                <td>{{ $member->contact }}</td>
+                                <td>{{ Str::limit($member->address, 50) }}</td>
+                                <td>
+                                    <a class="btn btn-success" href="{{ url('update_staff', $member->id) }}">Edit</a>
+                                    <a class="btn btn-danger" onclick="confirmation(event, {{ $member->id }})" href="{{ url('delete_staff', $member->id) }}">Delete</a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
 
-                            <a class="btn btn-danger" onclick="confirmation(event, {{ $member->id }})" href="{{ url('delete_staff', $member->id) }}">Delete</a>
-                        </div>
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        {{ $staff->onEachSide(1)->links() }}
                     </div>
-                    @endforeach
-                </div>
-
-                <div class="div_deg">
-                    {{ $staff->onEachSide(1)->links() }}
                 </div>
 
             </div>
         </div>
     </div>
+
+
     <!-- JavaScript files-->
     <script type="text/javascript">
     function confirmation(ev, staffId) {

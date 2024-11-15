@@ -100,7 +100,7 @@
             <i class="bi bi-car-front-fill"></i> Vehicles <span class="sr-only">(current)</span>
           </a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link{{ request()->is('staffs') ? ' active' : '' }}" href="{{ url('/staffs') }}">
             <i class="bi bi-person-fill-check"></i> Staffs <span class="sr-only">(current)</span>
           </a>
@@ -109,7 +109,7 @@
           <a class="nav-link{{ request()->is('why') ? ' active' : '' }}" href="{{ url('/why') }}">
             <i class="bi bi-patch-question-fill"></i> Why Us <span class="sr-only">(current)</span>
           </a>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a class="nav-link{{ request()->is('about_us') ? ' active' : '' }}" href="{{ url('/about_us') }}">
             <i class="bi bi-file-person-fill"></i> About Us <span class="sr-only">(current)</span>
@@ -125,12 +125,14 @@
       <div class="user_option">
         @if (Route::has('login'))
           @auth
+
+          <a style="color: #000;" class="nav-link{{ request()->is('mycart') ? ' active' : '' }}" href="{{url('mycart')}}">
+              <i class="fa fa-shopping-bag" aria-hidden="true"></i> [{{$count}}]Pending 
+            </a>
             <a style="color: #000;" class="nav-link{{ request()->is('myorders') ? ' active' : '' }}" href="{{url('myorders')}}">
               <i class="bi bi-cart-check-fill"></i> [{{$counts}}]Booked <span class="sr-only">(current)</span>
             </a>
-            <a style="color: #000;" class="nav-link{{ request()->is('mycart') ? ' active' : '' }}" href="{{url('mycart')}}">
-              <i class="fa fa-shopping-bag" aria-hidden="true"></i> [{{$count}}]Pending 
-            </a>
+            
             <a href="{{url('profile_app')}}" class="nav-link{{ request()->is('profile_app') ? ' active' : '' }}" style="color: #000; font-weight: bold;">
               <i class="fa fa-user" aria-hidden="true" style="font-size: 24px;"></i>
             </a>

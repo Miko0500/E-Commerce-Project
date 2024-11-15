@@ -285,66 +285,61 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
-                    <form  action="{{url('confirm_order')}}" method="POST">
-                        @csrf
-                        <div class="form-group">
-                            <label for="name">Client Name</label>
-                            <input type="text" name="name" id="name" class="form-control" value="{{Auth::user()->name}}">
-                        </div>
-                        <div class="form-group">
-                            <label for="address">Client Address</label>
-                            <textarea name="address" id="address" class="form-control">{{Auth::user()->address}}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Client Phone</label>
-                            <input type="text" name="phone" id="phone" class="form-control" value="{{Auth::user()->phone}}">
-                        </div>
-                        <div class="form-group">
-                            <label for="staff_id">Select Staff</label>
-                            <select name="staff_id" id="staff_id" class="form-control" required>
-                                <option value="">Select Staff</option>
-                                @foreach($staff as $staffMember)
-                                    <option value="{{ $staffMember->id }}">{{ $staffMember->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group">
+                   <!-- Form containing the button -->
+<form action="{{ url('confirm_order') }}" method="POST" id="orderForm">
+    @csrf
+    <div class="form-group">
+        <label for="name">Client Name</label>
+        <input type="text" name="name" id="name" class="form-control" value="{{ Auth::user()->name }}">
+    </div>
+    <div class="form-group">
+        <label for="address">Client Address</label>
+        <textarea name="address" id="address" class="form-control">{{ Auth::user()->address }}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="phone">Client Phone</label>
+        <input type="text" name="phone" id="phone" class="form-control" value="{{ Auth::user()->phone }}">
+    </div>
+    <div class="form-group">
+        <label for="staff_id">Select Staff</label>
+        <select name="staff_id" id="staff_id" class="form-control" required>
+            <option value="">Select Staff</option>
+            @foreach($staff as $staffMember)
+                <option value="{{ $staffMember->id }}">{{ $staffMember->name }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="form-group">
         <label for="vehicle">Select Vehicle</label>
         <select name="vehicle_id" id="vehicle" class="form-control" onchange="updateSizes()" required>
-        <option value="">Select Vehicle</option>
-        @foreach($vehicles as $vehicle)
-        <option value="{{ $vehicle->id }}" data-sizes="{{ json_encode($vehicle->sizes) }}">{{ $vehicle->type }}</option>
-        @endforeach
-    </select>
-
+            <option value="">Select Vehicle</option>
+            @foreach($vehicles as $vehicle)
+                <option value="{{ $vehicle->id }}" data-sizes="{{ json_encode($vehicle->sizes) }}">{{ $vehicle->type }}</option>
+            @endforeach
+        </select>
     </div>
-
 
     <div class="form-group">
         <label for="size">Select Size</label>
         <select name="size" id="size" class="form-control">
-        <option value="">Select Size</option>
-        @foreach($vehicles as $vehicle)
-        <option value="{{ $vehicle->id }}" data-sizes="{{ json_encode($vehicle->sizes) }}">{{ $vehicle->type }}</option>
-    @endforeach
-
-
+            <option value="">Select Size</option>
         </select>
     </div>
 
+    <div class="form-group">
+        <label for="service_datetime">Preferred Date & Time</label>
+        <input type="text" name="service_datetime" id="service_datetime" class="form-control" placeholder="Select Date & Time" required>
+    </div>
 
     <div class="form-group">
-    <label for="service_datetime">Preferred Date & Time</label>
-    <input type="text" name="service_datetime" id="service_datetime" class="form-control" placeholder="Select Date & Time" required>
-</div>
-            <div class="form-group">
-                <button type="button" class="btn2 btn-warning" onclick="fetchServiceDatetimes()">All Occupied Datetimes</button>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn2 btn-primary">Book Now</button>
-            </div>
-                    </form>
+        <button type="button" class="btn2 btn-warning" onclick="fetchServiceDatetimes()">All Occupied Datetimes</button>
+    </div>
+
+    <div class="form-group">
+        <button type="button" class="btn2 btn-primary" onclick="confirmation2(event)">Book Now</button>
+    </div>
+</form>
+
                 </div>
             </div>
         </div>
@@ -445,8 +440,8 @@
         });
     }
 
-    // Fetch service datetimes and statuses for modal display
-    function fetchServiceDatetimes() {
+   // Function to fetch unavailable datetimes and show them in the modal
+   function fetchServiceDatetimes() {
         $.ajax({
             url: "{{ route('fetchServiceDatetimes') }}",
             method: "GET",
@@ -455,15 +450,19 @@
                 datetimeList.empty();
                 data.forEach(order => {
                     datetimeList.append(`
-    <li class="list-group-item">
-        Occupied: ${order.service_datetime} - 
-        Status: <span style="color: ${order.status === 'Ongoing Service' ? 'skyblue' : order.status === 'In Queue' ? 'orange' : 'black'}; font-weight: bold;">
-                    ${order.status}
-                </span>
-    </li>
-`);
- });
-                $('#allDatetimesModal').modal('show');  // Show modal with updated data
+                        <li class="list-group-item">
+                            Occupied: ${order.service_datetime} - 
+                            Status: <span style="color: ${order.status === 'Ongoing Service' ? 'skyblue' : order.status === 'In Queue' ? 'orange' : 'black'}; font-weight: bold;">
+                                        ${order.status}
+                                    </span>
+                        </li>
+                    `);
+                });
+
+                // After a short delay, show the modal
+                setTimeout(function() {
+                    $('#allDatetimesModal').modal('show');  // Show the modal with updated data
+                }, 500);  // Delay time (in milliseconds), adjust if necessary
             },
             error: function() {
                 toastr.error("Failed to fetch datetimes.");
@@ -479,7 +478,8 @@
             fetchServiceDatetimes();  // Load data when button is clicked
         });
 
-        $('#orderForm').on('submit', function(event) {
+       // Submit the order form and show the modal after order confirmation
+       $('#orderForm').on('submit', function(event) {
             event.preventDefault();
             const chosenDateTime = $('#service_datetime').val();
 
@@ -493,12 +493,18 @@
                     method: "POST",
                     data: $(this).serialize(),
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    success: function() {
+                    success: function(response) {
+                        // Ensure the toastr success message is shown before modal
                         toastr.success("Order placed successfully.");
-                        loadUnavailableDatetimes();  // Reload unavailable datetimes after order
+                        toastr.success('Your service has been booked successfully! You will be notified once it is processed.');
 
-                        // Full page reload after successful order
-                        location.reload();  // Refreshes the page to show updated state
+                        // Reload unavailable datetimes after the order is placed
+                        loadUnavailableDatetimes();
+
+                        // After a short delay, show the modal with updated data
+                        setTimeout(function() {
+                            $('#allDatetimesModal').modal('show');  // Show the modal with updated data
+                        }, 1000); // Short delay to ensure toastr is visible before modal appears
                     },
                     error: function() {
                         toastr.error("Error placing order.");
@@ -508,6 +514,11 @@
         });
     });
 </script>
+
+
+
+
+
 
 
 <script>
@@ -553,6 +564,72 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<script>
+    // Pass the cart count from Blade to JavaScript
+    let cartItemCount = {{ $count }};
+</script>
+
+<script>
+   // Function to handle form submission after confirmation
+   function confirmation2(ev) {
+        ev.preventDefault();  // Prevent the form submission initially
+
+        // Check if there are items in the cart
+        if (cartItemCount <= 0) {
+            toastr.error("Your cart is empty. Please add services to your cart before proceeding.");
+            return;  // Stop the function if the cart is empty
+        }
+
+        // Check if all required fields are filled
+        const name = document.getElementById('name').value;
+        const address = document.getElementById('address').value;
+        const phone = document.getElementById('phone').value;
+        const staffId = document.getElementById('staff_id').value;
+        const vehicleId = document.getElementById('vehicle').value;
+        const size = document.getElementById('size').value;
+        const serviceDatetime = document.getElementById('service_datetime').value;
+
+        // Check if any of the required fields are empty
+        if (!name || !address || !phone || !staffId || !vehicleId || !size || !serviceDatetime) {
+            toastr.error("Please fill out all the required fields before proceeding.");
+            return;  // Stop the function if the form is not complete
+        }
+
+        // Show the confirmation popup using SweetAlert
+        swal({
+            title: "Are You Sure You Want To Book This Service?",
+            text: "After booking a service, you must be on the site before the 20 minutes countdown runs out. Please wait for the finalization by the admin.",
+            icon: "info",
+            buttons: true,
+            dangerMode: true,
+        }).then((willAdd) => {
+            if (willAdd) {
+                // After confirmation, submit the form
+                document.getElementById("orderForm").submit(); // Submit the form
+            }
+        });
+    }
+
+   // Function to show modal after form submission and toastr notification
+   function showModalAfterAction() {
+        setTimeout(function() {
+            $('#allDatetimesModal').modal('show');  // Show the modal with the unavailable dates
+        }, 1000);  // Delay in milliseconds (1 second)
+    }
+
+    // Initialize the modal and ensure it's working even after actions like submitting the form or showing a toastr
+    $(document).ready(function() {
+        // Show unavailable datetimes when button is clicked
+        $('#viewDatetimesBtn').on('click', function() {
+            fetchServiceDatetimes();  // Load data when button is clicked
+        });
+    });
+</script>
+
+
+
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

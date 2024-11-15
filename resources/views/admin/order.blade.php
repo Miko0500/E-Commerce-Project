@@ -9,127 +9,124 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
         <style type="text/css">
-            /* Container and Card Layout */
-            .filter-sort-container {
-                display: flex;
-                align-items: center;
-                gap: 15px;
-                padding: 10px 20px;
-                background: #f8f9fa;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                margin-bottom: 20px;
-                max-width: 750px;
-            }
+              /* Container and Card Layout */
+        .filter-sort-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 25px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            max-width: 750px;
+        }
 
-            .form-group {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                margin: 0;
-            }
+        .form-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 0;
+        }
 
-            .form-label {
-                font-weight: bold;
-                color: #333;
-                font-size: 14px;
-            }
+        .form-label {
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
 
-            .form-select {
-                width: 150px;
-                padding: 8px;
-                font-size: 14px;
-                color: #333;
-                background-color: #ffffff;
-                border: 1px solid #007bff;
-                border-radius: 5px;
-                outline: none;
-                transition: border-color 0.3s ease, box-shadow 0.3s ease;
-                appearance: none;
-                background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjMDA3YmZmIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBkPSJNNC41IDE0bDcuNS03LjUgNy41IDcuNUwxNCA1LjVsLTcgLTcgLTcgNy41eiIgLz48L3N2Zz4=');
-                background-repeat: no-repeat;
-                background-position: right 10px center;
-                background-size: 10px;
-            }
+        .form-select {
+            width: 150px;
+            padding: 8px;
+            font-size: 14px;
+            color: #333;
+            background-color: #ffffff;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            appearance: none;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjMDA3YmZmIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBkPSJNNC41IDE0bDcuNS03LjUgNy41IDcuNUwxNCA1LjVsLTcgLTcgLTcgNy41eiIgLz48L3N2Zz4=');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 10px;
+        }
 
-            .form-select:hover, .form-select:focus {
-                border-color: #0056b3;
-                box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
-            }
+        .form-select:hover, .form-select:focus {
+            border-color: #0056b3;
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+        }
 
-            /* Table Styling */
-            .table-container {
-                margin: 40px auto;
-                max-width: 1000px;
-                background-color: #ffffff;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                overflow: hidden;
-            }
+        /* Table Styling */
+        .table-container {
+            margin: 40px auto;
+            max-width: 1000px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
 
-            .custom-table {
-                width: 1000px;
-                border-collapse: collapse;
-                max-width: 12000px;
-            }
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-            .custom-table thead th {
-                background-color: #007bff;
-                color: #ffffff;
-                font-size: 1rem;
-                font-weight: bold;
-                padding: 15px;
-                text-align: center;
-            }
+        .custom-table thead th {
+            background-color: #007bff;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 15px;
+            text-align: center;
+        }
 
-            .custom-table tbody td {
-        padding: 15px;
-        text-align: center;         /* Centers content horizontally */
-        vertical-align: middle;     /* Centers content vertically */
-        font-size: 0.95rem;
-        color: #333;
-        background-color: #ffffff;
-    }
+        .custom-table tbody td {
+            padding: 12px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 0.95rem;
+            color: #333;
+            background-color: #ffffff;
+        }
 
+        .custom-table tbody tr:hover {
+            background-color: #f5f5f5;
+        }
 
-            .custom-table tbody tr:hover {
-                background-color: #f5f5f5;
-            }
+        /* Status Badge Styling */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #fff;
+        }
 
-            /* Status Badge Styling */
-            .status-badge {
-                padding: 6px 12px;
-                border-radius: 8px;
-                font-size: 0.85rem;
-                font-weight: bold;
-                color: #fff;
-            }
+        .status-badge.in-queue { background-color: #ffc107; }
+        .status-badge.ongoing-service { background-color: #17a2b8; }
+        .status-badge.finished { background-color: #28a745; }
 
-            .status-badge.in-queue { background-color: #ffc107; }
-            .status-badge.ongoing-service { background-color: #17a2b8; }
-            .status-badge.finished { background-color: #28a745; }
+        /* Button Styling */
+        .btn {
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0 3px;
+        }
 
-            /* Button Styling */
-            .btn {
-                font-size: 0.85rem;
-                padding: 6px 12px;
-                border-radius: 8px;
-                font-weight: bold;
-                color: #ffffff;
-                margin: 0 3px;
-            }
-
-            .btn-primary { background-color: #007bff; }
-            .btn-primary:hover { background-color: #0056b3; }
-            .btn-warning { background-color: #ffc107; color: #333; }
-            .btn-warning:hover { background-color: #e0a800; }
-
+        .btn-primary { background-color: #007bff; }
+        .btn-primary:hover { background-color: #0056b3; }
+        .btn-warning { background-color: #ffc107; color: #333; }
+        .btn-warning:hover { background-color: #e0a800; }
             /* Modal Styling */
             .modal-content {
                 border-radius: 8px;
-                background-color: #ffffff;
+                background-color: #fff;
                 padding: 20px;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             }
@@ -382,7 +379,7 @@
                                 <!-- Details Modal -->
                                 <div class="modal fade" id="detailsModal-{{ $datas->id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
+                                        <div style="background-color: #fff; color: #000"  class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title text-dark" id="detailsModalLabel">Order Details</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -403,7 +400,7 @@
                                                     <!-- Product Information -->
                                                     <div class="row mb-3">
                                                         <div class="col-md-6">
-                                                            <h6 class="text-primary">Product Information</h6>
+                                                            <h6 class="text-primary">Service Information</h6>
                                                             <p><strong>Title:</strong> {{ $datas->product->title }}</p>
                                                             <p><strong>Price:</strong> ${{ $datas->product->price }}</p>
                                                             <p><strong>Status:</strong>
@@ -418,23 +415,19 @@
 @endif
 
                                                             </p>
-                                                        </div>
-                                                        <div class="col-md-6 text-center">
-                                                            <h6 class="text-primary">Product Image</h6>
-                                                            <img src="products/{{ $datas->product->image }}" alt="Product Image" class="img-fluid rounded product-image">
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Service Information -->
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-12">
-                                                            <h6 class="text-primary">Service Information</h6>
                                                             <p><strong>Assigned Staff:</strong> {{ $datas->staff_id ? $datas->staff->name : 'N/A' }}</p>
                                                             <p><strong>Vehicle Type:</strong> {{ $datas->vehicle ? $datas->vehicle->type : 'N/A' }}</p>
                                                             <p><strong>Size:</strong> {{ $datas->size ? $datas->size : 'N/A' }}</p>
                                                             <p><strong>Service Date & Time:</strong> {{ \Carbon\Carbon::parse($datas->service_datetime)->format('F j, Y \a\t g:i A') }}</p>
+                                                        
+                                                        </div>
+                                                        <div class="col-md-6 text-center">
+                                                            <h6 class="text-primary">Service Image</h6>
+                                                            <img src="products/{{ $datas->product->image }}" alt="Product Image" class="img-fluid rounded product-image">
                                                         </div>
                                                     </div>
+
+                                                   
 
                                                     <!-- Finalized Order Information -->
                                                     @if($datas->finalization)

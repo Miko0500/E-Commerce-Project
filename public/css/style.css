@@ -1,9 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 @import url("font-awesome.min.css");
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Arial', sans-serif;
   color: #ffffff;
-  background: #d6cece; /* Bluish gradient */
+  background: #f7f7f7;
   margin: 0;
   padding: 0;
   position: relative; /* Needed for bubble positioning */

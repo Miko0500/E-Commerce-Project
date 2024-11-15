@@ -69,7 +69,7 @@
     <!-- footer section -->
     <footer class=" footer_section">
       <div class="container">
-      <p>
+      <p style="color: white;">
           &copy; <span id="displayYear"></span> Shee Auto Polish & Ceramic Coating
         </p>
       </div>

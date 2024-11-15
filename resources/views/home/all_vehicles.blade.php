@@ -1,85 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     @include('home.css')
     <style>
-        /* Scroll animation keyframes */
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            color: #333;
         }
 
-        /* Dark theme for the vehicle section */
-        .vehicle_section {
-            padding: 10px 0;
-           
-            color: #ffffff; /* Light text for contrast */
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Vehicle card styling with dark theme */
-        .vehicle-card {
-            position: relative;
-            border: 3px solid #000; /* Neon blue border */
-            border-radius: 15px;
-            background: #fff; /* Dark background for cards */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Darker shadow for a more intense look */
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 30px;
-            padding: 20px;
-            opacity: 0; /* Initially hidden */
-            transform: translateY(50px); /* Initially moved down */
-        }
-
-        .vehicle-card.show {
-            animation: slideUp .5s ease-out forwards; /* Apply animation on scroll */
-        }
-
-        .vehicle-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.7); /* Stronger shadow on hover */
-        }
-
-        .vehicle-card .img-box {
-            position: relative;
-            height: 200px;
-            overflow: hidden;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #000; /* Neon blue line separating image */
-        }
-
-        .vehicle-card .img-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .vehicle-card .detail-box {
-            text-align: left;
-        }
-
-        .vehicle-card .detail-box h6 {
-            margin: 10px 0;
-            font-size: 18px;
-            font-weight: 600;
-            color: #000; /* Neon blue text for names */
-        }
-
-        .vehicle-card .detail-box .info {
-            margin-top: 5px;
-            font-size: 14px;
-            color: #000; /* Light gray text for details */
-        }
-
+        /* Title Section */
         .top-title {
             font-size: 40px;
             font-weight: 600;
@@ -89,121 +23,219 @@
             color: #000;
             padding: 10px;
             padding-top: -100px;
-            margin-top: 10px;
+            margin-top: -30px;
+            margin-bottom: 10px;
+            text-align: center;
         }
 
-        .vehicle_section form {
-    margin-top: 10px;
-    margin-bottom: 20px; /* Space below the search form */
-    display: flex;
-    justify-content: center;
-}
+        /* Vehicle Section */
+        .vehicle_section {
+            padding: 50px 0;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
 
-.vehicle_section form input[type="search"] {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 25px; /* Rounded corners */
-    font-size: 16px;
-    width: 100%; /* Full width */
-    max-width: 300px; /* Limit width */
-    margin-right: 10px; /* Space between inputs */
-}
+        /* Vehicle Item Styles */
+        .vehicle-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            margin-bottom: 40px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
 
-.vehicle_section form input[type="submit"] {
-    background-color: grey; /* Accent color */
-    color: #ffffff; /* White text */
-    border: none; /* Remove border */
-    padding: 13px 20px; /* Padding */
-    border-radius: 25px; /* Rounded corners */
-    font-size: 16px;
-    cursor: pointer; /* Pointer cursor on hover */
-}
+        .vehicle-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
 
-.vehicle_section form input[type="submit"]:hover {
-    background-color: black; /* Darker shade on hover */
-}
+        /* Image Style */
+        .vehicle-item .vehicle-image {
+            flex: 1;
+            max-width: 45%;
+            margin-right: 30px;
+        }
 
-.sorting-form {
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
-}
+        .vehicle-item .vehicle-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-.sorting-form select {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 25px;
-    width: 100%;
-    max-width: 160px;
-    color: #333;
-    background-color: #fff;
-    transition: border-color 0.3s, background-color 0.3s;
-}
+        /* Text Style */
+        .vehicle-item .vehicle-details {
+            flex: 1;
+            text-align: left;
+            padding-left: 30px;
+        }
 
-.sorting-form select:hover,
-.sorting-form select:focus {
-    border-color: #007bff; /* Accent color on hover */
-    background-color: #f0f8ff; /* Slightly lighter background on focus */
-}
+        .vehicle-item .vehicle-details h3 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
 
-.sorting-form select option {
-    color: #333; /* Text color for options */
-}
+        .vehicle-item .vehicle-details p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
 
+        /* "P" Style (Image on Left, Text on Right) */
+        .p-style {
+            flex-direction: row;
+        }
+
+        /* "J" Style (Image on Right, Text on Left) */
+        .j-style {
+            flex-direction: row-reverse;
+        }
+
+        /* Search and Sorting */
+        .search-sort {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .search-sort input[type="search"],
+        .search-sort select {
+            padding: 14px;
+            border-radius: 25px;
+            border: 2px solid #3498db;
+            font-size: 16px;
+            width: 100%;
+            max-width: 230px;
+            margin: 10px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        .search-sort input[type="search"]:focus,
+        .search-sort select:focus {
+            outline: none;
+            border-color: #2980b9;
+        }
+
+        .search-sort input[type="submit"] {
+            background-color: #3498db;
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            height: 60px;
+            margin-top: -20px;
+            margin-bottom: -20px;
+        }
+
+        .search-sort input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        /* Sorting Dropdown */
+        .sorting-form select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 25px;
+            border: 1px solid #ecf0f1;
+            color: #333;
+            background-color: #fff;
+            width: 100%;
+            max-width: 180px;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+
+        .sorting-form select:hover,
+        .sorting-form select:focus {
+            border-color: #00bcd4;
+            background-color: #f0f8ff;
+        }
+
+        .sorting-form select option {
+            color: #333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .vehicle-item {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .vehicle-item .vehicle-image,
+            .vehicle-item .vehicle-details {
+                max-width: 100%;
+                padding-right: 0;
+                padding-left: 0;
+            }
+
+            .vehicle-item .vehicle-details h3 {
+                font-size: 28px;
+            }
+
+            .vehicle-item .vehicle-details p {
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
+
 <body>
-    <section class="vehicle_section layout_padding">
+    <section class="vehicle_section">
         <div class="container">
-            <div style="padding-bottom: 10px;" class="heading_container heading_center">
-                <a class="top-title" style="color: #000;">
-                    <span>Vehicle Information</span> <!-- Neon blue for the heading -->
-                </a>
+            <div class="top-title">
+                <span>Vehicle Accommodated</span>
             </div>
 
-            <form action="{{ url('search_vehicle') }}" method="get">
-            @csrf
-            <input type="search" name="search" placeholder="Search vehicles">
-            <input type="submit" class="btn btn-secondary" value="Search">
-        </form>
+            <!-- Search and Sort -->
+            <div class="search-sort">
+                <form action="{{ url('search_vehicle') }}" method="get">
+                    @csrf
+                    <input type="search" name="search" placeholder="Search vehicles" />
+                    <input type="submit" class="btn btn-secondary" value="Search" />
+                </form>
 
-        <form action="{{ url('/vehicle') }}" method="GET" class="sorting-form">
-    <select name="status" onchange="this.form.submit()">
-        <option value="" disabled selected>Filter by Status</option>
-        <option value="Available" {{ request('status') == 'Available' ? 'selected' : '' }}>Available</option>
-        <option value="Not Available" {{ request('status') == 'Not Available' ? 'selected' : '' }}>Not Available</option>
-    </select>
-</form>
+                <form action="{{ url('/vehicle') }}" method="GET" class="sorting-form">
+                    <select name="status" onchange="this.form.submit()">
+                        <option value="" disabled selected>Filter by Status</option>
+                        <option value="Available" {{ request('status') == 'Available' ? 'selected' : '' }}>Available</option>
+                        <option value="Not Available" {{ request('status') == 'Not Available' ? 'selected' : '' }}>Not Available</option>
+                    </select>
+                </form>
+            </div>
 
-
-
-
-            <div class="row">
-                @foreach($vehicles as $vehicle)
-                <div class="col-sm-6 col-md-4">
-                    <div class="box vehicle-card">
-                        <div class="img-box">
+            <!-- Vehicle Items Section -->
+            <div class="vehicle-list">
+                @foreach($vehicles as $index => $vehicle)
+                    <div class="vehicle-item {{ $index % 2 == 0 ? 'p-style' : 'j-style' }}">
+                        <div class="vehicle-image">
                             <img src="{{ asset('vehicles/' . $vehicle->image) }}" alt="{{ $vehicle->type }}">
                         </div>
-                        <div class="detail-box">
-                            <h6>{{ $vehicle->type }}</h6>
-                            <p class="info"><strong>Size:</strong> @if(is_array($vehicle->sizes))
-        {{-- If sizes is an array, join it directly --}}
-        {{ implode(', ', $vehicle->sizes) }}
-    @else
-        {{-- If sizes is a string, decode it --}}
-        @php
-            $sizes = json_decode($vehicle->sizes, true);
-        @endphp
-        {{ implode(', ', $sizes) }}
-    @endif</p>
-                            <p class="info"><strong>Status:</strong> {{ $vehicle->status ? 'Available' : 'Not Available' }}</p>
-                            <!-- Additional vehicle information can be added here if needed -->
+                        <div class="vehicle-details">
+                            <h3>{{ $vehicle->type }}</h3>
+                            <p><strong>Size:</strong> 
+                                @if(is_array($vehicle->sizes))
+                                    {{ implode(', ', $vehicle->sizes) }}
+                                @else
+                                    @php
+                                        $sizes = json_decode($vehicle->sizes, true);
+                                    @endphp
+                                    {{ implode(', ', $sizes) }}
+                                @endif
+                            </p>
+                            <p><strong>Status:</strong> {{ $vehicle->status ? 'Available' : 'Not Available' }}</p>
                         </div>
                     </div>
-                </div>
                 @endforeach
             </div>
         </div>
@@ -217,16 +249,16 @@
 
     <script>
         function handleScroll() {
-            const cards = document.querySelectorAll('.vehicle-card');
+            const items = document.querySelectorAll('.vehicle-item');
             const triggerBottom = window.innerHeight;
 
-            cards.forEach(card => {
-                const cardTop = card.getBoundingClientRect().top;
+            items.forEach(item => {
+                const itemTop = item.getBoundingClientRect().top;
 
-                if (cardTop < triggerBottom) {
-                    card.classList.add('show');
+                if (itemTop < triggerBottom) {
+                    item.classList.add('show');
                 } else {
-                    card.classList.remove('show');
+                    item.classList.remove('show');
                 }
             });
         }
@@ -235,4 +267,5 @@
         window.addEventListener('load', handleScroll);
     </script>
 </body>
+
 </html>
