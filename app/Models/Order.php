@@ -9,47 +9,51 @@ class Order extends Model
 {
     use HasFactory;
 
-    // Relationship with User
+    // Relationship with User (One-to-One)
     public function user()
     {
         return $this->hasOne('App\Models\User', 'id', 'user_id');
     }
 
-    // Relationship with Product
-    public function product()
+    // Relationship with Products (Many-to-Many)
+    public function products()
     {
-        return $this->hasOne('App\Models\Product', 'id', 'product_id');
+        return $this->belongsToMany('App\Models\Product', 'order_product');
     }
 
-    // Relationship with Staff
+    // Relationship with Staff (Many-to-Many)
     public function staff()
     {
-        return $this->belongsTo('App\Models\Staff', 'staff_id');
+        return $this->belongsToMany('App\Models\Staff', 'order_staff');
     }
 
+    // Relationship with Vehicle (One-to-One)
     public function vehicle()
     {
         return $this->belongsTo('App\Models\Vehicle', 'vehicle_id');
     }
 
+    // Check if there are ongoing or finished orders
     public function hasOngoingOrders()
-{
-    return $this->orders()->where('status', 'Ongoing Service', 'Finished')->exists();
-}
+    {
+        return $this->orders()->whereIn('status', ['Ongoing Service', 'Finished'])->exists();
+    }
 
-public function rating()
-{
-    return $this->hasOne(Rating::class);
-}
+    // Relationship with Rating (One-to-One)
+    public function rating()
+    {
+        return $this->hasOne(Rating::class);
+    }
 
-public function finalization()
-{
-    return $this->hasOne(OrderFinalization::class);
-}
+    // Relationship with OrderFinalization (One-to-One)
+    public function finalization()
+    {
+        return $this->hasOne(OrderFinalization::class);
+    }
 
-public function countdownTimer()
-{
-    return $this->hasOne(CountdownTimer::class);
-}
-
+    // Relationship with CountdownTimer (One-to-One)
+    public function countdownTimer()
+    {
+        return $this->hasOne(CountdownTimer::class);
+    }
 }

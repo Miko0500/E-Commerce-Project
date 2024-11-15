@@ -230,16 +230,26 @@
     @foreach($order as $index => $orders)
     <div class="card" style="border: none; border-radius: 15px; background: #fff; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); width: 1100px; margin: 30px 15px; transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 25px; height: 400px;">
 
-        <!-- Image Section -->
-        <div class="card-image" style="width: 45%; height: 100%; overflow: hidden; border-radius: 10px; flex-shrink: 0; order: {{ $index % 2 == 0 ? 1 : 2 }};">
-            <img src="/products/{{$orders->product->image}}" alt="Service Image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+         <!-- Image Section -->
+         <div class="card-image" style="width: 45%; height: 100%; overflow: hidden; border-radius: 10px; flex-shrink: 0; order: {{ $index % 2 == 0 ? 1 : 2 }};">
+            @if($orders->product && $orders->product->image) 
+                <img src="/products/{{$orders->product->image}}" alt="Service Image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+            @else
+                <img src="/default-image.jpg" alt="Default Image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+            @endif
         </div>
 
         <!-- Card Content Section -->
         <div class="card-content" style="padding-left: 30px; width: 50%; color: #333; display: flex; flex-direction: column; justify-content: space-between; order: {{ $index % 2 == 0 ? 2 : 1 }}; overflow: hidden;">
 
-            <!-- Title -->
-            <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 10px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{$orders->product->title}}</h3>
+             <!-- Title -->
+             <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 10px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                @if($orders->product)
+                    {{$orders->product->title}}
+                @else
+                    Product Title Not Available
+                @endif
+            </h3>
 
             <!-- Service Date & Time -->
             <p style="font-size: 14px; color: #333; margin-bottom: 10px; line-height: 1.4; font-weight: bold">Service Date & Time: 
@@ -361,10 +371,29 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <h6 class="text-primary">Service Information</h6>
-                            <p><strong>Title:</strong> {{ $orders->product->title }}</p>
-                            <p><strong>Price:</strong> ${{ $orders->product->price }}</p>
+                            <p><strong>Title:</strong> 
+    @if($orders->product)
+        {{ $orders->product->title }}
+    @else
+        N/A
+    @endif
+</p>
+
+<p><strong>Price:</strong> 
+    @if($orders->product)
+        ${{ $orders->product->price }}
+    @else
+        N/A
+    @endif
+</p>
                             
-                            <p><strong>Assigned Staff:</strong> {{ $orders->staff_id ? $orders->staff->name : 'N/A' }}</p>
+<p><strong>Assigned Staff:</strong> 
+    @if($orders->staff->isNotEmpty())
+        {{ $orders->staff->first()->name }}
+    @else
+        N/A
+    @endif
+</p>
                             <p><strong>Vehicle Type:</strong> {{ $orders->vehicle ? $orders->vehicle->type : 'N/A' }}</p>
                             <p><strong>Size:</strong> {{ $orders->size ? $orders->size : 'N/A' }}</p>
                             <p><strong>Service Date & Time:</strong> {{ \Carbon\Carbon::parse($orders->service_datetime)->format('F j, Y \a\t g:i A') }}</p>
@@ -382,9 +411,13 @@
                             </p>
                         </div>
                         <div class="col-md-6 text-center">
-                            <h6 class="text-primary">Product Image</h6>
-                            <img src="products/{{ $orders->product->image }}" alt="Product Image" class="img-fluid rounded product-image">
-                        </div>
+                        <h6 class="text-primary">Product Image</h6>
+    @if($orders->product && $orders->product->image)
+        <img src="products/{{ $orders->product->image }}" alt="Product Image" class="img-fluid rounded product-image">
+    @else
+        <img src="/default-image.jpg" alt="Default Product Image" class="img-fluid rounded product-image">
+    @endif
+</div>
                     </div>
 
                     
