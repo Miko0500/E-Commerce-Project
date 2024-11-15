@@ -692,9 +692,8 @@ document.getElementById('logoutForm').addEventListener('submit', function(ev) {
                             <p><strong>Price:</strong> ${{ $orders->product->price }}</p>
                             
                             <p><strong>Assigned Staff:</strong> {{ $orders->staff_id ? $orders->staff->name : 'N/A' }}</p>
-                            <p><strong>Vehicle Type:</strong> {{ $orders->vehicle ?: 'N/A' }}</p>
-<p><strong>Size:</strong> {{ $orders->size ?: 'N/A' }}</p>
-
+                            <p><strong>Vehicle Type:</strong> {{ $orders->vehicle ? $orders->vehicle->type : 'N/A' }}</p>
+                            <p><strong>Size:</strong> {{ $orders->size ? $orders->size : 'N/A' }}</p>
                             <p><strong>Service Date & Time:</strong> {{ \Carbon\Carbon::parse($orders->service_datetime)->format('F j, Y \a\t g:i A') }}</p>
                             <p><strong>Status:</strong>
                             @if($orders->status == 'In Queue')

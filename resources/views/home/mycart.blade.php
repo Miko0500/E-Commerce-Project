@@ -310,15 +310,21 @@
         </select>
     </div>
     <div class="form-group">
-    <label for="vehicle">Enter Vehicle</label>
-    <input type="text" name="vehicle" id="vehicle" class="form-control" placeholder="Enter vehicle type or description" required>
-</div>
+        <label for="vehicle">Select Vehicle</label>
+        <select name="vehicle_id" id="vehicle" class="form-control" onchange="updateSizes()" required>
+            <option value="">Select Vehicle</option>
+            @foreach($vehicles as $vehicle)
+                <option value="{{ $vehicle->id }}" data-sizes="{{ json_encode($vehicle->sizes) }}">{{ $vehicle->type }}</option>
+            @endforeach
+        </select>
+    </div>
 
-
-<div class="form-group">
-    <label for="size">Enter Size Description</label>
-    <input type="text" name="size" id="size" class="form-control" placeholder="Enter size (e.g., Small, Medium, Large)" required>
-</div>
+    <div class="form-group">
+        <label for="size">Select Size</label>
+        <select name="size" id="size" class="form-control">
+            <option value="">Select Size</option>
+        </select>
+    </div>
 
     <div class="form-group">
         <label for="service_datetime">Preferred Date & Time</label>
@@ -381,7 +387,26 @@
             });
         }
 
-       
+        function updateSizes() {
+        const vehicleSelect = document.getElementById('vehicle');
+        const sizeSelect = document.getElementById('size');
+        const selectedVehicle = vehicleSelect.options[vehicleSelect.selectedIndex];
+        
+        // Get the sizes from the data attribute
+        const sizes = JSON.parse(selectedVehicle.getAttribute('data-sizes'));
+
+        // Clear existing options
+        sizeSelect.innerHTML = '<option value="">Select Size</option>';
+
+        // Populate size options based on selected vehicle
+        sizes.forEach(size => {
+            // Ensure size is a simple letter and not an object or special character
+            const sizeLetter = size.trim(); // Clean any extra whitespace
+            if (sizeLetter.length > 0) {
+                sizeSelect.innerHTML += `<option value="${sizeLetter}">${sizeLetter}</option>`;
+            }
+        });
+    }
 
 
 
