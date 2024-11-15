@@ -33,11 +33,12 @@
     letter-spacing: 3px;
     text-transform: uppercase;
     color: #000;
-  padding: 10px;
-  padding-top: -100px;
-  margin-top: -60px;
-  
+    padding: 10px;
+    padding-top: 10px; /* Adjust top padding to prevent overlap */
+    margin-top: 10px; /* Adjust margin-top if necessary */
 }
+
+
 .brand-text {
     font-size: 1.5rem;
     font-weight: 900;
