@@ -416,8 +416,9 @@
 
                                                             </p>
                                                             <p><strong>Assigned Staff:</strong> {{ $datas->staff_id ? $datas->staff->name : 'N/A' }}</p>
-                                                            <p><strong>Vehicle Type:</strong> {{ $datas->vehicle ? $datas->vehicle->type : 'N/A' }}</p>
-                                                            <p><strong>Size:</strong> {{ $datas->size ? $datas->size : 'N/A' }}</p>
+                                                            <p><strong>Vehicle Type:</strong> {{ $datas->vehicle ?: 'N/A' }}</p>
+<p><strong>Size:</strong> {{ $datas->size ?: 'N/A' }}</p>
+
                                                             <p><strong>Service Date & Time:</strong> {{ \Carbon\Carbon::parse($datas->service_datetime)->format('F j, Y \a\t g:i A') }}</p>
                                                         
                                                         </div>
