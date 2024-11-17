@@ -193,117 +193,230 @@
 
     <!-- About Us Section -->
     <section class="reason_section layout_padding">
-        <div class="container">
-            <!-- Section Title -->
-            <h1 class="top-title2">What We Offer</h1>
+    <div class="container">
+        <!-- Section Title -->
+        <h1 class="top-title2">What We Offer</h1>
 
-            <div class="row">
-                <!-- Card 1: Expertise -->
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-icon">
-                                <i class="fas fa-cogs"></i> <!-- Gear icon for expertise -->
-                            </div>
-                            <h5 class="card-title">We're Experts In:</h5>
-                            <p class="card-text">Auto Polish: We use premium polish to remove scratches, swirl marks, and other imperfections, restoring your car's original luster.</p>
-                            <p class="card-text">Ceramic Coating: Our ceramic coating provides long-lasting protection against the elements, UV rays, and scratches, keeping your car looking new for longer.</p>
-                            
+        <div class="row">
+            <!-- Card 1: Expertise -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-icon">
+                            <i class="fas fa-cogs"></i> <!-- Gear icon for expertise -->
                         </div>
-                    </div>
-                </div>
-
-                <!-- Card 2: Services for Vehicles -->
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-icon">
-                                <i class="fas fa-car"></i> <!-- Car icon for services -->
-                            </div>
-                            <h5 class="card-title">We Cater To:</h5>
-                            <p class="card-text">Motorcycles & Tricycles: In and out in just 10 minutes!</p>
-                            <p class="card-text">Cars: Get that showroom shine in 30 minutes!</p>
-                            
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3: Commitment -->
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-icon">
-                                <i class="fas fa-thumbs-up"></i> <!-- Thumbs up icon for commitment -->
-                            </div>
-                            <h5 class="card-title">Our Commitment:</h5>
-                            <p class="card-text">Our commitment to customer satisfaction is at the heart of everything we do. We strive to provide a friendly and professional service, ensuring your vehicle receives the best possible care.</p>
-                            
-                        </div>
+                        <h5 class="card-title">We're Experts In:</h5>
+                        <p class="card-text">Auto Polish: We use premium polish to remove scratches, swirl marks, and other imperfections, restoring your car's original luster.</p>
+                        <p class="card-text">Ceramic Coating: Our ceramic coating provides long-lasting protection against the elements, UV rays, and scratches, keeping your car looking new for longer.</p>
                     </div>
                 </div>
             </div>
 
-        </div>
-
-        <!-- Why Our Services Section -->
-        <div class="container">
-            <h1 style="margin-top: 70px; font-size: 40px;
-            font-weight: 600;
-            margin: 0;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #000;
-            padding: 10px;
-            padding-top: -100px;
-            margin-top: 70px;
-            margin-bottom: 10px;
-            text-align: center;" class="top-title">Why Our Services?</h1>
-            <div class="row">
-                <!-- Reason 1: Fast & Efficient -->
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-icon">
-                                <i class="fas fa-clock"></i> <!-- Clock icon for speed -->
-                            </div>
-                            <h5 class="card-title">Fast & Efficient</h5>
-                            <p class="card-text">We're known for our quick turnaround times. Motorcycles and tricycles are in and out in 10 minutes, while cars get that showroom shine in just 30 minutes.</p>
-                            
+            <!-- Card 2: Services for Vehicles -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-icon">
+                            <i class="fas fa-car"></i> <!-- Car icon for services -->
                         </div>
+                        <h5 class="card-title">We Cater To:</h5>
+                        <p class="card-text">Motorcycles & Tricycles: In and out in just 10 minutes!</p>
+                        <p class="card-text">Cars: Get that showroom shine in 30 minutes!</p>
                     </div>
                 </div>
+            </div>
 
-                <!-- Reason 2: Quality -->
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-icon">
-                                <i class="fas fa-star"></i> <!-- Star icon for quality -->
-                            </div>
-                            <h5 class="card-title">Quality You Can Trust</h5>
-                            <p class="card-text">We use only the highest quality products and techniques to ensure your vehicle gets the best possible care.</p>
-                            
+            <!-- Card 3: Commitment -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-icon">
+                            <i class="fas fa-thumbs-up"></i> <!-- Thumbs up icon for commitment -->
                         </div>
-                    </div>
-                </div>
-
-                <!-- Reason 3: Customer Satisfaction -->
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-icon">
-                                <i class="fas fa-smile"></i> <!-- Smile icon for satisfaction -->
-                            </div>
-                            <h5 class="card-title">Customer Satisfaction</h5>
-                            <p class="card-text">We're dedicated to providing a friendly and professional service, so you can relax and enjoy the results.</p>
-                            
-                        </div>
+                        <h5 class="card-title">Our Commitment:</h5>
+                        <p class="card-text">Our commitment to customer satisfaction is at the heart of everything we do. We strive to provide a friendly and professional service, ensuring your vehicle receives the best possible care.</p>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-    </section>
+    <!-- Why Our Services Section -->
+    <div class="container">
+        <h1 style="margin-top: 70px; font-size: 40px; font-weight: 600; margin: 0; letter-spacing: 3px; text-transform: uppercase; color: #000; padding: 10px; margin-top: 70px; margin-bottom: 10px; text-align: center;" class="top-title">Why Our Services?</h1>
+        <div class="row">
+            <!-- Reason 1: Fast & Efficient -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-icon">
+                            <i class="fas fa-clock"></i> <!-- Clock icon for speed -->
+                        </div>
+                        <h5 class="card-title">Fast & Efficient</h5>
+                        <p class="card-text">We're known for our quick turnaround times. Motorcycles and tricycles are in and out in 10 minutes, while cars get that showroom shine in just 30 minutes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reason 2: Quality -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-icon">
+                            <i class="fas fa-star"></i> <!-- Star icon for quality -->
+                        </div>
+                        <h5 class="card-title">Quality You Can Trust</h5>
+                        <p class="card-text">We use only the highest quality products and techniques to ensure your vehicle gets the best possible care.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reason 3: Customer Satisfaction -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-icon">
+                            <i class="fas fa-smile"></i> <!-- Smile icon for satisfaction -->
+                        </div>
+                        <h5 class="card-title">Customer Satisfaction</h5>
+                        <p class="card-text">We're dedicated to providing a friendly and professional service, so you can relax and enjoy the results.</p>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </div>
+</section>
+<style>
+    /* Global Styles */
+    body {
+        font-family: 'Arial', sans-serif;
+        background: #f7f7f7;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    /* Title Styles */
+    .top-title2 {
+        font-size: 40px;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #000;
+        padding: 10px;
+        margin-top: -30px;
+        text-align: center; /* Center align title */
+    }
+
+    /* Vehicle Section */
+    .vehicle_section {
+        padding: 50px 0;
+        margin: 0 auto;
+        max-width: 1200px;
+    }
+
+    /* Card Container */
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    /* Card Styling */
+    .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%; /* Ensure cards take up full height */
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        min-height: 300px; /* Set a minimum height */
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-icon {
+        font-size: 40px;
+        margin-bottom: 20px;
+        color: #3498db;
+    }
+
+    /* Card Content */
+    .card-body {
+        flex-grow: 1;
+    }
+
+    .card-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .card-text {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #555;
+    }
+
+    /* Card Icon Size */
+    .card-icon {
+        font-size: 40px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .card {
+            min-height: 250px; /* Smaller height for smaller screens */
+        }
+
+        .top-title2 {
+            font-size: 28px; /* Reduce title font size for small screens */
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 16px;
+        }
+
+        .card-text {
+            font-size: 13px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .top-title2 {
+            font-size: 24px; /* Reduce title font size for extra small screens */
+        }
+    }
+
+    /* Flexbox Adjustments */
+    .row {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .col-md-4, .col-lg-4, .col-sm-12 {
+        flex: 1 1 30%;
+        min-width: 280px;
+        max-width: 320px;
+    }
+</style>
+
 
     <!-- Staff Section -->
     @include('home.all_staffs')

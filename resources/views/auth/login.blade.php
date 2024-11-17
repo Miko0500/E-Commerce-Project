@@ -45,33 +45,17 @@
             position: relative;
         }
 
-        @keyframes logoAnimation {
-    0% {
-        transform: rotate(0deg);
-    }
-    25% {
-        transform: rotate(360deg);
-    }
-    50% {
-        transform: rotate(360deg); /* Keep the logo still for the cooldown */
-    }
-    75% {
-        transform: rotate(360deg); /* Continue spinning after the pause */
-    }
-    100% {
-        transform: rotate(0deg);
-    }
-}
+       
 
 /* Apply the updated animation to the logo */
 .left-section img {
-    width: 350px; /* Large logo size */
-    height: 180px;
+    width: 300px; /* Large logo size */
+    height: 80px;
     border-radius: 20%;
     object-fit: cover;
     margin-bottom: 20px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-    animation: logoAnimation 8s ease-in-out infinite; /* Animation lasts 8s (spin + 2s cooldown) */
+    
 }
 
 
@@ -250,7 +234,7 @@
     <div class="container">
         <!-- Left Section: Welcome Section -->
         <div class="left-section">
-            <img src="{{ asset('/images/logo.jpg') }}" alt="Logo">
+            <!-- <img src="{{ asset('/images/logo.jpg') }}" alt="Logo"> -->
             <h1>Welcome!</h1>
             <p>Book your carwash with ease and enjoy our top-quality services.</p>
         </div>

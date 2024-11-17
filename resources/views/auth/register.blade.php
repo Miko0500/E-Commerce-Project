@@ -43,34 +43,15 @@
             align-items: center;
             padding: 40px;
             position: relative;
+            
         }
 
-        @keyframes logoAnimation {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            25% {
-                transform: rotate(360deg);
-            }
-
-            50% {
-                transform: rotate(360deg);
-            }
-
-            75% {
-                transform: rotate(360deg);
-            }
-
-            100% {
-                transform: rotate(0deg);
-            }
-        }
+        
 
         /* Apply the updated animation to the logo */
         .left-section img {
-            width: 350px;
-            height: 180px;
+            width: 50px; /* Large logo size */
+    height: 30px;
             border-radius: 20%;
             object-fit: cover;
             margin-bottom: 20px;
@@ -109,6 +90,7 @@
             font-size: 32px;
             margin-bottom: 10px;
             font-weight: bold;
+            margin-top: -10px;
         }
 
         /* Input Fields */
@@ -265,7 +247,7 @@
     <div class="container">
         <!-- Left Section: Register Section -->
         <div class="left-section">
-            <img src="{{ asset('/images/logo.jpg') }}" alt="Logo">
+            <!-- <img src="{{ asset('/images/logo.jpg') }}" alt="Logo"> -->
             <h1>Register Now!</h1>
             <p>Sign up today to enjoy the benefits of our premium carwash services.</p>
         </div>

@@ -146,59 +146,45 @@
 
 .shop_section form input[type="search"] {
   padding: 14px;
-  border-radius: 25px;
-  border: 2px solid #3498db;
-  font-size: 16px;
-  width: 100%;
-  max-width: 300px;
-  margin: 10px;
-  background-color: #fff;
-  color: #333;
+            border-radius: 25px;
+            border: 2px solid #3498db;
+            font-size: 16px;
+            width: 230px;
+            max-width: 330px;
+            margin: 10px;
+            background-color: #fff;
+            color: #333;
+            margin-top: 1px;
 }
 
 .shop_section form input[type="submit"] {
   background-color: #3498db;
-  color: #fff;
-  padding: 12px 25px;
-  border-radius: 25px;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            height: 60px;
+            margin-top: -1px;
+            margin-bottom: -20px;
 }
 
 .shop_section form input[type="submit"]:hover {
   background-color: #2980b9;
 }
 
-/* Responsive adjustments for mobile */
 @media (max-width: 992px) {
-  .product-card {
-    height: auto; /* Allow height to adjust based on content */
-    margin-bottom: 20px; /* Reduce margin between cards */
+  .top-title {
+    font-size: 32px; /* Reduce the title font size for medium screens */
   }
 
-  .product-card .detail-box h6 {
-    font-size: 16px; /* Adjust product title for smaller screens */
-  }
-
-  .product-card .price {
-    font-size: 18px; /* Adjust price for smaller screens */
-  }
-
-  .product-card .btn {
-    font-size: 14px; /* Adjust button size for smaller screens */
-  }
-
-  .shop_section form input[type="search"] {
-    max-width: 90%; /* Make search box take more space on smaller screens */
-  }
-
-  .shop_section form input[type="submit"] {
-    max-width: 90%; /* Adjust submit button width */
-  }
 }
 
 @media (max-width: 768px) {
+  .top-title {
+    font-size: 28px; /* Reduce the title font size for small screens */
+  }
   .product-card {
     margin-bottom: 15px; /* Reduce margin between cards */
   }
@@ -215,16 +201,32 @@
     font-size: 12px; /* Smaller button font size */
   }
 
-  .shop_section form input[type="search"] {
-    width: 80%; /* Adjust search box width */
+ 
+
+  .top-title {
+    font-size: 28px; /* Reduce the title font size for small screens */
   }
 
-  .shop_section form input[type="submit"] {
-    width: 80%; /* Adjust submit button width */
+  .search-sort {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .search-sort input[type="search"] {
+    max-width: 80%; /* Adjust search input width for small screens */
+  }
+
+  .search-sort input[type="submit"] {
+    max-width: 80%; /* Adjust button width for small screens */
+    margin-top: 10px;
   }
 }
 
 @media (max-width: 480px) {
+
+  .top-title {
+    font-size: 24px; /* Even smaller title size for extra small screens */
+  }
   .product-card {
     margin-bottom: 10px; /* Reduce margin for very small screens */
   }
@@ -292,13 +294,15 @@
     <a class="top-title" style="color: #000;">
                     <span>All Services</span> <!-- Neon blue for the heading -->
                 </a>
-
+<div class="search-sort">
     <form action="{{url('search_product')}}" method="get">
       @csrf
-      <input type="search" name="search" placeholder="Search products">
+      <input type="search" name="search" placeholder="Search services">
       <input type="submit" class="btn btn-secondary" value="Search">
     </form>
+    </div>
       </div>
+
     
     <div class="row">
       @foreach($product as $products)

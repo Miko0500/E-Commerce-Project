@@ -12,7 +12,7 @@
         <div class="col-lg-7 col-md-6 px-0">
           <div class="map_container">
             <div class="map-responsive">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d239.48238571990592!2d119.92692649983063!3d16.183477652863065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3393c382618bb049%3A0xa8412ba680ab549c!2sSan%20Vicente%2C%20Alaminos%2C%20Pangasinan!5e0!3m2!1sen!2sph!4v1725189939029!5m2!1sen!2sph" width="600" height="450" style="border: 3px solid #000; /* Neon blue border */
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d239.48238571990592!2d119.92692649983063!3d16.183477652863065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3393c382618bb049%3A0xa8412ba680ab549c!2sSan%20Vicente%2C%20Alaminos%2C%20Pangasinan!5e0!3m2!1sen!2sph!4v1725189939029!5m2!1sen!2sph" width="600" height="450" style="border: 2px solid #000; /* Neon blue border */
     border-radius: 15px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
           </div>
@@ -57,7 +57,7 @@
     .contact-info {
         padding: 20px;
         background-color: #fff;
-        border: 3px solid #000; /* Neon blue border */
+        border: 2px solid #000; /* Neon blue border */
     border-radius: 15px;
         box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
     }

@@ -4,6 +4,7 @@
 <head>
     @include('home.css')
     <style>
+        
         /* Global Styles */
         body {
             font-family: 'Arial', sans-serif;
@@ -12,17 +13,94 @@
             padding: 0;
             color: #333;
         }
+         /* Global Styles */
+         body {
+            font-family: 'Arial', sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .vehicle_section {
+            padding: 50px 0;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+      /* Vehicle Item Styles */
+.vehicle-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    margin-bottom: 40px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.7s ease, opacity 0.7s ease; /* Adjusted transition for smoother effect */
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(100px); /* Move the item further down for smoother appearance */
+}
+
+.vehicle-item.show {
+    opacity: 1;
+    transform: translateY(0); /* Smoothly move to normal position */
+}
+
+/* Vehicle Item Hover Effect */
+.vehicle-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+
+        /* Image Style */
+        .vehicle-item .vehicle-image {
+            flex: 1;
+            max-width: 45%;
+            margin-right: 30px;
+        }
+
+        .vehicle-item .vehicle-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Text Style */
+        .vehicle-item .vehicle-details {
+            flex: 1;
+            text-align: left;
+            padding-left: 30px;
+        }
+
+        .vehicle-item .vehicle-details h3 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .vehicle-item .vehicle-details p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
 
        /* General Styles for the Title */
 .top-title {
-  font-size: 40px;
+    font-size: 40px;
   font-weight: 600;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: #000;
   padding: 10px;
-  margin-bottom: 20px;
-  text-align: center; /* Center align the title */
+  margin-top: -30px;
+  text-align: center; /* Center align title */
 }
 
         /* Vehicle Section */
@@ -303,24 +381,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="js/custom.js"></script>
 
+    <!-- Include necessary scripts -->
     <script>
-        function handleScroll() {
-            const items = document.querySelectorAll('.vehicle-item');
-            const triggerBottom = window.innerHeight;
+       function handleScroll() {
+    const items = document.querySelectorAll('.vehicle-item');
+    const triggerBottom = window.innerHeight - 150; // Trigger scroll slightly earlier for smoother effect
 
-            items.forEach(item => {
-                const itemTop = item.getBoundingClientRect().top;
+    items.forEach(item => {
+        const itemTop = item.getBoundingClientRect().top;
 
-                if (itemTop < triggerBottom) {
-                    item.classList.add('show');
-                } else {
-                    item.classList.remove('show');
-                }
-            });
+        if (itemTop < triggerBottom) {
+            item.classList.add('show');
+        } else {
+            item.classList.remove('show');
         }
+    });
+}
 
-        window.addEventListener('scroll', handleScroll);
-        window.addEventListener('load', handleScroll);
+window.addEventListener('scroll', handleScroll);
+window.addEventListener('load', handleScroll);
+
     </script>
 </body>
 

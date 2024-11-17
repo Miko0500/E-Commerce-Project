@@ -182,7 +182,7 @@
   }
 
   .staff-card .img-box img {
-    max-width: 150px; /* Smaller image on medium screens */
+    max-width: 250px; /* Smaller image on medium screens */
   }
 
   .staff-card .detail-box {
@@ -204,7 +204,7 @@
   }
 
   .staff-card .img-box img {
-    max-width: 120px; /* Reduce image size further */
+    max-width: 220px; /* Reduce image size further */
   }
 
   .staff-card h6 {
@@ -222,7 +222,7 @@
   }
 
   .staff-card .img-box img {
-    max-width: 100px; /* Even smaller image size on mobile */
+    max-width: 200px; /* Even smaller image size on mobile */
   }
 
   .staff-card h6 {
