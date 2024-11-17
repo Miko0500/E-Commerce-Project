@@ -12,8 +12,6 @@
             background-color: #fff;
             margin: 0;
             padding: 20px;
-            position: relative;
-            z-index: 1; /* Set a baseline z-index for page content */
         }
 
         .div_center {
@@ -144,14 +142,6 @@
             outline: none;
         }
 
-
-        .modal {
-    z-index: 1050 !important; /* Ensure the modal is above the header */
-}
-.modal-dialog {
-    margin-top: 50px; /* Add space to the top to avoid overlap */
-}
-
           /* Modal Styling */
           .modal-content {
                 border-radius: 8px;
@@ -193,78 +183,9 @@
                 font-size: 1.5rem;
                 color: #FFD700;
             }
-    </style>
-</head>
-
-<body>
-
-<div class="hero_area">
-    <!-- header section starts -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 
-<style>
-  .nav-link {
-    display: block;
-    padding: 5px 10px; /* Adjust padding as needed */
-    border-radius: 5px; /* Adjust border radius as needed */
-    font-size: 14px; /* Adjust font size as needed */
-    position: relative;
-    
-    
-  }
-  .nav-link.active::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px; /* Adjust thickness */
-    background-color: #000; /* Underline color */
-  }
-  .nav-item {
-    padding: -5px -5px; /* This seems incorrect, remove it */
-  }
-  .navbar-brand {
-    font-size: 40px;
-    font-weight: 900;
-    margin: 0;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #000;
-    padding: 10px;
-    padding-top: 10px; /* Adjust top padding to prevent overlap */
-    margin-top: 10px; /* Adjust margin-top if necessary */
-}
-
-
-.brand-text {
-    font-size: 1.5rem;
-    font-weight: 900;
-    margin: 0;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: #007bff; /* Adjust color as needed */
-  }
-
-  /* Responsive adjustments */
-  @media (min-width: 992px) {
-    .brand-text {
-      font-size: 2rem;
-      letter-spacing: 2px;
-    }
-  }
-  
-  @media (min-width: 1200px) {
-    .brand-text {
-      font-size: 2.5rem;
-      letter-spacing: 3px;
-    }
-  }
-  body {
+            body {
     padding-top: 70px; /* Add space for header */
     z-index: 1; /* Ensure body is below the modal */
 }
@@ -279,8 +200,10 @@ header {
 }
 
 .modal {
-    z-index: 1050 !important; /* Ensure the modal is above the backdrop */
+    z-index: 1050 !important; /* Ensure the modal stays above everything */
+    
 }
+
 
 
 .modal-dialog {
@@ -298,226 +221,42 @@ header {
     z-index: 1060; /* Ensure close button is above everything else */
 }
 
-</style>
-
-<header class="header_section">
-  <nav class="navbar navbar-expand-lg custom_nav-container">
-    <a class="navbar-brand"  style="text-decoration: none;">
-      <span class="brand-text" style="
-        font-size: 40px;
-        font-weight: 900;
-        margin: 0;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        color: #000;
-        padding: 10px;">
-          Shee Auto Polish & Ceramic Coating
-      </span>
-    </a>
-
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon">&#9776;</span> <!-- Unicode hamburger icon -->
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link{{ request()->is('/') ? ' active' : '' }}" href="{{ url('/') }}">
-            <i class="bi bi-house-fill"></i> Home <span class="sr-only">(current)</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link{{ request()->is('product') ? ' active' : '' }}" href="{{ url('/product') }}">
-            <i class="bi bi-clipboard-check-fill"></i> Services <span class="sr-only">(current)</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link{{ request()->is('vehicle') ? ' active' : '' }}" href="{{ url('/vehicle') }}">
-            <i class="bi bi-car-front-fill"></i> Vehicles <span class="sr-only">(current)</span>
-          </a>
-        </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link{{ request()->is('staffs') ? ' active' : '' }}" href="{{ url('/staffs') }}">
-            <i class="bi bi-person-fill-check"></i> Staffs <span class="sr-only">(current)</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link{{ request()->is('why') ? ' active' : '' }}" href="{{ url('/why') }}">
-            <i class="bi bi-patch-question-fill"></i> Why Us <span class="sr-only">(current)</span>
-          </a>
-        </li> -->
-        <li class="nav-item">
-          <a class="nav-link{{ request()->is('about_us') ? ' active' : '' }}" href="{{ url('/about_us') }}">
-            <i class="bi bi-file-person-fill"></i> About Us <span class="sr-only">(current)</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link{{ request()->is('contact_us') ? ' active' : '' }}" href="{{ url('/contact_us') }}">
-            <i class="bi bi-person-lines-fill"></i> Contact Us <span class="sr-only">(current)</span>
-          </a>
-        </li>
-      </ul>
-
-      <div class="user_option">
-        @if (Route::has('login'))
-          @auth
-
-          <a style="color: #000;" class="nav-link{{ request()->is('mycart') ? ' active' : '' }}" href="{{url('mycart')}}">
-              <i class="fa fa-shopping-bag" aria-hidden="true"></i> [{{$count}}]Pending 
-            </a>
-            <a style="color: #000;" class="nav-link{{ request()->is('myorders') ? ' active' : '' }}" href="{{url('myorders')}}">
-              <i class="bi bi-cart-check-fill"></i> [{{$counts}}]Booked <span class="sr-only">(current)</span>
-            </a>
-            
-            <a href="{{url('profile_app')}}" class="nav-link{{ request()->is('profile_app') ? ' active' : '' }}" style="color: #000; font-weight: bold;">
-              <i class="fa fa-user" aria-hidden="true" style="font-size: 24px;"></i>
-            </a>
-            <form style="padding: 15px;" id="logoutForm" method="POST" action="{{ route('logout') }}">
-              @csrf
-              <input class="btn btn-dark" type="submit" value="Logout">
-            </form>
-          @else
-            <a style="color: #000; font-weight: bold;" href="{{url('/login')}}">
-              <i class="fa fa-user" aria-hidden="true"></i> Login
-            </a>
-            <a style="color: #000; font-weight: bold;" href="{{url('/register')}}">
-              <i class="fa fa-vcard" aria-hidden="true"></i> Register
-            </a>
-          @endauth
-        @endif
-      </div>
-    </div>
-  </nav>
-</header>
-
-<script>
-  // Toggle icon between hamburger and X on mobile toggle
-  document.querySelector('.navbar-toggler').addEventListener('click', function() {
-    const navbarCollapse = document.getElementById('navbarSupportedContent');
-    const togglerIcon = this.querySelector('.navbar-toggler-icon');
-
-    // Toggle the icon based on the collapse state
-    if (navbarCollapse.classList.contains('show')) {
-      togglerIcon.innerHTML = '&#9776;'; // Set to hamburger icon
-    } else {
-      togglerIcon.innerHTML = '&#10005;'; // Set to X icon
-    }
-  });
-
-  // Ensure the icon resets when resizing the window
-  window.addEventListener('resize', function() {
-    const navbarCollapse = document.getElementById('navbarSupportedContent');
-    const togglerIcon = document.querySelector('.navbar-toggler-icon');
-
-    if (window.innerWidth >= 992) {
-      // Reset to hamburger icon on larger screens
-      togglerIcon.innerHTML = '&#9776;';
-      navbarCollapse.classList.remove('show');
-    }
-  });
-</script>
-
-<style>
-  /* Responsive Brand Text */
-  .brand-text {
-    font-size: 24px;
-  }
-
-  @media (min-width: 768px) {
-    .brand-text {
-      font-size: 32px;
-    }
-  }
-
-  @media (min-width: 992px) {
-    .brand-text {
-      font-size: 36px;
-    }
-  }
-
-  @media (min-width: 1200px) {
-    .brand-text {
-      font-size: 40px;
-    }
-  }
-</style>
-
-
-<script>
-  document.querySelectorAll('.nav-link').forEach(link => {
-    if (link.classList.contains('active')) {
-      link.classList.add('active'); // Add active class on page load
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .filter-sort-container {
+        flex-direction: column; /* Stack form elements vertically on small screens */
+        align-items: flex-start;
     }
 
-    link.addEventListener('click', function() {
-      document.querySelectorAll('.nav-link').forEach(otherLink => {
-        otherLink.classList.remove('active'); // Remove underline from other links
-      });
-      this.classList.add('active'); // Add underline to clicked link
-    });
-  });
-</script>
-
-
-
-<script type="text/javascript">
-
-document.getElementById('logoutForm').addEventListener('submit', function(ev) {
-  ev.preventDefault();
-
-  swal({
-    title: "Are You Sure You Want To Logout?",
-    text: "You will be logged out",
-    icon: "warning",
-    buttons: true,
-    dangerMode: true,
-  }).then((willLogout) => {
-    if (willLogout) {
-      this.submit(); // Submit the form if user confirms
+    .form-group {
+        width: 100%; /* Form elements take full width */
     }
-  });
-});
 
-    </script>
+    .form-select {
+        width: 100%; /* Allow select to take full width on smaller screens */
+    }
+}
 
-<script>
-  $(document).ready(function() {
-    // Toggle the "toggled" class on the navbar-toggler and collapse menu when clicked
-    $('.navbar-toggler').on('click', function() {
-      const navbarCollapse = $('#navbarSupportedContent');
-      const isExpanded = $(this).hasClass('toggled');
+@media (max-width: 480px) {
+    .form-label {
+        font-size: 12px; /* Smaller label font size for smaller screens */
+    }
 
-      if (isExpanded) {
-        // If expanded, remove toggled class and collapse menu
-        $(this).removeClass('toggled');
-        navbarCollapse.collapse('hide');
-      } else {
-        // If not expanded, add toggled class and show menu
-        $(this).addClass('toggled');
-        navbarCollapse.collapse('show');
-      }
-    });
+    .form-select {
+        font-size: 12px; /* Smaller font size for select elements */
+        padding: 6px; /* Reduce padding */
+    }
+}
 
-    // Close the menu and reset the icon when a link is clicked (for mobile)
-    $('.navbar-nav .nav-link').on('click', function() {
-      $('#navbarSupportedContent').collapse('hide'); // Collapse the navbar
-      $('.navbar-toggler').removeClass('toggled'); // Reset the toggle icon
-    });
 
-    // Ensure the icon resets when resizing the window
-    $(window).on('resize', function() {
-      if ($(window).width() >= 992) {
-        $('.navbar-toggler').removeClass('toggled'); // Reset to hamburger icon on larger screens
-        $('#navbarSupportedContent').removeClass('show'); // Ensure the menu is collapsed
-      }
-    });
-  });
-</script>
+    </style>
+</head>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<body>
+
+<div class="hero_area">
+    <!-- header section starts -->
+    @include('home.header')
 
     @include('home.css')
 
@@ -555,15 +294,15 @@ document.getElementById('logoutForm').addEventListener('submit', function(ev) {
 
 <div class="div_center" style="display: flex; flex-wrap: wrap; justify-content: center;">
     @foreach($order as $index => $orders)
-    <div class="card" style="border: none; border-radius: 15px; background: #fff; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); width: 1100px; margin: 30px 15px; transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 25px; height: 400px;">
+    <div class="card" style="border: none; border-radius: 15px; background: #fff; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); width: 100%; max-width: 600px; margin: 30px 15px; transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 25px; height: auto;">
 
         <!-- Image Section -->
-        <div class="card-image" style="width: 45%; height: 100%; overflow: hidden; border-radius: 10px; flex-shrink: 0; order: {{ $index % 2 == 0 ? 1 : 2 }};">
+        <div class="card-image" style="width: 100%; height: 200px; overflow: hidden; border-radius: 10px; margin-bottom: 20px;">
             <img src="/products/{{$orders->product->image}}" alt="Service Image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
         </div>
 
         <!-- Card Content Section -->
-        <div class="card-content" style="padding-left: 30px; width: 50%; color: #333; display: flex; flex-direction: column; justify-content: space-between; order: {{ $index % 2 == 0 ? 2 : 1 }}; overflow: hidden;">
+        <div class="card-content" style="width: 100%; color: #333; display: flex; flex-direction: column; justify-content: space-between; padding-left: 0; padding-right: 0;">
 
             <!-- Title -->
             <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 10px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{$orders->product->title}}</h3>
@@ -614,31 +353,30 @@ document.getElementById('logoutForm').addEventListener('submit', function(ev) {
             @endif
 
            <!-- Rate Now Button -->
-@if($orders->status === 'Finished' && !$orders->rating)
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ratingModal{{ $orders->id }}" style="font-size: 14px; padding: 6px 12px; border-radius: 20px; background-color: #007bff; color: #fff; font-weight: bold;">
-        Rate Now!
-    </button>
-@endif
+           @if($orders->status === 'Finished' && !$orders->rating)
+           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ratingModal2{{ $orders->id }}" style="font-size: 14px; padding: 6px 12px; border-radius: 20px; background-color: #007bff; color: #fff; font-weight: bold;">
+    Rate Now!
+</button>
 
-
-
+           @endif
         </div>
     </div>
     @endforeach
 </div>
 
-@foreach($order as $index => $orders)
+
 <!-- Rating Modal -->
-<div class="modal fade" id="ratingModal{{ $orders->id }}" tabindex="-1" role="dialog" aria-labelledby="ratingModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+@foreach($order as $index => $orders)
+<div class="modal fade custom-modal" id="ratingModal2{{ $orders->id }}" tabindex="-1" role="dialog" aria-labelledby="ratingModalLabel" aria-hidden="true">
+    <div class="modal-dialog custom-modal-dialog" role="document">
+        <div class="modal-content custom-modal-content">
+            <div class="modal-header custom-modal-header">
                 <h5 class="modal-title" id="ratingModalLabel">Rate Your Service</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body custom-modal-body">
                 <form action="{{ route('orders.rate', $orders->id) }}" method="POST">
                     @csrf
                     <div class="rating-stars" style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px;">
@@ -654,7 +392,7 @@ document.getElementById('logoutForm').addEventListener('submit', function(ev) {
                     <label for="comment" style="font-weight: bold; font-size: 14px; margin-top: 10px; color:#333;">Comment:</label>
                     <textarea name="comment" id="comment" rows="3" placeholder="Write your comment here..." style="width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; margin-top: 5px;"></textarea>
 
-                    <button type="submit" class="btn btn-primary" style="margin-top: 10px; padding: 6px 12px; border-radius: 20px; background-color: #007bff; color: #fff; font-weight: bold; font-size: 14px;">Submit</button>
+                    <button type="submit" class="btn btn-primary custom-btn" style="margin-top: 10px; padding: 6px 12px; border-radius: 20px; background-color: #007bff; color: #fff; font-weight: bold; font-size: 14px;">Submit</button>
                 </form>
             </div>
         </div>
@@ -662,10 +400,70 @@ document.getElementById('logoutForm').addEventListener('submit', function(ev) {
 </div>
 @endforeach
 
+
+<style>
+  /* Custom Modal Styles */
+.custom-modal .modal-dialog {
+    max-width: 400px; /* Reduce the width */
+    margin: 1.75rem auto; /* Center modal on the screen */
+}
+
+.custom-modal .modal-content {
+    border-radius: 15px; /* Round corners of the modal */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+}
+
+.custom-modal-header {
+    background-color: #007bff; /* Custom header background color */
+    color: white; /* White text */
+}
+
+.custom-modal-body {
+    padding: 15px; /* Padding inside the body */
+}
+
+.custom-modal-body .rating-stars {
+    gap: 10px;
+    align-items: center;
+}
+
+.custom-modal-body .star-rating .star {
+    font-size: 18px;
+    color: #ddd;
+}
+
+.custom-btn {
+    font-size: 14px; /* Set a consistent button font size */
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+@media (max-width: 768px) {
+    /* Mobile adjustments */
+    .custom-modal .modal-dialog {
+        max-width: 80%; /* Make the modal wider for smaller screens */
+    }
+
+    .custom-modal .modal-content {
+        border-radius: 10px; /* Slightly smaller border radius on mobile */
+    }
+
+    .custom-modal-body textarea {
+        font-size: 14px; /* Slightly larger text area font size on mobile */
+    }
+
+    .custom-btn {
+        font-size: 16px; /* Increase button font size on mobile */
+    }
+}
+
+</style>
+
+
 @foreach($order as $orders)
 <!-- Details Modal -->
 <div class="modal fade" id="detailsModal-{{ $orders->id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div style="color: #000;" class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-dark" id="detailsModalLabel">Order Details</h5>
@@ -676,7 +474,7 @@ document.getElementById('logoutForm').addEventListener('submit', function(ev) {
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-12">
                             <h6 class="text-primary">Customer Information</h6>
                             <p><strong>Name:</strong> {{ $orders->name }}</p>
                             <p><strong>Address:</strong> {{ $orders->rec_address }}</p>
@@ -686,15 +484,13 @@ document.getElementById('logoutForm').addEventListener('submit', function(ev) {
 
                     <!-- Product Information -->
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-6 col-12">
                             <h6 class="text-primary">Service Information</h6>
                             <p><strong>Title:</strong> {{ $orders->product->title }}</p>
                             <p><strong>Price:</strong> ${{ $orders->product->price }}</p>
-                            
                             <p><strong>Assigned Staff:</strong> {{ $orders->staff_id ? $orders->staff->name : 'N/A' }}</p>
-                            <p><strong>Vehicle Type:</strong> {{ $orders->vehicle ?: 'N/A' }}</p>
-<p><strong>Size:</strong> {{ $orders->size ?: 'N/A' }}</p>
-
+                            <p><strong>Vehicle Type:</strong> {{ $orders->vehicle ? $orders->vehicle->type : 'N/A' }}</p>
+                            <p><strong>Size:</strong> {{ $orders->size ? $orders->size : 'N/A' }}</p>
                             <p><strong>Service Date & Time:</strong> {{ \Carbon\Carbon::parse($orders->service_datetime)->format('F j, Y \a\t g:i A') }}</p>
                             <p><strong>Status:</strong>
                             @if($orders->status == 'In Queue')
@@ -706,57 +502,157 @@ document.getElementById('logoutForm').addEventListener('submit', function(ev) {
 @elseif($orders->status == 'Cancelled')
     <span class="badge badge-danger" style="font-size: 18px; padding: 10px 20px; border-radius: 20px;">{{ $orders->status }}</span>
 @endif
-
                             </p>
                         </div>
-                        <div class="col-md-6 text-center">
+                        <div class="col-md-6 col-12 text-center">
                             <h6 class="text-primary">Product Image</h6>
                             <img src="products/{{ $orders->product->image }}" alt="Product Image" class="img-fluid rounded product-image">
                         </div>
                     </div>
+               
+
+
 
                     
 
                     <!-- Finalized Order Information -->
-                    @if($orders->finalization)
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <h6 class="text-primary">Finalized Order Information</h6>
-                            <p><strong>Total Price:</strong> {{ $orders->finalization->total_price }}</p>
-                            <p><strong>Description:</strong> {{ $orders->finalization->description }}</p>
-                        </div>
-                    </div>
-                    @endif
-
-                    <!-- Rating and Comment -->
-                    @if($orders->rating)
-                    <div class="row mb-3">
-                        <div class="col-md-12 rating-display">
-                            <h6 class="text-primary">Customer Feedback</h6>
-                            <p><strong>Rating:</strong>
-                                @for($i = 1; $i <= 5; $i++)
-                                    <span style="color: {{ $i <= $orders->rating->rating ? '#FFD700' : '#ddd' }};">&#9733;</span>
-                                @endfor
-                            </p>
-                            <p><strong>Comment:</strong> {{ $orders->rating->comment }}</p>
-                        </div>
-                    </div>
-                    @endif
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
+@if($orders->finalization)
+<div class="row mb-3">
+    <div class="col-12">
+        <h6 class="text-primary">Finalized Order Information</h6>
+        <p><strong>Total Price:</strong> {{ $orders->finalization->total_price }}</p>
+        <p><strong>Description:</strong> {{ $orders->finalization->description }}</p>
     </div>
+</div>
+@endif
+
+<!-- Rating and Comment -->
+@if($orders->rating)
+<div class="row mb-3">
+    <div class="col-12 rating-display">
+        <h6 class="text-primary">Customer Feedback</h6>
+        <p><strong>Rating:</strong>
+            @for($i = 1; $i <= 5; $i++)
+                <span style="color: {{ $i <= $orders->rating->rating ? '#FFD700' : '#ddd' }};">&#9733;</span>
+            @endfor
+        </p>
+        <p><strong>Comment:</strong> {{ $orders->rating->comment }}</p>
+    </div>
+</div>
+@endif
+
+</div>
+</div>
+
+<!-- Modal Footer -->
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</div>
+
+</div>
+</div>
 </div>
 @endforeach
 
+<!-- Pagination Section -->
 <div class="pagination">
     {{ $order->links() }}
 </div>
 
 </div>
+
+<!-- Responsive Design Adjustments -->
+<style>
+    /* Make modal content responsive */
+    .modal-dialog {
+        max-width: 90%;
+        width: auto;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    /* Ensure images in the modal are responsive */
+    .modal-body img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    /* Make form inputs and buttons fit on small screens */
+    .form-control {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 10px 20px;
+        width: 100%;
+    }
+
+    /* Pagination style for mobile */
+    .pagination {
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination li {
+        margin: 5px;
+    }
+
+    /* Text styles */
+    .modal-title {
+        font-size: 18px;
+    }
+
+    .text-primary {
+        font-size: 16px;
+    }
+
+    /* Responsively adjust card styles */
+    .card {
+        margin: 15px 0;
+        width: 100%;
+    }
+
+    .card-content {
+        padding-left: 0;
+    }
+
+    /* Adjust for mobile devices */
+    @media (max-width: 768px) {
+        .modal-dialog {
+            max-width: 95%;
+        }
+
+        .modal-body {
+            padding: 15px;
+        }
+
+        .modal-footer {
+            display: block;
+            padding: 10px 0;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .pagination li a {
+            font-size: 12px;
+            padding: 8px 12px;
+        }
+
+        .pagination li {
+            margin: 5px;
+        }
+    }
+</style>
+
 
   
 

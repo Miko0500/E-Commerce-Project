@@ -24,7 +24,7 @@
 
   @include('home.product')
 
-  end shop section
+  <!-- end shop section -->
   <div id="bubble-container">
   <div class="bubble"></div>
   <div class="bubble"></div>
@@ -138,11 +138,106 @@
             padding: 0;
             color: #333;
         }
+
+        /* General Styles for the heading */
+.heading_container .navbar-brand span {
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #000;
+  padding: 10px;
+  margin-top: -60px;
+}
+
+/* Reason section styles */
+.reason_section .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the items */
+  margin-left: -15px; /* Adjust spacing between columns */
+  margin-right: -15px;
+}
+
+.reason_section .card {
+  width: 100%; /* Default to 100% width on small screens */
+  margin-bottom: 30px;
+  border: none;
+}
+
+.reason_section .card-body {
+  text-align: center; /* Center text inside the card */
+}
+
+.reason_section .slider-img {
+  width: 80%;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .heading_container .navbar-brand span {
+    font-size: 32px;
+  }
+
+  .reason_section .col-md-4 {
+    width: 33.33%; /* Make each card take 1/3 of the width on medium screens */
+    padding: 0 15px; /* Ensure there is spacing between cards */
+  }
+
+  .reason_section .slider-img {
+    width: 70%; /* Reduce image size for medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .heading_container .navbar-brand span {
+    font-size: 28px; /* Reduce the title font size */
+  }
+
+  .reason_section .card-body h5 {
+    font-size: 18px; /* Adjust card title for smaller screens */
+  }
+
+  .reason_section .card-body p {
+    font-size: 14px; /* Adjust card text for smaller screens */
+  }
+
+  .reason_section .slider-img {
+    width: 70%; /* Reduce image size on smaller screens */
+  }
+
+  .reason_section .col-md-4 {
+    width: 100%; /* Make each card take full width on small screens */
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heading_container .navbar-brand span {
+    font-size: 24px; /* Further reduce title font size on very small screens */
+  }
+
+  .reason_section .card-body h5 {
+    font-size: 16px; /* Further reduce card title font */
+  }
+
+  .reason_section .card-body p {
+    font-size: 12px; /* Further reduce card text size */
+  }
+
+  .reason_section .slider-img {
+    width: 60%; /* Even smaller image size on extra small screens */
+  }
+}
+
 </style>
 </head>
 
 <body>
   <div class="hero_area">
+    
     <!-- Header Section -->
     <!-- End Header Section -->
     <!-- Slider Section -->
@@ -153,54 +248,47 @@
 
   <!-- Reason Section -->
   <section class="reason_section layout_padding">
-    <div class="container">
-      <div style="padding-bottom: 60px;" class="heading_container heading_center">
+  <div class="container">
+    <div style="padding-bottom: 60px;" class="heading_container heading_center">
       <a class="navbar-brand" href="index.html">
-      <span style="font-size: 40px;
-  font-weight: 600;
-  margin: 0;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #000;
-padding: 10px;
-padding-top: -100px;
-margin-top: -60px;">WHY OUR SERVICES?</span>
-    </a>
+        <span>WHY OUR SERVICES?</span>
+      </a>
+    </div>
+    <div class="row">
+      <!-- Reason 1 -->
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Quality Products</h5>
+            <p class="card-text">We offer only the highest quality products to ensure customer satisfaction.</p>
+            <img class="slider-img" src="images/icon1.png" alt="" />
+          </div>
+        </div>
       </div>
-      <div class="row">
-        <!-- Reason 1 -->
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Quality Products</h5>
-              <p class="card-text">We offer only the highest quality products to ensure customer satisfaction.</p>
-              <img class="slider-img" src="images/icon1.png" alt="" />
-            </div>
+      <!-- Reason 2 -->
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Fast Shipping</h5>
+            <p class="card-text">Enjoy fast and reliable shipping on all orders, so you can start enjoying your products sooner.</p>
+            <img class="slider-img" src="images/icon2.png" alt="" />
           </div>
         </div>
-        <!-- Reason 2 -->
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Fast Shipping</h5>
-              <p class="card-text">Enjoy fast and reliable shipping on all orders, so you can start enjoying your products sooner.</p>
-              <img class="slider-img" src="images/icon2.png" alt="" />
-            </div>
-          </div>
-        </div>
-        <!-- Reason 3 -->
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Excellent Service</h5>
-              <p class="card-text">Our dedicated customer service team is here to assist you with any questions or concerns.</p>
-              <img class="slider-img" src="images/icon3.png" alt="" />
-            </div>
+      </div>
+      <!-- Reason 3 -->
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Excellent Service</h5>
+            <p class="card-text">Our dedicated customer service team is here to assist you with any questions or concerns.</p>
+            <img class="slider-img" src="images/icon3.png" alt="" />
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
   <!-- End Reason Section -->
 
   <!-- Scripts -->
@@ -353,6 +441,7 @@ margin-top: -60px;">WHY OUR SERVICES?</span>
     border-radius: 50%;
     padding: 10px;
   }
+  
 </style>
 
 </head>

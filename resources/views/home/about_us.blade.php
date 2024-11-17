@@ -182,7 +182,9 @@
 </head>
 
 <body>
+    
     <div class="hero_area">
+        
         <!-- Header Section -->
         @include('home.header')
         <!-- End Header Section -->

@@ -17,7 +17,7 @@
     <!-- Styles -->
     <style>
         body {
-            background-image: url('/images/carbg.jpg'); /* Set the background image */
+            background-color: #666666;
             background-size: cover; /* Cover the entire background */
             background-position: center; /* Center the image */
             background-repeat: no-repeat; /* Prevent tiling */

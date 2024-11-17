@@ -1,280 +1,352 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!DOCTYPE html>
+<html lang="en">
 
-
-
-
-
-<x-guest-layout>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Register - Shee Auto Polish & Ceramic Coating</title>
     <style>
+        /* General styling */
         body {
-            background-image: url('/images/carbg.jpg'); /* Set the background image */
-            background-size: cover; /* Cover entire background */
-            background-position: center; /* Center the background image */
-            font-family: 'Arial', sans-serif;
-            color: #000; /* Set default text color to black */
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background: #001f3d; /* Darker background for futuristic look */
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
+            overflow: hidden;
         }
 
-        .form-content{
-            width: 450px;
-            height: 680px;
+        /* Container to hold left and right sections */
+        .container {
+            display: flex;
+            width: 85%;
+            max-width: 1200px;
+            height: 550px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            background: #fff;
+            overflow: hidden;
+            height: 620px;
         }
 
-        .form-section {
-            max-width: 90000px; /* Increase the maximum width for a wider form */
-            width: 100%;
-            
-            color: #000; /* Black text color */
-            text-align: center;
-            /* Removed background and box-shadow to make it blend into the page */
-        }
-
-        h1 {
-            color: #333; /* Darker color for heading */
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-
-        label {
-            display: block;
-            color: #333;
-            text-align: left;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            max-width: 100000px;
-            padding: 0.5rem;
-            margin-bottom: .5rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background: #fff; /* White background for inputs */
-            color: #000; /* Black text color */
-            font-size: 1rem;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            background-color: #f0f0f0;
-            outline: none;
-        }
-
-        button {
-            width: 100%;
-            padding: 0.8rem;
-            border: none;
-            border-radius: 4px;
-            background: #333;
-            color: #fff;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-            margin-top: 1rem;
-        }
-
-        button:hover {
-            background: #555;
-        }
-
-        .link {
-            color: #333;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .link:hover {
-            color: #555;
-        }
-
-        .password-container {
+        /* Left Section: Futuristic Carwash Design */
+        .left-section {
+            flex: 1.5;
+            background: linear-gradient(135deg, #003366, #0066cc); /* Futuristic blue tones */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
             position: relative;
         }
 
-        .password-container .eye-icon {
-    cursor: pointer;
-    position: absolute;
-    right: 10px; /* Space from the right edge */
-    top: 70%; /* Center vertically within the input field */
-    transform: translateY(-50%); /* Adjust vertical alignment */
-    font-size: 1.2rem;
-    color: #000;
-    z-index: 1; /* Ensure the icon is above the input */
-}
+        @keyframes logoAnimation {
+            0% {
+                transform: rotate(0deg);
+            }
 
-        /* Adjust error messages color */
-        .mt-2 {
+            25% {
+                transform: rotate(360deg);
+            }
+
+            50% {
+                transform: rotate(360deg);
+            }
+
+            75% {
+                transform: rotate(360deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        /* Apply the updated animation to the logo */
+        .left-section img {
+            width: 350px;
+            height: 180px;
+            border-radius: 20%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            animation: logoAnimation 8s ease-in-out infinite; /* Animation lasts 8s (spin + 2s cooldown) */
+        }
+
+        .left-section h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .left-section p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Right Section: Register Form */
+        .right-section {
+            flex: 1;
+            background: #f5f5f5;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0 20px 20px 0;
+            height: 550px;
+        }
+
+        .right-section h2 {
+            color: #003366;
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        /* Input Fields */
+        .form-group {
+            width: 100%;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .form-group label {
+            color: #333;
+            font-size: 12px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-group input {
+            width: 250px;
+            padding: 14px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            outline: none;
+            transition: all 0.3s ease;
+            height: 2px;
+        }
+
+        .form-group input:focus {
+            border-color: #003366;
+            box-shadow: 0 0 10px rgba(0, 51, 102, 0.4);
+        }
+
+        /* Password Eye Icon */
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #003366;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        /* Submit Button */
+        .register-button {
+            width: 100%;
+            height: 40px;
+            padding: 14px;
+            background: #003366;
+            color: white;
+            font-size: 13px;
+            font-weight: 550;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .register-button:hover {
+            background: #005599;
+        }
+
+        /* Links */
+        .extra-links {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 50px;
+            font-size: 14px;
+        }
+
+        .extra-links a {
+            color: #003366;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .extra-links a:hover {
+            color: #005599;
+            text-decoration: underline;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .left-section h1 {
+                font-size: 28px;
+            }
+
+            .left-section p {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+
+            .right-section {
+                padding: 25px;
+            }
+
+            .right-section h2 {
+                font-size: 24px;
+            }
+
+            .form-group input {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .register-button {
+                font-size: 16px;
+            }
+
+            .extra-links {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .left-section h1 {
+                font-size: 22px;
+            }
+
+            .form-group input {
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .register-button {
+                font-size: 14px;
+            }
+
+            .extra-links {
+                font-size: 10px;
+            }
+        }
+
+         /* Adjust error messages color */
+         .mt-2 {
             color: #ff6b6b;
             text-align: left;
             margin-top: 0.5rem;
             font-size: 0.9rem;
         }
     </style>
+</head>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<body>
+    <div class="container">
+        <!-- Left Section: Register Section -->
+        <div class="left-section">
+            <img src="{{ asset('/images/logo.jpg') }}" alt="Logo">
+            <h1>Register Now!</h1>
+            <p>Sign up today to enjoy the benefits of our premium carwash services.</p>
+        </div>
 
-    <div class="form-section">
-        <h1>{{ __('Register') }}</h1>
-        <form method="POST" action="{{ route('register') }}">
-            @csrf
+        <!-- Right Section: Register Form -->
+        <x-auth-session-status class="mb-4" :status="session('status')" />
+        <div class="right-section">
+            <h2>Create an Account</h2>
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+                
+                <!-- Name -->
+<div class="form-group">
+    <x-input-label for="name" :value="__('Name')" />
+    <x-text-input id="name" class="form-control" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+</div>
 
-            <!-- Name -->
-            <div>
-                <x-input-label for="name" :value="__('Name')" />
-                <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-                <x-input-error :messages="$errors->get('name')" class="mt-2" />
-            </div>
+<!-- Email Address -->
+<div class="form-group">
+    <x-input-label for="email" :value="__('Email')" />
+    <x-text-input id="email" class="form-control" type="email" name="email" :value="old('email')" required autocomplete="username" />
+    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+</div>
 
-            <!-- Email Address -->
-            <div>
-                <x-input-label for="email" :value="__('Email')" />
-                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
-            </div>
+<!-- Address -->
+<div class="form-group">
+    <x-input-label for="address" :value="__('Address')" />
+    <x-text-input id="address" class="form-control" type="text" name="address" :value="old('address')" required autocomplete="address" />
+    <x-input-error :messages="$errors->get('address')" class="mt-2" />
+</div>
 
-            <!-- Address -->
-            <div>
-                <x-input-label for="address" :value="__('Address')" />
-                <x-text-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')" required autocomplete="address" />
-                <x-input-error :messages="$errors->get('address')" class="mt-2" />
-            </div>
+<!-- Phone -->
+<div class="form-group">
+    <x-input-label for="phone" :value="__('Phone')" />
+    <x-text-input id="phone" class="form-control" type="text" name="phone" :value="old('phone')" required autocomplete="phone" />
+    <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+</div>
 
-            <!-- Phone -->
-            <div>
-                <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" required autocomplete="phone" />
-                <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-            </div>
+<!-- Password -->
+<div class="form-group password-wrapper">
+    <x-input-label for="password" :value="__('Password')" />
+    <x-text-input id="password" class="form-control" type="password" name="password" required autocomplete="new-password" />
+    <i class="eye-icon fa fa-eye" onclick="togglePassword('password', this)"></i>
+    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+</div>
 
-            <!-- Password -->
-            <div class="password-container">
-                <x-input-label for="password" :value="__('Password')" />
-                <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-                <i class="eye-icon fa fa-eye" onclick="togglePassword('password', this)"></i>
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
-            </div>
+<!-- Confirm Password -->
+<div class="form-group password-wrapper">
+    <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+    <x-text-input id="password_confirmation" class="form-control" type="password" name="password_confirmation" required autocomplete="new-password" />
+    <i class="eye-icon fa fa-eye" onclick="togglePassword('password_confirmation', this)"></i>
+    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+</div>
 
-            <!-- Confirm Password -->
-            <div class="password-container">
-                <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-                <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
-                <i class="eye-icon fa fa-eye" onclick="togglePassword('password_confirmation', this)"></i>
-                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-            </div>
 
-            <div class="flex items-center justify-end">
-                <a class="link" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
-                </a>
+                <button type="submit" class="register-button"> {{ __('Register') }}</button>
 
-                <button>
-                    {{ __('Register') }}
-                </button>
-            </div>
-        </form>
+                <div class="extra-links">
+                    <a href="{{ route('login') }}">Already have an account?</a>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
         function togglePassword(inputId, iconElement) {
             var passwordInput = document.getElementById(inputId);
-            
+            var eyeIcon = iconElement;
+
             if (passwordInput.type === "password") {
                 passwordInput.type = "text";
-                iconElement.classList.remove("fa-eye");
-                iconElement.classList.add("fa-eye-slash");
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
             } else {
                 passwordInput.type = "password";
-                iconElement.classList.remove("fa-eye-slash");
-                iconElement.classList.add("fa-eye");
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
             }
         }
     </script>
-</x-guest-layout>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <style>
-        body {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0 5%; /* Adding padding for better spacing */
-            background-image: url('/images/carbg.jpg'); /* Set the background image */
-        }
-
-        .welcome-container {
-            max-width: 60%; /* Larger width for left side */
-            padding: 40px;
-            margin-right: 50px; /* Add gap between welcome text and form */
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.85); /* Subtle white overlay with transparency */
-            box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .welcome-container:hover {
-            transform: translateY(-5px); /* Lift on hover for a subtle effect */
-        }
-
-        .welcome-title {
-            font-size: 70px;
-    font-weight: 900;
-    margin: 0;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: black; /* Set color to black */
-    text-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Adjust shadow if desired */
-        }
-
-        .highlight {
-            font-size: 50px;
-    font-weight: 600;
-    margin: 20px 0;
-    letter-spacing: 1px;
-    color: #007bff;
-        }
-
-        .welcome-description {
-            font-size: 1.6rem; /* Larger font size for readability */
-            color: #444;
-            line-height: 1.8;
-            margin-top: 0;
-            max-width: 90%; /* Take up most of the container width */
-        }
-
-        .welcome-description span {
-            font-weight: bold;
-            color: #007bff;
-        }
-    </style>
-</head>
-<body>
-
-<div class="welcome-container">
-    <h1 class="welcome-title">
-        Welcome to <br> <span class="highlight">Shee Auto Polish & Ceramic Coating</span>
-    </h1>
-    <p class="welcome-description">
-        Discover <span>unmatched car care</span> with our expert polishing and ceramic coating services,
-        ensuring a lasting shine and protection for your vehicle.
-    </p>
-</div>
-
-<!-- Your login form goes here, to the right of the welcome text -->
-
 </body>
+
 </html>

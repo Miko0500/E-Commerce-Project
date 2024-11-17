@@ -77,7 +77,7 @@
             background-color: #218838;
         }
 
-        @media print {
+        /* @media print {
             body * {
                 visibility: hidden;
             }
@@ -98,7 +98,7 @@
             text-align: center;
             font-weight: bold;
             margin-bottom: 20px;
-        }
+        } */
 
        /* Sorting and Filter Section */
 .filter-container {
@@ -200,14 +200,15 @@
     background-color: #ddd;
 }
 
-/* Hide elements that should not be printed */
 @media print {
     body * {
-        visibility: hidden;
+        visibility: hidden; /* Hide everything */
     }
+
     .printable-content, .printable-content * {
-        visibility: visible;
+        visibility: visible; /* Make content inside printable-content visible */
     }
+
     .printable-content {
         position: absolute;
         left: 0;
@@ -216,46 +217,80 @@
         max-width: 100%;
     }
 
-    /* Print button should not appear when printing */
-    .btn-print, .btn-download {
-        display: none;
+    /* Image at the top-left of the printed page with max width and height */
+    .print-image {
+        position: fixed;
+        top: 50px;
+        left: 20px;
+        display: block;
+        z-index: 9999; /* Ensure it stays above other content */
     }
-}
 
-h1 {
-    color: #333;
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
+    .print-image img {
+        visibility: visible;
+        max-width: 150px; /* Prevent the image from being larger than 150px */
+        max-height: 100px; /* Prevent the image from being taller than 100px */
+        width: auto; /* Maintain aspect ratio */
+        height: auto; /* Maintain aspect ratio */
+    }
 
-.report-header {
-    text-align: center;
-    margin-bottom: 20px;
-    font-weight: bold;
-    font-size: 1.5rem;
-}
+    .btn-print, .btn-download, .pagination {
+        display: none; /* Hide buttons during print */
+    }
 
-.total-price {
+    /* Table Styling */
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 80px; /* Push the table below the image */
+    }
+
+    .custom-table thead th {
+        background-color: #007bff;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .custom-table tbody td {
+        padding: 8px;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #333;
+    }
+
+    .custom-table tfoot td {
+        font-weight: bold;
+        font-size: 1rem;
         text-align: right;
-        font-size: 1.2rem;
-        font-weight: bold;
-        padding-top: 10px;
-        padding-right: 20px;
-        background-color: #f8f9fa;
-        color: green;
     }
 
-    .total-price td {
-        font-size: 1.5rem;
-        color: #007bff;
+    .custom-table th, .custom-table td {
+        border: 1px solid #ddd;
     }
-    
+
+    .report-header {
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
     .total-price td:last-child {
-        font-size: 1.6rem;
         color: green;
         font-weight: bold;
     }
+
+    .custom-table tbody tr {
+        height: 40px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}
+
         </style>
 
     </head>
@@ -302,51 +337,55 @@ h1 {
 
                 </div>
 
-                <div class="report-header">
-                    <h3>Orders Report</h3>
-                    <a href="javascript:void(0)" onclick="printReport()" class="btn-print">Print Report</a>
-                    
-                </div>
+                <div class="print-image">
+    <img style="visibility: visible;
+        max-width: 150px; /* Prevent the image from being larger than 150px */
+        max-height: 100px; /* Prevent the image from being taller than 100px */
+        width: auto; /* Maintain aspect ratio */
+        height: auto; /* Maintain aspect ratio */" src="{{asset('/images/logo.jpg')}}" alt="Report Logo" class="report-logo">
+</div>
 
-                <div class="table-container printable-content">
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Customer Name</th>
-                                <th>Address</th>
-                                <th>Product Title</th>
-                                <th>Status</th>
-                                <th>Service Date</th>
-                                <th>Staff Assigned</th> <!-- Added Staff Assigned column -->
-                                <th>Total Price</th> <!-- Added Total Price column -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($data as $order)
-                                <tr>
-                                    <td>{{ $order->name }}</td>
-                                    <td>{{ $order->rec_address }}</td>
-                                    <td>{{ $order->product->title }}</td>
-                                    <td>{{ $order->status }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($order->service_datetime)->format('F j, Y \a\t g:i A') }}</td>
-                                    <td>{{ $order->staff ? $order->staff->name : 'N/A' }}</td> <!-- Display staff assigned -->
-                                    <td>P{{ number_format($order->finalization ? $order->finalization->total_price : 0, 2) }}</td> <!-- Display total price -->
-                                </tr>
-                            @endforeach
-                        </tbody>
+<div class="report-header">
+    <h3>Orders Report</h3>
+    <a href="javascript:void(0)" onclick="printReport()" class="btn-print">Print Report</a>
+</div>
 
-                        <tfoot>
+<div class="table-container printable-content">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Customer Name</th>
+                <th>Address</th>
+                <th>Product Title</th>
+                <th>Status</th>
+                <th>Service Date</th>
+                <th>Staff Assigned</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($data as $order)
+                <tr>
+                    <td>{{ $order->name }}</td>
+                    <td>{{ $order->rec_address }}</td>
+                    <td>{{ $order->product->title }}</td>
+                    <td>{{ $order->status }}</td>
+                    <td>{{ \Carbon\Carbon::parse($order->service_datetime)->format('F j, Y \a\t g:i A') }}</td>
+                    <td>{{ $order->staff ? $order->staff->name : 'N/A' }}</td>
+                    <td>P{{ number_format($order->finalization ? $order->finalization->total_price : 0, 2) }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+        <tfoot>
             <tr>
                 <td colspan="6" style="text-align: right; font-weight: bold;">Total Price</td>
                 <td style="font-weight: bold; color: green;">P{{ number_format($totalPrice, 2) }}</td>
             </tr>
         </tfoot>
-                    </table>
+    </table>
+</div>
 
-                    <!-- Display Total Price -->
-    
 
-                </div>
 
                 <div class="pagination">
                     {{ $data->links() }}

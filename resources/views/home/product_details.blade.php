@@ -213,28 +213,127 @@
         color: #888;
     }
 
-    .btn-back {
-            background-color: #6c757d;
-            color: #fff;
-            padding: 10px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s, transform 0.2s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-right: 1000px;
-        }
+   /* Styling for the "Back" button */
+.btn-back {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 20px;
+  text-transform: uppercase;
+}
 
-        .btn-back:hover {
-            background-color: #5a6268;
-            transform: scale(1.05);
-        }
+.btn-back:hover {
+  background-color: #2980b9;
+}
 
-        .btn-back:active {
-            background-color: #495057;
-        }
+@media (max-width: 480px) {
+  .top-title {
+    font-size: 24px; /* Even smaller title size */
+  }
+
+  .detail-box h6 {
+    font-size: 12px; /* Even smaller text */
+  }
+
+  .btn2 {
+    font-size: 10px; /* Even smaller button font size */
+  }
+
+  .shop_section img {
+    width: 100%;
+    max-width: 120px; /* Make image smaller on extra small screens */
+  }
+
+  .modal-content {
+    width: 100%; /* Full width for modal */
+  }
+}
+
+@media (max-width: 768px) {
+  .top-title {
+    font-size: 28px; /* Further reduce title size for small screens */
+  }
+
+  .detail-box h6 {
+    font-size: 14px; /* Smaller text for small screens */
+  }
+
+  .btn2 {
+    font-size: 12px; /* Smaller button font size */
+  }
+
+  .shop_section img {
+    width: 100%;
+    max-width: 150px; /* Even smaller image for mobile */
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  /* Reduce title size for medium screens */
+  .top-title {
+    font-size: 32px;
+  }
+
+  .detail-box h6 {
+    font-size: 16px;
+  }
+
+  .btn2 {
+    font-size: 14px; /* Smaller button size */
+  }
+
+  .shop_section img {
+    width: 100%;
+    max-width: 200px; /* Adjust image size for smaller screens */
+  }
+
+  .modal-content {
+    width: 90%; /* Make modal width responsive */
+  }
+}
+
+body {
+    padding-top: 70px; /* Add space for header */
+    z-index: 1; /* Ensure body is below the modal */
+}
+
+header {
+    position: relative;
+    z-index: 1; /* Ensure header is below the modal */
+}
+
+.modal-backdrop {
+    z-index: 1040 !important; /* Ensure the backdrop is behind the modal */
+}
+
+.modal {
+    z-index: 1050 !important; /* Ensure the modal stays above everything */
+    
+}
+
+
+
+.modal-dialog {
+    z-index: 1050 !important;
+    position: relative;
+}
+
+.modal-content {
+    position: relative;
+    z-index: 1060; /* Ensure the modal content is above the backdrop */
+}
+
+
+.modal-header .close {
+    z-index: 1060; /* Ensure close button is above everything else */
+}
 </style>
 
 </head>
@@ -253,66 +352,67 @@
 
 
 <section class="shop_section layout_padding">
-    <div class="container">
-        <div class="heading_container heading_center">
-            <a class="top-title" style="color: #000;">
-                <span>Service Details</span>
-            </a>
-            <button onclick="history.back()" class="btn-back">Back</button>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="box">
-                    <div class="div_center">
-                        <img width="300" src="/products/{{$data->image}}" alt="">
-                    </div>
-                    <div class="detail-box">
-                        <h6>Name: {{$data->title}}</h6>
-                        <h6>Price: <span>${{$data->price}}</span></h6>
-                    </div>
-                    <div class="detail-box">
-                        <h6>Category: {{$data->category}}</h6>
-                    </div>
-                    <div class="detail-box">
-                        <p>{{$data->description}}</p>
-                    </div>
-                    <div class="detail-box">
-                    <button id="openModalBtn" class="btn2 btn-warning">Ratings & Reviews</button>   
-                    </div>
-                    <a class="btn2 btn-primary" onclick="confirmation(event)" href="{{ url('add_cart', $data->id) }}">Add Service</a>
-                </div>
-            </div>
-        </div>
+  <div class="container">
+    <div class="heading_container heading_center">
+      <a class="top-title" style="color: #000;">
+        <span>Service Details</span>
+      </a>
+      <button onclick="history.back()" class="btn-back">Back</button>
     </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="box">
+          <div class="div_center">
+            <img width="300" src="/products/{{$data->image}}" alt="">
+          </div>
+          <div class="detail-box">
+            <h6>Name: {{$data->title}}</h6>
+            <h6>Price: <span>${{$data->price}}</span></h6>
+          </div>
+          <div class="detail-box">
+            <h6>Category: {{$data->category}}</h6>
+          </div>
+          <div class="detail-box">
+            <p>{{$data->description}}</p>
+          </div>
+          <div class="detail-box">
+            <button id="openModalBtn" class="btn2 btn-warning">Ratings & Reviews</button>
+          </div>
+          <a class="btn2 btn-primary" onclick="confirmation(event)" href="{{ url('add_cart', $data->id) }}">Add Service</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Ratings & Reviews Modal -->
 <div id="reviewsModal" class="modal">
-    <div class="modal-content">
+  <div class="modal-content">
     <div class="modal-header">
-            <h2>Ratings & Reviews</h2>
-            <span class="close">&times;</span>
-        </div>
-
-        <!-- Display each rating if available -->
-        @forelse ($ratings as $rating)
-            <div class="review">
-                <div class="user-name">{{ $rating->order->user->name }}</div>
-                <div class="rating">
-                    @for ($i = 0; $i < $rating->rating; $i++)
-                        &#9733; <!-- Filled star -->
-                    @endfor
-                    @for ($i = $rating->rating; $i < 5; $i++)
-                        &#9734; <!-- Empty star -->
-                    @endfor
-                </div>
-                <div class="comment">{{ $rating->comment }}</div>
-                <div class="date">{{ $rating->created_at->format('F j, Y') }}</div>
-            </div>
-        @empty
-            <p>No reviews yet for this service.</p>
-        @endforelse
+      <h2>Ratings & Reviews</h2>
+      <span class="close">&times;</span>
     </div>
+
+    <!-- Display each rating if available -->
+    @forelse ($ratings as $rating)
+      <div class="review">
+        <div class="user-name">{{ $rating->order->user->name }}</div>
+        <div class="rating">
+          @for ($i = 0; $i < $rating->rating; $i++)
+            &#9733; <!-- Filled star -->
+          @endfor
+          @for ($i = $rating->rating; $i < 5; $i++)
+            &#9734; <!-- Empty star -->
+          @endfor
+        </div>
+        <div class="comment">{{ $rating->comment }}</div>
+        <div class="date">{{ $rating->created_at->format('F j, Y') }}</div>
+      </div>
+    @empty
+      <p>No reviews yet for this service.</p>
+    @endforelse
+  </div>
 </div>
 
   @include('home.css')

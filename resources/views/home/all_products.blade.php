@@ -1,180 +1,256 @@
 @include('home.css')
+
 <style>
-  
-  .product-card {
-    position: relative;
-    border: 3px solid #000; /* Neon blue border */
-    border-radius: 15px;
-            background: rgb(8, 91, 109);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 420px; /* Fixed height */
-    margin-bottom: 30px; /* Space between cards */
-  }
+  /* General Styles for the heading */
+.top-title {
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #000;
+  padding: 10px;
+  margin-top: -80px;
+  text-align: center; /* Center align title */
+}
 
-  .product-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
-  }
+/* Product card styles */
+.product-card {
+  position: relative;
+  border: 3px solid #000; /* Neon blue border */
+  border-radius: 15px;
+  background: rgb(8, 91, 109);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 420px; /* Fixed height */
+  margin-bottom: 30px; /* Space between cards */
+}
 
-  .product-card .img-box {
-    position: relative;
-    height: 250px; /* Fixed height for image box */
-    overflow: hidden;
-    
-  }
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
 
-  .product-card .img-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Cover the box while maintaining aspect ratio */
-    transition: transform 0.3s ease;
-  }
+.product-card .img-box {
+  position: relative;
+  height: 250px; /* Fixed height for image box */
+  overflow: hidden;
+}
 
-  .product-card:hover .img-box img {
-    transform: scale(1.1); /* Zoom effect on hover */
-  }
+.product-card .img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cover the box while maintaining aspect ratio */
+  transition: transform 0.3s ease;
+}
 
-  .product-card .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 140px;
-    background: rgba(0, 0, 0, 0.5); /* Dark overlay */
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    text-align: center;
-    padding: 20px;
-  }
+.product-card:hover .img-box img {
+  transform: scale(1.1); /* Zoom effect on hover */
+}
 
-  .product-card:hover .overlay {
-    opacity: 1; /* Show overlay on hover */
-  }
+.product-card .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 140px;
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  text-align: center;
+  padding: 20px;
+}
 
-  .product-card .detail-box {
-    padding: 20px;
-    text-align: left;
-  }
+.product-card:hover .overlay {
+  opacity: 1; /* Show overlay on hover */
+}
 
-  .product-card .detail-box h6 {
-    margin: 10px 0;
-    font-size: 18px; /* Font size for title */
-    font-weight: 600; /* Bold text */
-    color: #000; /* Dark text color */
-  }
+.product-card .detail-box {
+  padding: 20px;
+  text-align: left;
+}
 
-  .product-card .detail-box .price {
-    display: block;
-    margin-top: 10px;
-    font-size: 20px; /* Larger font size */
-    color: #ff5722; /* Accent color */
-    font-weight: 700; /* Bold text */
-  }
+.product-card .detail-box h6 {
+  margin: 10px 0;
+  font-size: 18px; /* Font size for title */
+  font-weight: 600; /* Bold text */
+  color: #000; /* Dark text color */
+}
 
-  .product-card .btn {
-    margin-top: 10px;
-    background-color: #007BFF; /* Accent color */
-    color: #ffffff; /* White text */
-    border: none; /* Remove border */
-    padding: 6px 12px; /* Smaller padding */
-    border-radius: 5px; /* Slightly rounded corners */
-    font-size: 13px; /* Smaller font size */
-    font-weight: bold;
-    text-transform: uppercase; /* Uppercase text */
-    letter-spacing: 0.5px;
-    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 50px;
-    margin-top: 75px;
+.product-card .detail-box .price {
+  display: block;
+  margin-top: 10px;
+  font-size: 20px; /* Larger font size */
+  color: #ff5722; /* Accent color */
+  font-weight: 700; /* Bold text */
+}
+
+.product-card .btn {
+  margin-top: 10px;
+  background-color: #007BFF; /* Accent color */
+  color: #ffffff; /* White text */
+  border: none; /* Remove border */
+  padding: 6px 12px; /* Smaller padding */
+  border-radius: 5px; /* Slightly rounded corners */
+  font-size: 13px; /* Smaller font size */
+  font-weight: bold;
+  text-transform: uppercase; /* Uppercase text */
+  letter-spacing: 0.5px;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  margin-top: 75px;
 }
 
 .product-card .btn:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    transform: translateY(-1px); /* Gentle lift effect */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow */
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: translateY(-1px); /* Gentle lift effect */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow */
 }
 
+/* Shop Section Styling */
+.shop_section {
+  padding: 100px 0; /* Padding around the section */
+  position: relative;
+  overflow: hidden;
+}
 
-  .shop_section {
-    padding: 100px 0; /* Padding around the section */
-    position: relative;
-    overflow: hidden;
+.shop_section .heading_container {
+  margin-bottom: 50px; /* Margin for heading */
+}
+
+.shop_section .box {
+  transition: transform .5s ease-out, opacity .5s ease-out;
+  opacity: 0;
+  transform: translateY(150px);
+}
+
+.shop_section .box.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.shop_section form {
+  margin-top: 10px;
+  margin-bottom: -45px; /* Space below the search form */
+  display: flex;
+  justify-content: center;
+}
+
+.shop_section form input[type="search"] {
+  padding: 14px;
+  border-radius: 25px;
+  border: 2px solid #3498db;
+  font-size: 16px;
+  width: 100%;
+  max-width: 300px;
+  margin: 10px;
+  background-color: #fff;
+  color: #333;
+}
+
+.shop_section form input[type="submit"] {
+  background-color: #3498db;
+  color: #fff;
+  padding: 12px 25px;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+}
+
+.shop_section form input[type="submit"]:hover {
+  background-color: #2980b9;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 992px) {
+  .product-card {
+    height: auto; /* Allow height to adjust based on content */
+    margin-bottom: 20px; /* Reduce margin between cards */
   }
 
-  .shop_section .heading_container {
-    margin-bottom: 50px; /* Margin for heading */
+  .product-card .detail-box h6 {
+    font-size: 16px; /* Adjust product title for smaller screens */
   }
 
-  .shop_section .box {
-    transition: transform .5s ease-out, opacity .5s ease-out;
-    opacity: 0;
-    transform: translateY(150px);
+  .product-card .price {
+    font-size: 18px; /* Adjust price for smaller screens */
   }
 
-  .shop_section .box.in-view {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .shop_section form {
-    margin-top: 10px;
-    margin-bottom: -45px; /* Space below the search form */
-    display: flex;
-    justify-content: center;
+  .product-card .btn {
+    font-size: 14px; /* Adjust button size for smaller screens */
   }
 
   .shop_section form input[type="search"] {
-    padding: 14px;
-            border-radius: 25px;
-            border: 2px solid #3498db;
-            font-size: 16px;
-            width: 100%;
-            max-width: 300px;
-            margin: 10px;
-            background-color: #fff;
-            color: #333;
-            margin-top: 20px;
-            margin-bottom: 20px;
+    max-width: 90%; /* Make search box take more space on smaller screens */
   }
 
   .shop_section form input[type="submit"] {
-    background-color: #3498db;
-            color: #fff;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            margin-top: 20px;
-            margin-bottom: 20px;
+    max-width: 90%; /* Adjust submit button width */
+  }
+}
+
+@media (max-width: 768px) {
+  .product-card {
+    margin-bottom: 15px; /* Reduce margin between cards */
   }
 
-  .shop_section form input[type="submit"]:hover {
-    background-color: #2980b9;
+  .product-card .detail-box h6 {
+    font-size: 14px; /* Smaller product title on mobile */
   }
 
-  .top-title {
-            font-size: 40px;
-            font-weight: 600;
-            margin: 0;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #000;
-            padding: 10px;
-            padding-top: -100px;
-            margin-top: -80px;
-        }
+  .product-card .price {
+    font-size: 16px; /* Smaller price text on mobile */
+  }
 
-        .average-rating {
+  .product-card .btn {
+    font-size: 12px; /* Smaller button font size */
+  }
+
+  .shop_section form input[type="search"] {
+    width: 80%; /* Adjust search box width */
+  }
+
+  .shop_section form input[type="submit"] {
+    width: 80%; /* Adjust submit button width */
+  }
+}
+
+@media (max-width: 480px) {
+  .product-card {
+    margin-bottom: 10px; /* Reduce margin for very small screens */
+  }
+
+  .product-card .detail-box h6 {
+    font-size: 12px; /* Further reduce title font size */
+  }
+
+  .product-card .price {
+    font-size: 14px; /* Further reduce price font size */
+  }
+
+  .product-card .btn {
+    font-size: 12px; /* Smaller button text */
+  }
+
+  .shop_section form input[type="search"] {
+    width: 90%; /* Increase width of search box on smaller screens */
+  }
+
+  .shop_section form input[type="submit"] {
+    width: 90%; /* Increase width of submit button */
+  }
+}
+
+.average-rating {
     display: inline-flex;
     align-items: center;
     padding: 5px 10px;

@@ -268,10 +268,7 @@ public function product()
         // Check if the user already has a service in the cart
         $existingCart = Cart::where('user_id', $user->id)->first();
         
-        if ($existingCart) {
-            toastr()->timeOut(10000)->closeButton()->error('You can only add one service to the Pending Page at a time.');
-            return redirect()->back();
-        }
+        
     
         // Add the new service to the cart if no existing item is found
         $data = new Cart;
@@ -289,35 +286,30 @@ public function product()
 
 
     public function mycart()
-    {
-        if (Auth::id()) {
-            $user = Auth::user();
-            $userid = $user->id;
-    
-            // Count of items in cart and orders made by the user
-            $count = Cart::where('user_id', $userid)->count();
-            $counts = Order::where('user_id', $userid)->count();
-            
-            // Fetch the user's cart items with pagination
-            $cart = Cart::where('user_id', $userid)->paginate(3); 
-    
-            // Fetch all staff members (no changes needed here)
-            $staff = Staff::all();
-    
-            // No need to fetch vehicles as we are now saving vehicle as a string in the orders table
-            // Instead, you might want to pass vehicle data separately if necessary, but for now, we handle it in the form itself
-            $vehicles = Vehicle::all(); // If you still need to display vehicles for selection, you can fetch them
-        } else {
-            $cart = [];
-            $count = 0;
-            $counts = 0;
-            $staff = [];
-            $vehicles = []; // No vehicles if not logged in
-        }
-    
-        return view('home.mycart', compact('count', 'cart', 'counts', 'staff', 'vehicles'));
+{
+    if (Auth::id()) {
+        $user = Auth::user();
+        $userid = $user->id;
+
+        $count = Cart::where('user_id', $userid)->count();
+        $counts = Order::where('user_id', $userid)->count();
+        $cart = Cart::where('user_id', $userid)->paginate(3); // Paginate user's cart items
+
+        // Fetch all staff members
+        $staff = Staff::all();
+
+        // Fetch vehicle details
+        $vehicles = Vehicle::all(); // Fetch all vehicles including type and sizes
+    } else {
+        $cart = [];
+        $count = 0;
+        $counts = 0;
+        $staff = [];
+        $vehicles = []; // No vehicles if not logged in
     }
-    
+
+    return view('home.mycart', compact('count', 'cart', 'counts', 'staff', 'vehicles'));
+}
 
 public function fetchServiceDatetimes()
 {
@@ -375,8 +367,8 @@ public function confirm_order(Request $request)
     $address = $request->address;
     $phone = $request->phone;
     $staff_id = $request->staff_id;
-    $vehicle = $request->vehicle; // Vehicle as a string input
-    $size = $request->size; // Size as a string input
+    $vehicle_id = $request->vehicle_id;
+    $size = $request->size;
     $service_datetime = $request->service_datetime;
 
     // Check if the chosen datetime is already taken by another user
@@ -403,8 +395,8 @@ public function confirm_order(Request $request)
         $order->user_id = $userId;
         $order->product_id = $cartItem->product_id;
         $order->staff_id = $staff_id;
-        $order->vehicle = $vehicle; // Store the vehicle as a string
-        $order->size = $size; // Store the size as a string
+        $order->vehicle_id = $vehicle_id;
+        $order->size = $size;
         $order->service_datetime = $service_datetime;
         $order->status = 'In Queue'; // Set initial status as 'In Queue'
         $order->save();
@@ -413,11 +405,9 @@ public function confirm_order(Request $request)
     // Clear the cart after placing the order
     Cart::where('user_id', $userId)->delete();
 
-    toastr()->timeOut(10000)->closeButton()->success('Service Booked Successfully');
+    toastr()->timeOut(10000)->closeButton()->success('Service Booked Succesfully');
     return redirect()->route('myorders');
 }
-
-
 
 
 

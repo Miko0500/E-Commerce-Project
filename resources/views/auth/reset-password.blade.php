@@ -1,18 +1,21 @@
 <x-guest-layout>
-<style>
+    <style>
+        /* Body Styling */
         body {
-            background: #E37383;
-            font-family: 'Arial', sans-serif;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background: #001f3d; /* Darker background for futuristic look */
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            color: #ffffff;
+            overflow: hidden;
         }
 
+        /* Form Container */
         .form-container {
-            max-width: 400px;
+            max-width: 450px;
             width: 100%;
             padding: 2rem;
             background: rgba(40, 44, 52, 0.85);
@@ -38,13 +41,14 @@
 
         .form-container input[type="email"],
         .form-container input[type="password"] {
-            width: 1000px;
-            padding: 0.75rem;
+            width: 100%;
+            padding: 1rem;
             margin-bottom: 1rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             background: #20232a;
             color: #ffffff;
+            font-size: 1rem;
             transition: background-color 0.3s, box-shadow 0.3s;
         }
 
@@ -55,18 +59,14 @@
             outline: none;
         }
 
-        .form-container input[type="checkbox"] {
-            margin-right: 0.5rem;
-        }
-
         .form-container button {
             width: 100%;
-            padding: 0.75rem;
+            padding: 1rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             background: #ff66b2;
             color: #20232a;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s, box-shadow 0.3s;
@@ -89,22 +89,47 @@
             color: #ff3385;
         }
 
-        .form-container .remember-me {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            margin-bottom: 1rem;
+        /* Success message styling */
+        .success-msg {
+            color: #66ff66;
+            font-size: 1rem;
+            margin-top: 10px;
+            text-align: center;
         }
-        .link {
-    color: blue; /* blue color */
-    text-decoration: none; /* remove default underline */
-}
 
-.link:hover {
-    text-decoration: underline; /* add underline on hover */
-}
+        /* Error Messages Styling */
+        .mt-2 {
+            color: #ff6b6b;
+            text-align: left;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            .form-container h1 {
+                font-size: 1.6rem;
+            }
+
+            .form-container input[type="email"],
+            .form-container input[type="password"] {
+                font-size: 0.9rem;
+                padding: 0.8rem;
+            }
+
+            .form-container button {
+                font-size: 1rem;
+                padding: 0.9rem;
+            }
+        }
 
     </style>
+
+    <!-- Form Content -->
     <form method="POST" action="{{ route('password.store') }}">
         @csrf
 
@@ -113,31 +138,36 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label style="color: #ff66b2;" for="email" :value="__('Email')" />
+            <x-input-label style="color: #000; text-align: center;" for="email" :value="__('Email')" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label style="color: #ff66b2;" for="password" :value="__('Password')" />
+            <x-input-label style="color: #000; text-align: center;" for="password" :value="__('Password')" />
             <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <!-- Confirm Password -->
         <div class="mt-4">
-            <x-input-label style="color: #ff66b2;" for="password_confirmation" :value="__('Confirm Password')" />
-
+            <x-input-label style="color: #000; text-align: center;" for="password_confirmation" :value="__('Confirm Password')" />
             <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
-
+                type="password"
+                name="password_confirmation" required autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+        <!-- Success Message (only visible when successful reset is sent) -->
+        @if(session('status'))
+            <div class="success-msg">
+                {{ session('status') }}
+            </div>
+        @endif
+
         <div class="flex items-center justify-end mt-4">
-            <x-primary-button style="color: #ff66b2;">
+            <x-primary-button style="color: #fff;">
                 {{ __('Reset Password') }}
             </x-primary-button>
         </div>

@@ -13,20 +13,17 @@
             color: #333;
         }
 
-        /* Title Section */
-        .top-title {
-            font-size: 40px;
-            font-weight: 600;
-            margin: 0;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #000;
-            padding: 10px;
-            padding-top: -100px;
-            margin-top: -30px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
+       /* General Styles for the Title */
+.top-title {
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #000;
+  padding: 10px;
+  margin-bottom: 20px;
+  text-align: center; /* Center align the title */
+}
 
         /* Vehicle Section */
         .vehicle_section {
@@ -187,6 +184,65 @@
                 font-size: 16px;
             }
         }
+        /* Responsive Adjustments */
+@media (max-width: 992px) {
+  .top-title {
+    font-size: 32px; /* Reduce the title font size for medium screens */
+  }
+
+  .vehicle-item {
+    width: 100%; /* Make the vehicle items stack in one column on smaller screens */
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .vehicle-item .vehicle-details {
+    text-align: center;
+  }
+
+  .vehicle-item .vehicle-image img {
+    max-width: 200px; /* Reduce image size on smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .top-title {
+    font-size: 28px; /* Reduce the title font size for small screens */
+  }
+
+  .search-sort {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .search-sort input[type="search"] {
+    max-width: 80%; /* Adjust search input width for small screens */
+  }
+
+  .search-sort input[type="submit"] {
+    max-width: 80%; /* Adjust button width for small screens */
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-title {
+    font-size: 24px; /* Even smaller title size for extra small screens */
+  }
+
+  .vehicle-item {
+    width: 100%; /* Make the vehicle items take full width on very small screens */
+    flex-direction: column;
+  }
+
+  .vehicle-item .vehicle-details {
+    text-align: center;
+  }
+
+  .vehicle-item .vehicle-image img {
+    max-width: 150px; /* Even smaller image size */
+  }
+}
     </style>
 </head>
 
@@ -205,13 +261,13 @@
                     <input type="submit" class="btn btn-secondary" value="Search" />
                 </form>
 
-                <form action="{{ url('/vehicle') }}" method="GET" class="sorting-form">
+                <!-- <form action="{{ url('/vehicle') }}" method="GET" class="sorting-form">
                     <select name="status" onchange="this.form.submit()">
                         <option value="" disabled selected>Filter by Status</option>
                         <option value="Available" {{ request('status') == 'Available' ? 'selected' : '' }}>Available</option>
                         <option value="Not Available" {{ request('status') == 'Not Available' ? 'selected' : '' }}>Not Available</option>
                     </select>
-                </form>
+                </form> -->
             </div>
 
             <!-- Vehicle Items Section -->
@@ -233,7 +289,7 @@
                                     {{ implode(', ', $sizes) }}
                                 @endif
                             </p>
-                            <p><strong>Status:</strong> {{ $vehicle->status ? 'Available' : 'Not Available' }}</p>
+                            <!-- <p><strong>Status:</strong> {{ $vehicle->status ? 'Available' : 'Not Available' }}</p> -->
                         </div>
                     </div>
                 @endforeach

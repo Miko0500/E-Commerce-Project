@@ -23,17 +23,18 @@
             position: relative;
         }
 
-        /* Staff Section Title */
-        .top-title {
-            font-size: 48px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #333;
-            padding-bottom: 20px;
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
+       /* General Styles for the Title */
+.top-title {
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #000;
+  padding: 10px;
+  margin-top: -65px;
+  margin-bottom: 20px;
+  text-align: center;
+}
 
         /* Staff Member Styling */
         .staff-card {
@@ -168,12 +169,77 @@
                 font-size: 14px;
             }
         }
+
+        /* Responsive Adjustments */
+@media (max-width: 992px) {
+  .top-title {
+    font-size: 32px; /* Smaller title font size for medium screens */
+  }
+
+  .staff-card {
+    flex-direction: column; /* Stack cards vertically on smaller screens */
+    align-items: center;
+  }
+
+  .staff-card .img-box img {
+    max-width: 150px; /* Smaller image on medium screens */
+  }
+
+  .staff-card .detail-box {
+    text-align: center; /* Center align text */
+  }
+
+  .staff-card h6 {
+    font-size: 18px; /* Adjust heading size for small screens */
+  }
+
+  .staff-card .info {
+    font-size: 14px; /* Adjust text size for small screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .top-title {
+    font-size: 28px; /* Even smaller title size for smaller screens */
+  }
+
+  .staff-card .img-box img {
+    max-width: 120px; /* Reduce image size further */
+  }
+
+  .staff-card h6 {
+    font-size: 16px; /* Reduce heading font size */
+  }
+
+  .staff-card .info {
+    font-size: 12px; /* Reduce text size further */
+  }
+}
+
+@media (max-width: 480px) {
+  .top-title {
+    font-size: 24px; /* Further reduce title size for extra small screens */
+  }
+
+  .staff-card .img-box img {
+    max-width: 100px; /* Even smaller image size on mobile */
+  }
+
+  .staff-card h6 {
+    font-size: 14px; /* Further reduce heading font size */
+  }
+
+  .staff-card .info {
+    font-size: 10px; /* Further reduce text size for extra small screens */
+  }
+}
     </style>
 </head>
 
 <body>
     <section class="staff_section layout_padding">
         <div class="container">
+            
             <div style="padding-bottom: 20px;" class="heading_container heading_center">
                 <a style="font-size: 40px;
             font-weight: 600;
@@ -200,8 +266,8 @@
                             </div>
                             <div class="detail-box">
                                 <h6>{{ $member->name }}</h6>
-                                <p class="info"><strong>Age:</strong> {{ $member->age }}</p>
-                                <p class="info"><strong>Birthday:</strong> {{ \Carbon\Carbon::parse($member->birthday)->format('d M, Y') }}</p>
+                                <!-- <p class="info"><strong>Age:</strong> {{ $member->age }}</p>
+                                <p class="info"><strong>Birthday:</strong> {{ \Carbon\Carbon::parse($member->birthday)->format('d M, Y') }}</p> -->
                                 <p class="info"><strong>Sex:</strong> {{ ucfirst($member->sex) }}</p>
                                 <p class="info"><strong>Contact:</strong> {{ $member->contact }}</p>
                                 <p class="info"><strong>Address:</strong> {{ $member->address }}</p>

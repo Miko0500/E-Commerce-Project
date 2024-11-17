@@ -10,53 +10,45 @@
 
         <style type="text/css">
               /* Container and Card Layout */
-        .filter-sort-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px 25px;
-            background: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            max-width: 750px;
-        }
+              .filter-sort-container {
+    display: flex;
+    justify-content: center;  /* Centers the container horizontally */
+    align-items: center;      /* Vertically aligns the items if necessary */
+    gap: 15px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 900px;         /* Optionally set a max width */
+}
 
-        .form-group {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin: 0;
-        }
+.filter-sort-container form {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;              /* Ensures form takes full width of container */
+}
 
-        .form-label {
-            font-weight: bold;
-            color: #333;
-            font-size: 14px;
-        }
+.form-group {
+    margin-bottom: 0;
+}
 
-        .form-select {
-            width: 150px;
-            padding: 8px;
-            font-size: 14px;
-            color: #333;
-            background-color: #ffffff;
-            border: 1px solid #007bff;
-            border-radius: 5px;
-            outline: none;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            appearance: none;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjMDA3YmZmIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBkPSJNNC41IDE0bDcuNS03LjUgNy41IDcuNUwxNCA1LjVsLTcgLTcgLTcgNy41eiIgLz48L3N2Zz4=');
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 10px;
-        }
+.form-select {
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
 
-        .form-select:hover, .form-select:focus {
-            border-color: #0056b3;
-            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
-        }
+.form-select:hover,
+.form-select:focus {
+    border-color: #0056b3;
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+}
+
 
         /* Table Styling */
         .table-container {
@@ -402,7 +394,7 @@
                                                         <div class="col-md-6">
                                                             <h6 class="text-primary">Service Information</h6>
                                                             <p><strong>Title:</strong> {{ $datas->product->title }}</p>
-                                                            <p><strong>Price:</strong> ${{ $datas->product->price }}</p>
+                                                            <p><strong>Price:</strong> {{ $datas->product->price }}</p>
                                                             <p><strong>Status:</strong>
                                                             @if($datas->status == 'In Queue')
     <span class="badge badge-warning">{{ $datas->status }}</span>
@@ -416,9 +408,8 @@
 
                                                             </p>
                                                             <p><strong>Assigned Staff:</strong> {{ $datas->staff_id ? $datas->staff->name : 'N/A' }}</p>
-                                                            <p><strong>Vehicle Type:</strong> {{ $datas->vehicle ?: 'N/A' }}</p>
-<p><strong>Size:</strong> {{ $datas->size ?: 'N/A' }}</p>
-
+                                                            <p><strong>Vehicle Type:</strong> {{ $datas->vehicle ? $datas->vehicle->type : 'N/A' }}</p>
+                                                            <p><strong>Size:</strong> {{ $datas->size ? $datas->size : 'N/A' }}</p>
                                                             <p><strong>Service Date & Time:</strong> {{ \Carbon\Carbon::parse($datas->service_datetime)->format('F j, Y \a\t g:i A') }}</p>
                                                         
                                                         </div>

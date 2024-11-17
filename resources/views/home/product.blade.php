@@ -153,23 +153,116 @@
     padding: 5px 10px;
     font-weight: normal;
 }
+
+
+/* General Styles for the heading */
+.heading_container .navbar-brand span {
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #000;
+  padding: 10px;
+  margin-top: -60px;
+}
+
+/* Responsive adjustments for the shop section */
+.shop_section .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.product-card {
+  margin-bottom: 30px; /* Add spacing between cards */
+}
+
+/* Make the images responsive */
+.product-card .img-box img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* Mobile-responsive adjustments */
+@media (max-width: 768px) {
+  /* Adjust title font size */
+  .heading_container .navbar-brand span {
+    font-size: 32px;
+  }
+
+  /* Make the product cards stacked on small screens */
+  .col-sm-6 {
+    width: 100%; /* Full width for smaller screens */
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Adjust spacing for product card */
+  .product-card {
+    padding: 10px;
+    margin-bottom: 15px; /* Reduced margin */
+  }
+
+  /* Reduce button size for mobile */
+  .btn {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  /* Adjust the price and rating text size */
+  .product-card .detail-box h6 {
+    font-size: 18px;
+  }
+
+  .product-card .price {
+    font-size: 16px;
+  }
+
+  .product-card .average-rating {
+    font-size: 14px;
+  }
+
+  /* Adjust the "View All Services" button */
+  .text-center .btn-dark {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heading_container .navbar-brand span {
+    font-size: 28px; /* Even smaller title font size on very small screens */
+  }
+
+  .product-card .detail-box h6 {
+    font-size: 16px; /* Smaller product title */
+  }
+
+  .product-card .price {
+    font-size: 14px; /* Smaller price font */
+  }
+
+  .product-card .average-rating {
+    font-size: 12px; /* Smaller rating font */
+  }
+
+  /* Adjust "Add Service" button */
+  .btn {
+    font-size: 12px;
+    padding: 6px 12px; /* Smaller button padding */
+  }
+}
+
 </style>
 
 <section class="shop_section layout_padding">
   <div class="container">
-  <div style="padding-bottom: 60px;" class="heading_container heading_center">
+    <div style="padding-bottom: 60px;" class="heading_container heading_center">
       <a class="navbar-brand" href="index.html">
-      <span style="font-size: 40px;
-  font-weight: 600;
-  margin: 0;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #000;
-padding: 10px;
-padding-top: -100px;
-margin-top: -60px;">LATEST SERVICES</span>
-    </a>
-      </div>
+        <span>LATEST SERVICES</span>
+      </a>
+    </div>
     <div class="row">
       @foreach($product as $products)
       <div class="col-sm-6 col-md-6">
@@ -178,7 +271,6 @@ margin-top: -60px;">LATEST SERVICES</span>
             <div class="img-box">
               <img src="products/{{$products->image}}" alt="">
               <div class="overlay">
-                
                 <p>Click to learn more about this service</p>
               </div>
             </div>
@@ -187,21 +279,20 @@ margin-top: -60px;">LATEST SERVICES</span>
               <span class="price">${{$products->price}}</span>
 
               @if ($products->average_rating !== null)
-    <div class="average-rating">
-        <span class="star-icon">★</span>
-        <span class="rating-value">{{ number_format($products->average_rating, 1) }}</span>
-    </div>
-@else
-    <div class="average-rating no-rating">No ratings yet</div>
-@endif
+              <div class="average-rating">
+                  <span class="star-icon">★</span>
+                  <span class="rating-value">{{ number_format($products->average_rating, 1) }}</span>
+              </div>
+              @else
+              <div class="average-rating no-rating">No ratings yet</div>
+              @endif
 
               @if(Auth::check())
-                        <!-- If the user is logged in, allow adding to cart -->
-                        <a class="btn" onclick="confirmation(event)" href="{{ url('add_cart', $products->id) }}">Book Service</a>
-                    @else
-                        <!-- If the user is not logged in, direct them to the login page -->
-                        <a class="btn" href="{{ route('login') }}">Add Service</a>
-                    @endif </div>
+                <a class="btn" onclick="confirmation(event)" href="{{ url('add_cart', $products->id) }}">Book Service</a>
+              @else
+                <a class="btn" href="{{ route('login') }}">Add Service</a>
+              @endif
+            </div>
           </div>
         </a>
       </div>
@@ -209,9 +300,11 @@ margin-top: -60px;">LATEST SERVICES</span>
     </div>
   </div>
 </section>
+
 <div class="text-center">
   <a class="btn btn-dark" href="{{url('/product')}}">View All Services</a>
 </div>
+
 
 <script>
   function handleScroll() {

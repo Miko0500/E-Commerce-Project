@@ -10,123 +10,187 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <style type="text/css">
-
+/* General Styles for the Table and Cart Section */
 .div_deg {
-        display: flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 60px;
+    flex-direction: column; /* Stack content vertically */
+}
+
+.cardy {
+    overflow-x: auto; /* Allow horizontal scroll for tables on small screens */
+    width: 100%; /* Ensure the card takes full width */
+}
+
+table {
+    width: 100%; /* Full width of the container */
+    border-collapse: collapse;
+    margin: 20px auto;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th {
+    background-color: #333333;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 15px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+td {
+    padding: 15px;
+    text-align: center;
+    font-size: 16px;
+    color: #333333;
+    font-weight: 500;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Remove border on the last row */
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Hover effect on table rows */
+tr:hover {
+    background-color: #f2f2f2;
+    transition: background-color 0.3s ease;
+}
+
+/* Button Styling */
+.btn-danger {
+    background-color: #ff5722;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.btn-danger:hover {
+    background-color: #e64a19;
+}
+
+/* Pagination Styling */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    padding: 8px 12px;
+    margin: 0 5px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.pagination a:hover {
+    background-color: #2980b9;
+}
+
+/* Order Form Styles */
+.card {
+    padding: 20px;
+    color: #000;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.form-control {
+    font-size: 14px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    /* Adjust table padding and text size for medium screens */
+    table, th, td {
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 10px;
+    }
+
+    td img {
+        width: 100px; /* Resize images on medium screens */
+        height: 100px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Make the table scrollable horizontally on small screens */
+    .cardy table {
+        font-size: 12px;
+        width: 100%;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
         justify-content: center;
-        align-items: center;
-        margin: 60px;
     }
 
-    /* Table Styling */
+    /* Make the images and text smaller */
+    td img {
+        width: 80px;
+        height: 80px;
+    }
+
+    /* Reduce form input and button size for smaller screens */
+    .form-group label {
+        font-size: 14px;
+    }
+
+    .form-control {
+        font-size: 14px;
+    }
+
+    .btn-danger {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* On very small screens */
     table {
-        border-collapse: collapse;
-        width: 100%; /* Full width */
-        max-width: 100%; /* Max width set to 100% to make it as wide as the container */
-        margin: 20px auto;
-        background-color: #ffffff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        border-radius: 10px;
-        overflow: hidden;
+        font-size: 10px;
     }
 
-    th {
-        background-color: #333333;
-        color: #ffffff;
-        font-size: 20px;
-        font-weight: bold;
-        padding: 15px;
-        text-align: center;
-        text-transform: uppercase;
+    td img {
+        width: 70px;
+        height: 70px;
     }
 
-    td {
-        padding: 15px;
-        text-align: center;
-        font-size: 16px;
-        color: #333333;
-        font-weight: 500;
-        border-bottom: 1px solid #ddd;
+    .pagination a {
+        font-size: 10px;
+        padding: 6px 8px;
     }
 
-    /* Remove border on the last row */
-    tr:last-child td {
-        border-bottom: none;
+    .btn-danger {
+        font-size: 10px;
+        padding: 5px 8px;
     }
 
-    /* Hover effect on table rows */
-    tr:hover {
-        background-color: #f2f2f2;
-        transition: background-color 0.3s ease;
+    /* Make the pagination links adjust for small screens */
+    .pagination {
+        font-size: 12px;
+        flex-wrap: wrap;
     }
+}
 
-    /* Responsive styling */
-    @media (max-width: 768px) {
-        table, th, td {
-            font-size: 14px;
-        }
-
-        th, td {
-            padding: 10px;
-        }
-    }
-
-        .cart_value
-        {
-            text-align: center;
-            margin-bottom: 70px;
-            padding: 18px;
-        }
-
-        .order_deg
-        {
-            padding-right: 100px;
-            margin-top: -50px;
-        }
-        
-        label
-        {
-            display: inline-block;
-            width: 150px;
-        }
-
-        .div_gap
-        {
-            padding: 20px;
-        }
-
-        /* Additional Styles for the Card */
-        .card {
-            border: 2px solid #000;
-            border-radius: 10px;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-
-        
-        /* Style for pagination links */
-        .pagination li a {
-            color: red; /* Change to your desired color */
-            /* Add any additional styles here */
-        }
-
-        /* Style for active pagination link */
-        .pagination li.active a {
-            color: red; /* Change to your desired active color */
-            /* Add any additional styles here */
-        }
-        h3
-        {
-            border: 2px solid black;
-            text-align: center;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            background-color: grey;
-        }
-        .form-group{
-            color: #000;
-        }
         .cardy {
     border: 2px solid #000;
     border-radius: 10px;
@@ -221,6 +285,129 @@
     transform: translateY(-1px); /* Gentle lift effect */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow */
         }
+
+        /* General Styles for the Form and Order Card */
+.container {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.card {
+    padding: 20px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    margin-top: 50px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    font-size: 14px;
+    padding: 12px;
+}
+
+button {
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.btn2 {
+    width: 100%; /* Make buttons full width on small screens */
+}
+
+/* Button Styling */
+.btn-warning {
+    background-color: #ff9800;
+    color: #fff;
+}
+
+.btn-warning:hover {
+    background-color: #e68900;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    /* Adjust form padding and font size for medium screens */
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        font-size: 16px; /* Slightly larger font size on smaller screens */
+    }
+
+    button {
+        font-size: 16px;
+    }
+
+    /* Ensure buttons take full width */
+    .btn2 {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    /* On small screens, make the form card take full width */
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .form-group label {
+        font-size: 14px; /* Smaller font size for labels */
+    }
+
+    .form-control {
+        font-size: 15px; /* Adjust form input size */
+    }
+
+    button {
+        font-size: 14px; /* Smaller button size */
+        padding: 10px 20px;
+    }
+
+    /* Full width buttons on smaller screens */
+    .btn2 {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    /* On very small screens */
+    .form-group label {
+        font-size: 12px; /* Further reduce font size for labels */
+    }
+
+    .form-control {
+        font-size: 12px; /* Smaller form control inputs */
+    }
+
+    .btn2 {
+        font-size: 12px; /* Smaller buttons */
+    }
+
+    button {
+        font-size: 12px; /* Even smaller button text */
+    }
+}
+
     </style>
 
 
@@ -250,10 +437,6 @@
                 <th>Delete</th>
             </tr>
 
-            <?php
-            $totalValue = 0; // Initialize total value variable
-            ?>
-
             @foreach($cart as $carts)
             <tr>
                 <td>{{$carts->product->title}}</td>
@@ -265,80 +448,82 @@
                     <a class="btn btn-danger" onclick="confirmation(event)" href="{{url('delete_cart',$carts->id)}}">Remove</a>
                 </td>
             </tr>
-
-           
-
             @endforeach
         </table>
     </div>
 </div>
 
-    <div class="div_deg">
-
-    {{$cart->onEachSide(1)->links()}}
-
-    </div>
-
-
-    <!-- Place the order_deg card here -->
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                   <!-- Form containing the button -->
-<form action="{{ url('confirm_order') }}" method="POST" id="orderForm">
-    @csrf
-    <div class="form-group">
-        <label for="name">Client Name</label>
-        <input type="text" name="name" id="name" class="form-control" value="{{ Auth::user()->name }}">
-    </div>
-    <div class="form-group">
-        <label for="address">Client Address</label>
-        <textarea name="address" id="address" class="form-control">{{ Auth::user()->address }}</textarea>
-    </div>
-    <div class="form-group">
-        <label for="phone">Client Phone</label>
-        <input type="text" name="phone" id="phone" class="form-control" value="{{ Auth::user()->phone }}">
-    </div>
-    <div class="form-group">
-        <label for="staff_id">Select Staff</label>
-        <select name="staff_id" id="staff_id" class="form-control" required>
-            <option value="">Select Staff</option>
-            @foreach($staff as $staffMember)
-                <option value="{{ $staffMember->id }}">{{ $staffMember->name }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="form-group">
-    <label for="vehicle">Enter Vehicle</label>
-    <input type="text" name="vehicle" id="vehicle" class="form-control" placeholder="Enter vehicle type or description" required>
+<div class="div_deg">
+    {{$cart->onEachSide(1)->links()}} <!-- Pagination -->
 </div>
 
 
-<div class="form-group">
-    <label for="size">Enter Size Description</label>
-    <input type="text" name="size" id="size" class="form-control" placeholder="Enter size (e.g., Small, Medium, Large)" required>
-</div>
 
-    <div class="form-group">
-        <label for="service_datetime">Preferred Date & Time</label>
-        <input type="text" name="service_datetime" id="service_datetime" class="form-control" placeholder="Select Date & Time" required>
-    </div>
+  <!-- Order Form Card -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <!-- Form containing the button -->
+                <form action="{{ url('confirm_order') }}" method="POST" id="orderForm">
+                    @csrf
+                    <div class="form-group">
+                        <label for="name">Client Name</label>
+                        <input type="text" name="name" id="name" class="form-control" value="{{ Auth::user()->name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Client Address</label>
+                        <textarea name="address" id="address" class="form-control">{{ Auth::user()->address }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Client Phone</label>
+                        <input type="text" name="phone" id="phone" class="form-control" value="{{ Auth::user()->phone }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="staff_id">Select Staff</label>
+                        <select name="staff_id" id="staff_id" class="form-control" required>
+                            <option value="">Select Staff</option>
+                            @foreach($staff as $staffMember)
+                                <option value="{{ $staffMember->id }}">{{ $staffMember->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicle">Select Vehicle</label>
+                        <select name="vehicle_id" id="vehicle" class="form-control" onchange="updateSizes()" required>
+                            <option value="">Select Vehicle</option>
+                            @foreach($vehicles as $vehicle)
+                                <option value="{{ $vehicle->id }}" data-sizes="{{ json_encode($vehicle->sizes) }}">{{ $vehicle->type }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-    <div class="form-group">
-        <button type="button" class="btn2 btn-warning" onclick="fetchServiceDatetimes()">All Occupied Datetimes</button>
-    </div>
+                    <div class="form-group">
+                        <label for="size">Select Size</label>
+                        <select name="size" id="size" class="form-control">
+                            <option value="">Select Size</option>
+                        </select>
+                    </div>
 
-    <div class="form-group">
-        <button type="button" class="btn2 btn-primary" onclick="confirmation2(event)">Book Now</button>
-    </div>
-</form>
+                    <div class="form-group">
+                        <label for="service_datetime">Preferred Date & Time</label>
+                        <input type="text" name="service_datetime" id="service_datetime" class="form-control" placeholder="Select Date & Time" required>
+                    </div>
 
-                </div>
+                    <div class="form-group">
+                        <button type="button" class="btn2 btn-warning" onclick="fetchServiceDatetimes()">All Occupied Datetimes</button>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" class="btn2 btn-primary" onclick="confirmation2(event)">Book Now</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    <!-- End order_deg card -->
+</div>
+<!-- End order_deg card -->
+
 
     
 
@@ -381,7 +566,26 @@
             });
         }
 
-       
+        function updateSizes() {
+        const vehicleSelect = document.getElementById('vehicle');
+        const sizeSelect = document.getElementById('size');
+        const selectedVehicle = vehicleSelect.options[vehicleSelect.selectedIndex];
+        
+        // Get the sizes from the data attribute
+        const sizes = JSON.parse(selectedVehicle.getAttribute('data-sizes'));
+
+        // Clear existing options
+        sizeSelect.innerHTML = '<option value="">Select Size</option>';
+
+        // Populate size options based on selected vehicle
+        sizes.forEach(size => {
+            // Ensure size is a simple letter and not an object or special character
+            const sizeLetter = size.trim(); // Clean any extra whitespace
+            if (sizeLetter.length > 0) {
+                sizeSelect.innerHTML += `<option value="${sizeLetter}">${sizeLetter}</option>`;
+            }
+        });
+    }
 
 
 
