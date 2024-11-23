@@ -252,7 +252,7 @@
             margin-top: -65px;
             margin-bottom: 10px;
             text-align: center;" class="top-title">
-                    <span>Staff Information</span>
+                    <span>Our Staff</span>
                 </a>
             </div>
 

@@ -228,6 +228,13 @@
                 font-size: 10px;
             }
         }
+
+        .mt-2 {
+            color: #ff6b6b;
+            text-align: left;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -239,33 +246,49 @@
             <p>Book your carwash with ease and enjoy our top-quality services.</p>
         </div>
 
+        <x-auth-session-status class="mb-4" :status="session('status')" />
+
         <!-- Right Section: Login Form -->
         <div class="right-section">
-            <h2>Login</h2>
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input id="email" type="email" name="email" required autofocus>
-                </div>
+    <h2>{{ __('Log in') }}</h2>
 
-                <div class="form-group password-wrapper">
-                    <label for="password">Password</label>
-                    <input id="password" type="password" name="password" required>
-                    <i class="eye-icon fa fa-eye" onclick="togglePassword()"></i>
-                </div>
-
-                <button type="submit" class="login-button">Log in</button>
-
-                <div class="extra-links">
-                    @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}">Forgot Password?</a>
-                    @endif
-                    <a href="{{ url('register') }}">Create an Account</a>
-                </div>
-            </form>
+    <form method="POST" action="{{ route('login') }}">
+        @csrf
+        <!-- Email Field -->
+        <div class="form-group">
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            
+            <!-- Display email error below the email input -->
+            @error('email')
+                <span class="text-danger mt-2" style="display:block;">{{ $message }}</span>
+            @enderror
         </div>
-    </div>
+
+        <!-- Password Field -->
+        <div class="form-group password-wrapper">
+            <x-input-label for="password" :value="__('Password')" />
+            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password"/>
+
+            <i class="eye-icon fa fa-eye" onclick="togglePassword()"></i>
+            
+            <!-- Display password error below the password input -->
+            @error('password')
+                <span class="text-danger mt-2" style="display:block;">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <button type="submit" class="login-button">Log in</button>
+
+        <div class="extra-links">
+            @if (Route::has('password.request'))
+                <a href="{{ route('password.request') }}">Forgot Password?</a>
+            @endif
+            <a href="{{ url('register') }}">Create an Account</a>
+        </div>
+    </form>
+</div>
+
 
     <script>
         function togglePassword() {

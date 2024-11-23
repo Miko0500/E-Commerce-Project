@@ -665,11 +665,11 @@ public function view_orders(Request $request)
 {
     // Get the selected status, sort, and date filter from the request
     $selectedStatus = $request->input('status', 'all');
-    $selectedSort = $request->input('sort', 'newest');
+    $selectedSort = $request->input('sort');
     $dateFilter = $request->input('date_filter', '');
 
     // Build the query with filters and include the countdownTimer relationship
-    $data = Order::with(['product', 'staff', 'vehicle', 'countdownTimer'])
+    $data = Order::with(['product', 'countdownTimer']) // Removed staff and vehicle relationships
         ->when($selectedStatus !== 'all', function ($query) use ($selectedStatus) {
             return $query->where('status', $selectedStatus);
         })
@@ -682,6 +682,8 @@ public function view_orders(Request $request)
                 return $query->orderBy('status');
             }
         })
+        // Prioritize 'In Queue' and 'Ongoing Service' first
+        ->orderByRaw("CASE WHEN status = 'In Queue' THEN 1 WHEN status = 'Ongoing Service' THEN 2 ELSE 3 END")
         ->when($dateFilter, function ($query) use ($dateFilter) {
             if ($dateFilter == 'today') {
                 return $query->whereDate('created_at', today());
@@ -697,13 +699,18 @@ public function view_orders(Request $request)
     return view('admin.order', compact('data', 'selectedStatus', 'selectedSort', 'dateFilter'));
 }
 
+
+
 public function reports(Request $request)
 {
     // Get the selected status, sort, and date filter from the request
     $selectedStatus = $request->input('status', 'all');
-    $selectedSort = $request->input('sort', 'newest');
+    $selectedSort = $request->input('sort', 'newest'); // Default to 'newest' if no sort is selected
     $dateFilter = $request->input('date_filter', '');
+    $groupDateFilter = $request->input('group_date_filter', ''); // New group date filter
     $staffFilter = $request->input('staff_filter', ''); // Get staff filter
+    $vehicleFilter = $request->input('vehicle_filter', ''); // Get vehicle filter
+    $statusFilter = $request->input('status_filter', ''); // Added filter for status (Finished / Cancelled)
 
     // Split the date_filter input by commas and trim any extra spaces
     $dates = $dateFilter ? explode(',', $dateFilter) : [];
@@ -714,8 +721,13 @@ public function reports(Request $request)
         return \Carbon\Carbon::hasFormat($date, 'Y-m-d');
     });
 
-    // Build the query with filters
-    $data = Order::with(['product', 'staff', 'vehicle', 'countdownTimer', 'finalization']) // Ensure finalization is included
+    // Initialize the query
+    $query = Order::with(['product', 'finalization', 'countdownTimer']) // Include finalization to get staff and vehicle
+        // Select orders with 'Finished' or 'Cancelled' status by default
+        ->whereIn('status', ['Finished', 'Cancelled']) // Updated to include 'Cancelled'
+        ->when($statusFilter, function ($query) use ($statusFilter) {
+            return $query->where('status', $statusFilter); // Filter by selected status
+        })
         ->when($selectedStatus !== 'all', function ($query) use ($selectedStatus) {
             return $query->where('status', $selectedStatus);
         })
@@ -728,13 +740,32 @@ public function reports(Request $request)
                 return $query->orderBy('status');
             }
         })
+        // Filter by Staff Name if provided
         ->when($staffFilter, function ($query) use ($staffFilter) {
-            return $query->where('staff_id', $staffFilter);
+            return $query->whereHas('finalization', function ($query) use ($staffFilter) {
+                return $query->where('staff', 'like', '%' . $staffFilter . '%'); // Search staff name
+            });
+        })
+        ->when($vehicleFilter, function ($query) use ($vehicleFilter) {
+            return $query->whereHas('finalization', function ($query) use ($vehicleFilter) {
+                return $query->where('vehicle', $vehicleFilter); // Filter by vehicle from finalization table
+            });
         })
         ->when(!empty($dates), function ($query) use ($dates) {
-            return $query->whereIn(\DB::raw('DATE(service_datetime)'), $dates);
-        })
-        ->paginate(10)  // Paginate results
+            return $query->whereIn(\DB::raw('DATE(service_datetime)'), $dates); // Apply individual dates filter
+        });
+
+    // Group date filter logic
+    if ($groupDateFilter === 'today') {
+        $query->whereDate('created_at', \Carbon\Carbon::today());
+    } elseif ($groupDateFilter === 'week') {
+        $query->whereBetween('created_at', [\Carbon\Carbon::now()->startOfWeek(), \Carbon\Carbon::now()->endOfWeek()]);
+    } elseif ($groupDateFilter === 'month') {
+        $query->whereMonth('created_at', \Carbon\Carbon::now()->month);
+    }
+
+    // Execute the query and paginate results
+    $data = $query->paginate(10)  // Paginate results
         ->appends($request->except('page')); // Retain filters on pagination
 
     // Calculate the total price of the orders
@@ -742,11 +773,20 @@ public function reports(Request $request)
         return $order->finalization ? $order->finalization->total_price : 0;
     });
 
-    // Get the list of all staff members for the dropdown
-    $staffList = Staff::all(); // Replace with the correct model and relationship if necessary
+    // Get the list of all staff members for the dropdown (if needed)
+    $staffList = Staff::all();
 
-    return view('admin.reports', compact('data', 'selectedStatus', 'selectedSort', 'dateFilter', 'staffList', 'totalPrice'));
+    // Get the list of all vehicles for the dropdown (if needed)
+    $vehicleList = Vehicle::all();
+
+    return view('admin.reports', compact('data', 'selectedStatus', 'selectedSort', 'dateFilter', 'staffList', 'vehicleList', 'totalPrice'));
 }
+
+
+
+
+
+
 
 
 
@@ -850,8 +890,11 @@ public function cancel($id)
 {
     // Validate the inputs
     $request->validate([
-        'total_price' => 'required|string|max:255',
+        'total_price' => 'required|numeric',
         'description' => 'nullable|string',
+        'staff' => 'nullable|string',
+        'vehicle' => 'nullable|string',
+        'size' => 'nullable|string',
     ]);
 
     // Finalize the order by creating or updating the finalization record
@@ -859,7 +902,10 @@ public function cancel($id)
         ['order_id' => $id],
         [
             'total_price' => $request->input('total_price'),
-            'description' => $request->input('description')
+            'description' => $request->input('description'),
+            'staff' => $request->input('staff'),  // Added staff
+            'vehicle' => $request->input('vehicle'), // Added vehicle
+            'size' => $request->input('size'), // Added size
         ]
     );
 
@@ -875,13 +921,16 @@ public function cancel($id)
     return redirect()->back();
 }
 
-    
-    public function updateOrderFinalization(Request $request, $id)
+
+public function updateOrderFinalization(Request $request, $id)
 {
     // Validate the inputs
     $request->validate([
-        'total_price' => 'required|string|max:255',
+        'total_price' => 'required|numeric',
         'description' => 'nullable|string',
+        'staff' => 'nullable|string',
+        'vehicle' => 'nullable|string',
+        'size' => 'nullable|string',
     ]);
 
     // Find and update the existing order finalization record
@@ -891,6 +940,9 @@ public function cancel($id)
         $finalization->update([
             'total_price' => $request->input('total_price'),
             'description' => $request->input('description'),
+            'staff' => $request->input('staff'),  // Updated staff
+            'vehicle' => $request->input('vehicle'), // Updated vehicle
+            'size' => $request->input('size'), // Updated size
         ]);
 
         // Use Toastr for a success message
@@ -901,6 +953,7 @@ public function cancel($id)
 
     return redirect()->back();
 }
+
 
 
     

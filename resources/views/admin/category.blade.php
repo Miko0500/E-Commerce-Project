@@ -62,7 +62,7 @@
             text-decoration: none;
             padding: 12px 25px;
             color: #fff;
-            background-color: #333;
+            
             border-radius: 8px;
             font-weight: 600;
             transition: background-color 0.3s ease;

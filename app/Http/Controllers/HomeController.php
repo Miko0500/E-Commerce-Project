@@ -264,11 +264,17 @@ public function product()
     {
         // Get the authenticated user
         $user = Auth::user();
-        
-        // Check if the user already has a service in the cart
-        $existingCart = Cart::where('user_id', $user->id)->first();
-        
-        
+    
+        // Check if the user already has the product in the cart
+        $existingCart = Cart::where('user_id', $user->id)
+                            ->where('product_id', $id)
+                            ->first();  // Check if product already exists for this user
+    
+        if ($existingCart) {
+            // Product already exists in the cart, return an error message or redirect
+            toastr()->error('This product is already in your cart!');
+            return redirect('mycart');  // Redirect to the cart page
+        }
     
         // Add the new service to the cart if no existing item is found
         $data = new Cart;
@@ -276,11 +282,13 @@ public function product()
         $data->product_id = $id;
         $data->save();
     
+        // Show success message
+        // toastr()->success('Product added to your cart successfully!');
         
-        
-        // Redirect to the "my cart" page directly using the URL
+        // Redirect to the "my cart" page
         return redirect('mycart');  // Use the URL of your "My Cart" page
     }
+    
     
     
 
@@ -358,7 +366,7 @@ public function confirm_order(Request $request)
 
     if ($existingOrder) {
         // If an active order exists for this user, show an error message and redirect back
-        toastr()->timeOut(10000)->closeButton()->error('You can only have one active order at a time.');
+        toastr()->timeOut(10000)->closeButton()->error('You can only have one active booking at a time.');
         return redirect()->back();
     }
 
@@ -366,9 +374,6 @@ public function confirm_order(Request $request)
     $name = $request->name;
     $address = $request->address;
     $phone = $request->phone;
-    $staff_id = $request->staff_id;
-    $vehicle_id = $request->vehicle_id;
-    $size = $request->size;
     $service_datetime = $request->service_datetime;
 
     // Check if the chosen datetime is already taken by another user
@@ -383,6 +388,18 @@ public function confirm_order(Request $request)
         return redirect()->back();
     }
 
+    // Check if the user has already 3 cancelled orders today
+    $cancelledOrdersCount = Order::where('user_id', $userId)
+        ->where('status', 'Cancelled')
+        ->whereDate('created_at', today())  // Check only today's cancelled orders
+        ->count();  // Get count of cancelled orders today
+
+    // If the user has 3 cancelled orders today, prevent them from booking
+    if ($cancelledOrdersCount >= 3) {
+        toastr()->timeOut(10000)->closeButton()->error('You cannot book a service because you already have 3 cancelled bookings today.');
+        return redirect()->back();
+    }
+
     // Fetch the cart items for the user
     $cartItems = Cart::where('user_id', $userId)->get();
 
@@ -394,9 +411,6 @@ public function confirm_order(Request $request)
         $order->phone = $phone;
         $order->user_id = $userId;
         $order->product_id = $cartItem->product_id;
-        $order->staff_id = $staff_id;
-        $order->vehicle_id = $vehicle_id;
-        $order->size = $size;
         $order->service_datetime = $service_datetime;
         $order->status = 'In Queue'; // Set initial status as 'In Queue'
         $order->save();
@@ -405,9 +419,10 @@ public function confirm_order(Request $request)
     // Clear the cart after placing the order
     Cart::where('user_id', $userId)->delete();
 
-    toastr()->timeOut(10000)->closeButton()->success('Service Booked Succesfully');
+    toastr()->timeOut(10000)->closeButton()->success('Service Booked Successfully');
     return redirect()->route('myorders');
 }
+
 
 
 
@@ -437,7 +452,7 @@ public function myorders(Request $request)
     $date_filter = $request->input('date_filter', '');
 
     // Build the query with sorting and filtering
-    $query = Order::where('user_id', $user)->with('staff');
+    $query = Order::where('user_id', $user);
 
     // Apply status filter
     if ($status !== 'all') {
@@ -453,7 +468,14 @@ public function myorders(Request $request)
         $query->whereDate('created_at', '>=', now()->subDays(30));
     }
 
-    // Apply sorting
+    // First, prioritize finalized orders that are still "In Queue"
+    $query->orderByRaw("CASE 
+                            WHEN status = 'In Queue' AND EXISTS (SELECT 1 FROM order_finalizations WHERE order_id = orders.id) THEN 1
+                            WHEN status = 'Already Finalized' THEN 2
+                            ELSE 3 
+                        END");
+
+    // Apply sorting by user selection
     if ($sort === 'newest') {
         $query->orderBy('created_at', 'desc');
     } elseif ($sort === 'oldest') {
@@ -462,10 +484,18 @@ public function myorders(Request $request)
         $query->orderBy('status', 'asc');
     }
 
+    // Paginate the results
     $order = $query->paginate(6)->appends($request->except('page'));
 
     return view('home.order', compact('count', 'order', 'counts', 'status', 'sort', 'date_filter'));
 }
+
+
+
+
+
+
+
 
 
 

@@ -300,18 +300,19 @@
 
         <div class="page-content">
         <div class="page-header">
-            <h1>Report of Customer Orders</h1>
+            <h1 style="text-align: center; margin-bottom: 30px">Report of Customer Orders</h1>
             <div class="container-fluid">
                 <div class="filter-container">
                 <form method="GET" action="{{ route('reports') }}">
     @csrf
+    <!-- Filter By Group Date -->
     <div class="form-group">
-        <label for="date_filter" class="form-label">Filter By Date:</label>
-        <select name="date_filter" class="form-select" onchange="this.form.submit()">
-            <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Today</option>
-            <option value="week" {{ request('date_filter') == 'week' ? 'selected' : '' }}>This Week</option>
-            <option value="month" {{ request('date_filter') == 'month' ? 'selected' : '' }}>This Month</option>
-            
+        <label for="group_date_filter" class="form-label">Filter By Group Date:</label>
+        <select name="group_date_filter" class="form-select" onchange="this.form.submit()">
+            <option value="">Select Option</option>
+            <option value="today" {{ request('group_date_filter') == 'today' ? 'selected' : '' }}>Today</option>
+            <option value="week" {{ request('group_date_filter') == 'week' ? 'selected' : '' }}>This Week</option>
+            <option value="month" {{ request('group_date_filter') == 'month' ? 'selected' : '' }}>This Month</option>
         </select>
     </div>
 
@@ -322,15 +323,21 @@
 </div>
 
 
-<div class="form-group">
-    <label for="staff_filter" class="form-label">Filter By Staff:</label>
-    <select name="staff_filter" class="form-select" onchange="this.form.submit()">
-        <option value="">Select Staff</option>
-        @foreach($staffList as $staff)
-            <option value="{{ $staff->id }}" {{ request('staff_filter') == $staff->id ? 'selected' : '' }}>{{ $staff->name }}</option>
-        @endforeach
-    </select>
-</div>
+ <!-- Input to filter by Staff Name -->
+ <div class="form-group">
+        <label for="staff_filter" class="form-label">Filter By Staff (Search):</label>
+        <input type="text" name="staff_filter" class="form-select" placeholder="Search by Staff Name" value="{{ request('staff_filter') }}" onkeyup="this.form.submit()">
+    </div>
+
+   <!-- Filter By Status -->
+   <div class="form-group">
+        <label for="status_filter" class="form-label">Filter By Status:</label>
+        <select name="status_filter" class="form-select" onchange="this.form.submit()">
+            <option value="">Select Status</option>
+            <option value="Finished" {{ request('status_filter') == 'Finished' ? 'selected' : '' }}>Finished</option>
+            <option value="Cancelled" {{ request('status_filter') == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+        </select>
+    </div>
 
 
 </form>
@@ -359,7 +366,8 @@
                 <th>Product Title</th>
                 <th>Status</th>
                 <th>Service Date</th>
-                <th>Staff Assigned</th>
+                <th>Staff Assigned</th> <!-- Display staff name -->
+            <th>Vehicle Assigned</th> <!-- Display vehicle name -->
                 <th>Total Price</th>
             </tr>
         </thead>
@@ -371,7 +379,9 @@
                     <td>{{ $order->product->title }}</td>
                     <td>{{ $order->status }}</td>
                     <td>{{ \Carbon\Carbon::parse($order->service_datetime)->format('F j, Y \a\t g:i A') }}</td>
-                    <td>{{ $order->staff ? $order->staff->name : 'N/A' }}</td>
+                    <!-- Show staff and vehicle details from the finalization table -->
+                <td>{{ $order->finalization ? $order->finalization->staff : 'N/A' }}</td>
+                <td>{{ $order->finalization ? $order->finalization->vehicle : 'N/A' }}</td>
                     <td>P{{ number_format($order->finalization ? $order->finalization->total_price : 0, 2) }}</td>
                 </tr>
             @endforeach

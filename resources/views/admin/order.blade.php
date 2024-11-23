@@ -230,16 +230,18 @@
                     <option value="In Queue" {{ request('status') == 'In Queue' ? 'selected' : '' }}>In Queue</option>
                     <option value="Ongoing Service" {{ request('status') == 'Ongoing Service' ? 'selected' : '' }}>Ongoing Service</option>
                     <option value="Finished" {{ request('status') == 'Finished' ? 'selected' : '' }}>Finished</option>
+                    <option value="Cancelled" {{ request('status') == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="sort" class="form-label">Sort By:</label>
-                <select name="sort" class="form-select" onchange="this.form.submit()">
-                    <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>Newest Orders</option>
-                    <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest Orders</option>
-                    <option value="status" {{ request('sort') == 'status' ? 'selected' : '' }}>Status</option>
-                </select>
-            </div>
+    <label for="sort" class="form-label">Sort By:</label>
+    <select name="sort" class="form-select" onchange="this.form.submit()">
+        <option value="" {{ request('sort') == '' ? 'selected' : '' }}>Select Order</option>
+        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest Orders</option>
+        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest Orders</option>
+    </select>
+</div>
+
             <div class="form-group">
                 <label for="date_filter" class="form-label">Filter By Date:</label>
                 <select name="date_filter" class="form-select" onchange="this.form.submit()">
@@ -294,6 +296,8 @@
     Service Ongoing
 @elseif($datas->status === 'Finished')
     Service Completed
+    @elseif($datas->status === 'Cancelled')
+    Service Cancelled
 @elseif($datas->countdownTimer && $datas->countdownTimer->countdown_ends_at)
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -407,9 +411,9 @@
 @endif
 
                                                             </p>
-                                                            <p><strong>Assigned Staff:</strong> {{ $datas->staff_id ? $datas->staff->name : 'N/A' }}</p>
+                                                            <!-- <p><strong>Assigned Staff:</strong> {{ $datas->staff_id ? $datas->staff->name : 'N/A' }}</p>
                                                             <p><strong>Vehicle Type:</strong> {{ $datas->vehicle ? $datas->vehicle->type : 'N/A' }}</p>
-                                                            <p><strong>Size:</strong> {{ $datas->size ? $datas->size : 'N/A' }}</p>
+                                                            <p><strong>Size:</strong> {{ $datas->size ? $datas->size : 'N/A' }}</p> -->
                                                             <p><strong>Service Date & Time:</strong> {{ \Carbon\Carbon::parse($datas->service_datetime)->format('F j, Y \a\t g:i A') }}</p>
                                                         
                                                         </div>
@@ -421,16 +425,26 @@
 
                                                    
 
-                                                    <!-- Finalized Order Information -->
-                                                    @if($datas->finalization)
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-12">
-                                                            <h6 class="text-primary">Finalized Order Information</h6>
-                                                            <p><strong>Total Price:</strong> {{ $datas->finalization->total_price }}</p>
-                                                            <p><strong>Description:</strong> {{ $datas->finalization->description }}</p>
-                                                        </div>
-                                                    </div>
-                                                    @endif
+                                                   <!-- Finalized Order Information -->
+@if($datas->finalization)
+<div class="row mb-3">
+    <div class="col-md-12">
+        <h6 class="text-primary">Finalized Order Information</h6>
+        <p><strong>Total Price:</strong> {{ $datas->finalization->total_price }}</p>
+        <p><strong>Description:</strong> {{ $datas->finalization->description }}</p>
+        
+        <!-- Display Staff -->
+        <p><strong>Staff:</strong> {{ $datas->finalization->staff }}</p>
+
+        <!-- Display Vehicle -->
+        <p><strong>Vehicle:</strong> {{ $datas->finalization->vehicle }}</p>
+
+        <!-- Display Size -->
+        <p><strong>Size:</strong> {{ $datas->finalization->size }}</p>
+    </div>
+</div>
+@endif
+
 
                                                     <!-- Rating and Comment -->
                                                     @if($datas->rating)
@@ -502,71 +516,109 @@
         </div>
     </div>
 
-    <!-- edit and view finalization -->
-    @if($datas->finalization)
-    <div class="modal fade" id="viewFinalizedModal-{{ $datas->id }}" tabindex="-1" role="dialog" aria-labelledby="viewFinalizedModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Finalized Order Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="POST" action="{{ route('update_order_finalization', $datas->id) }}">
-                    @csrf
-                    @method('PATCH') <!-- Use PATCH method for updating -->
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="total_price">Total Price</label>
-                            <input type="text" name="total_price" class="form-control" value="{{ $datas->finalization->total_price }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea name="description" class="form-control" rows="3">{{ $datas->finalization->description }}</textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </div>
-                </form>
+    <!-- Edit and View Finalization -->
+@if($datas->finalization)
+<div class="modal fade" id="viewFinalizedModal-{{ $datas->id }}" tabindex="-1" role="dialog" aria-labelledby="viewFinalizedModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Finalized Order Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <form method="POST" action="{{ route('update_order_finalization', $datas->id) }}">
+                @csrf
+                @method('PATCH') <!-- Use PATCH method for updating -->
+                <div class="modal-body">
+                    <!-- Total Price -->
+                    <div class="form-group">
+                        <label for="total_price">Total Price</label>
+                        <input type="number" name="total_price" class="form-control" value="{{ $datas->finalization->total_price }}" required>
+                    </div>
+
+                    <!-- Staff -->
+                    <div class="form-group">
+                        <label for="staff">Staff</label>
+                        <input type="text" name="staff" class="form-control" value="{{ $datas->finalization->staff }}" required>
+                    </div>
+
+                    <!-- Vehicle -->
+                    <div class="form-group">
+                        <label for="vehicle">Vehicle</label>
+                        <input type="text" name="vehicle" class="form-control" value="{{ $datas->finalization->vehicle }}" required>
+                    </div>
+
+                    <!-- Size -->
+                    <div class="form-group">
+                        <label for="size">Size</label>
+                        <input type="text" name="size" class="form-control" value="{{ $datas->finalization->size }}" required>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea name="description" class="form-control" rows="3">{{ $datas->finalization->description }}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
         </div>
     </div>
-    @endif
+</div>
+@endif
 
+<!-- Finalize Order Modal -->
+<div class="modal fade" id="finalizeModal-{{ $datas->id }}" tabindex="-1" role="dialog" aria-labelledby="finalizeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Finalize Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="finalizeForm" method="POST" action="{{ route('finalize_order', $datas->id) }}">
+                @csrf
+                <div class="modal-body">
+                    <!-- Total Price -->
+                    <div class="form-group">
+                        <label for="total_price">Total Price</label>
+                        <input type="number" name="total_price" class="form-control" required>
+                    </div>
 
+                    <!-- Staff -->
+                    <div class="form-group">
+                        <label for="staff">Staff</label>
+                        <input type="text" name="staff" class="form-control" required>
+                    </div>
 
+                    <!-- Vehicle -->
+                    <div class="form-group">
+                        <label for="vehicle">Vehicle</label>
+                        <input type="text" name="vehicle" class="form-control" required>
+                    </div>
 
+                    <!-- Size -->
+                    <div class="form-group">
+                        <label for="size">Size</label>
+                        <input type="text" name="size" class="form-control" required>
+                    </div>
 
-                                <!-- Finalize Order Modal -->
-                    <div class="modal fade" id="finalizeModal-{{ $datas->id }}" tabindex="-1" role="dialog" aria-labelledby="finalizeModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Finalize Order</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form class="finalizeForm" method="POST" action="{{ route('finalize_order', $datas->id) }}">
-                                    @csrf
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label for="total_price">Total Price</label>
-                                            <input type="text" name="total_price" class="form-control" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="description">Description</label>
-                                            <textarea name="description" class="form-control" rows="3"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                    </div>
-                                </form>
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea name="description" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
                             
 
 

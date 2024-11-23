@@ -283,6 +283,36 @@
     font-weight: normal;
 }
 
+/* Custom Cancel button color */
+.swal-button--cancel {
+    background-color: #f44336 !important; /* Red color */
+    color: white !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    font-size: 16px !important;
+    transition: background-color 0.3s ease !important; /* Smooth transition */
+}
+
+/* Hover effect for Cancel button */
+.swal-button--cancel:hover {
+    background-color: #d32f2f !important; /* Darker red on hover */
+}
+
+/* Custom Confirm button color */
+.swal-button--confirm {
+    background-color: #4caf50 !important; /* Green color */
+    color: white !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    font-size: 16px !important;
+    transition: background-color 0.3s ease !important;  /* Smooth transition */
+}
+
+/* Hover effect for Confirm button */
+.swal-button--confirm:hover {
+    background-color: #388e3c !important; /* Darker green on hover */
+}
+
 </style>
 
 
@@ -362,23 +392,39 @@
   }
 
   function confirmation(ev) {
-        ev.preventDefault();  // Prevent the default link click action
-        var urlToRedirect = ev.currentTarget.getAttribute('href');
-        
-        // Show the confirmation popup using SweetAlert
-        swal({
-            title: "Are You Sure You Want To Add This Service?",
-            text: "This Will Be Added To The Pending Page",
-            icon: "info",
-            buttons: true,
-            dangerMode: true,
-        }).then((willAdd) => {
-            if (willAdd) {
-                // Redirect to the 'add_cart' URL
-                window.location.href = urlToRedirect;
+    ev.preventDefault();  // Prevent the default link click action
+    var urlToRedirect = ev.currentTarget.getAttribute('href');
+    
+    // Show the confirmation popup using SweetAlert
+    swal({
+        title: "Are You Sure You Want To Add This Service?",
+        text: "This Will Be Added To The Pending Page",
+        icon: "info",
+        buttons: {
+            cancel: {
+                text: "Cancel",
+                value: null,
+                visible: true,
+                className: "swal-button--cancel",  // Custom class for Cancel button
+                closeModal: true
+            },
+            confirm: {
+                text: "Confirm",
+                value: true,
+                visible: true,
+                className: "swal-button--confirm",  // Custom class for Confirm button
+                closeModal: true
             }
-        });
-    }
+        },
+        dangerMode: true, // Optional: makes the confirm button red
+    }).then((willAdd) => {
+        if (willAdd) {
+            // Redirect to the 'add_cart' URL
+            window.location.href = urlToRedirect;
+        }
+    });
+}
+
 
   window.addEventListener('scroll', handleScroll);
   window.addEventListener('load', handleScroll);

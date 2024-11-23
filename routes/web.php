@@ -3,6 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use Illuminate\Http\Request;
+
+use App\Models\Order;
+
 use App\Http\Controllers\HomeController;
 
 use App\Http\Controllers\AdminController;
@@ -147,6 +151,23 @@ Route::post('/orders/{order}/rate', [HomeController::class, 'rate'])->name('orde
 
 Route::get('/service-details/{productId}', [HomeController::class, 'serviceDetails'])->name('service.details');
 
+Route::get('/fetch-available-dates', [HomeController::class, 'fetchAvailableDates']);
+
+Route::get('/fetch-booked-times', function(Request $request) {
+    $date = $request->input('date');  // Get the selected date from the request
+
+    // Fetch unique booked times for the given date with status 'In Queue' or 'Ongoing Service'
+    $bookedTimes = Order::whereDate('service_datetime', $date)
+        ->whereIn('status', ['In Queue', 'Ongoing Service'])  // Filter by status
+        ->pluck('service_datetime')
+        ->map(function ($datetime) {
+            return \Carbon\Carbon::parse($datetime)->format('H:i'); // Format time as "HH:mm"
+        })
+        ->unique()  // Remove duplicates
+        ->toArray();
+
+    return response()->json(['bookedTimes' => $bookedTimes]); // Return booked times as JSON
+});
 
 Route::post('/orders/{id}/finalize', [AdminController::class, 'finalizeOrder'])->name('finalize_order');
 

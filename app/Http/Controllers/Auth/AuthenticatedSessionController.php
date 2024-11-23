@@ -23,18 +23,37 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
+{
+    // Attempt to authenticate the user by checking if the email exists
+    $user = \App\Models\User::where('email', $request->email)->first();
 
-        $request->session()->regenerate();
+    if ($user) {
+        // If the user exists, check if the password is correct
+        if (Auth::attempt($request->only('email', 'password'))) {
+            // Regenerate the session after successful authentication
+            $request->session()->regenerate();
 
-        if($request->user()->usertype === 'admin')
-        {
-            return redirect('admin/dashboard');
+            // Redirect based on the user type
+            if ($request->user()->usertype === 'admin') {
+                return redirect('admin/dashboard');
+            }
+
+            return redirect()->intended(route('dashboard'));
+        } else {
+            // If the password is incorrect
+            return back()->withErrors([
+                'password' => 'Password is incorrect.',
+            ])->onlyInput('email'); // Retain the email input on failure
         }
-
-        return redirect()->intended(route('dashboard'));
+    } else {
+        // If the email does not exist in the database
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email'); // Retain the email input on failure
     }
+}
+
+    
 
     /**
      * Destroy an authenticated session.

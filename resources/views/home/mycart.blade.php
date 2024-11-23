@@ -408,6 +408,37 @@ button {
     }
 }
 
+/* Custom Cancel button color */
+.swal-button--cancel {
+    background-color: #f44336 !important; /* Red color */
+    color: white !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    font-size: 16px !important;
+    transition: background-color 0.3s ease !important; /* Smooth transition */
+}
+
+/* Hover effect for Cancel button */
+.swal-button--cancel:hover {
+    background-color: #d32f2f !important; /* Darker red on hover */
+}
+
+/* Custom Confirm button color */
+.swal-button--confirm {
+    background-color: #4caf50 !important; /* Green color */
+    color: white !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    font-size: 16px !important;
+    transition: background-color 0.3s ease !important;  /* Smooth transition */
+}
+
+/* Hover effect for Confirm button */
+.swal-button--confirm:hover {
+    background-color: #388e3c !important; /* Darker green on hover */
+}
+
+
     </style>
 
 
@@ -479,7 +510,9 @@ button {
                         <label for="phone">Client Phone</label>
                         <input type="text" name="phone" id="phone" class="form-control" value="{{ Auth::user()->phone }}">
                     </div>
-                    <div class="form-group">
+
+
+                    <!-- <div class="form-group">
                         <label for="staff_id">Select Staff</label>
                         <select name="staff_id" id="staff_id" class="form-control" required>
                             <option value="">Select Staff</option>
@@ -504,19 +537,154 @@ button {
                             <option value="">Select Size</option>
                         </select>
                     </div>
+                     -->
 
-                    <div class="form-group">
-                        <label for="service_datetime">Preferred Date & Time</label>
-                        <input type="text" name="service_datetime" id="service_datetime" class="form-control" placeholder="Select Date & Time" required>
-                    </div>
+                     <div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Flatpickr input for selecting date and time -->
+            <div class="form-group">
+            <label for="service_datetime" style="display: block; text-align: center; font-size: 1.1rem; margin-bottom: 10px;">Preferred Date & Time (30mins interval)</label>
 
-                    <div class="form-group">
-                        <button type="button" class="btn2 btn-warning" onclick="fetchServiceDatetimes()">All Occupied Datetimes</button>
-                    </div>
+                <input type="text" name="service_datetime" id="service_datetime" class="form-control" placeholder="Select Date & Time" required>
+            </div>
+        </div>
 
-                    <div class="form-group">
-                        <button type="button" class="btn2 btn-primary" onclick="confirmation2(event)">Book Now</button>
-                    </div>
+        
+
+        <div class="col-md-6">
+            <!-- Display booked times for the selected day -->
+            <h5 style="font-size: medium; text-align: center; margin-bottom: 20px;">Choose on this Times Available for Selected Day</h5>
+
+            <!-- Container to display booked times in 3 columns -->
+            <div id="bookedTimesList" class="times-grid">
+                <!-- Booked times will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <style>
+        /* Style for the 3-column grid layout */
+.times-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+    gap: 10px; /* Space between items */
+    padding: 10px;
+}
+
+/* Styling for the times */
+.times-grid .list-group-item {
+    padding: 10px 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 50px;
+}
+
+/* Styling for available times */
+.times-grid .available {
+    background-color: #d4edda; /* Light green */
+    color: #155724;
+}
+
+/* Styling for booked times */
+.times-grid .booked {
+    background-color: #f8d7da; /* Light red */
+    color: #721c24;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .times-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .times-grid {
+        grid-template-columns: 1fr; /* 1 column on very small screens */
+    }
+}
+
+
+        .container {
+            padding-top: 40px;
+        }
+        .col-md-6 {
+            padding: 15px;
+        }
+        .form-control {
+            font-size: 16px;
+            padding: 12px;
+        }
+        .list-group-item {
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .list-group-item.booked {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .list-group-item.available {
+            background-color: #2ecc71;
+            color: white;
+        }
+        h5 {
+            font-size: 20px;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        label {
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .flatpickr-calendar {
+            z-index: 9999;
+        }
+        .btn-primary {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+
+        /* Add styling for booked times */
+.booked {
+    background-color: red; /* Red color for booked times */
+    color: white;
+    font-weight: bold;
+}
+
+/* Optional: Add a style for available times */
+.available {
+    background-color: green; /* Green color for available times */
+    color: white;
+    font-weight: bold;
+}
+
+    </style>
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Button to show all occupied datetimes -->
+            <div class="form-group">
+                <button type="button" class="btn2 btn-warning" onclick="fetchServiceDatetimes()">Virtual Queue</button>
+            </div>
+
+            <!-- Button to book the appointment -->
+            <div class="form-group">
+                <button type="button" class="btn2 btn-primary" onclick="confirmation2(event)">Book Now</button>
+            </div>
                 </form>
             </div>
         </div>
@@ -531,7 +699,7 @@ button {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="text-dark modal-title" id="allDatetimesModalLabel">All Unavailable Datetimes</h5>
+                        <h5 class="text-dark modal-title" id="allDatetimesModalLabel">All Bookings Datetimes</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -550,42 +718,63 @@ button {
     @yield('content')
 
     <script>
-        function confirmation(ev) {
-            ev.preventDefault();
-            var urlToRedirect = ev.currentTarget.getAttribute('href');
-            swal({
-                title: "Are You Sure You Want To Delete This Order?",
-                text: "This Delete Will Be Permanent",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            }).then((willCancel)=>{
-                if(willCancel) {
-                    window.location.href=urlToRedirect;
-                }
-            });
-        }
-
-        function updateSizes() {
-        const vehicleSelect = document.getElementById('vehicle');
-        const sizeSelect = document.getElementById('size');
-        const selectedVehicle = vehicleSelect.options[vehicleSelect.selectedIndex];
-        
-        // Get the sizes from the data attribute
-        const sizes = JSON.parse(selectedVehicle.getAttribute('data-sizes'));
-
-        // Clear existing options
-        sizeSelect.innerHTML = '<option value="">Select Size</option>';
-
-        // Populate size options based on selected vehicle
-        sizes.forEach(size => {
-            // Ensure size is a simple letter and not an object or special character
-            const sizeLetter = size.trim(); // Clean any extra whitespace
-            if (sizeLetter.length > 0) {
-                sizeSelect.innerHTML += `<option value="${sizeLetter}">${sizeLetter}</option>`;
+ function confirmation(ev) {
+    ev.preventDefault();  // Prevent the default link click action
+    var urlToRedirect = ev.currentTarget.getAttribute('href');
+    
+    // Show the confirmation popup using SweetAlert
+    swal({
+        title: "Are You Sure You Want To Delete This Order?",
+        text: "This Delete Will Be Permanent",
+        icon: "warning",
+        buttons: {
+            cancel: {
+                text: "Cancel",
+                value: null,
+                visible: true,
+                className: "swal-button--cancel",  // Custom class for Cancel button
+                closeModal: true
+            },
+            confirm: {
+                text: "Confirm",
+                value: true,
+                visible: true,
+                className: "swal-button--confirm",  // Custom class for Confirm button
+                closeModal: true
             }
-        });
-    }
+        },
+        dangerMode: true, // Optional: makes the confirm button red
+    }).then((willAdd) => {
+        if (willAdd) {
+            // Redirect to the 'add_cart' URL
+            window.location.href = urlToRedirect;
+        }
+    });
+}
+
+
+        
+
+    //     function updateSizes() {
+    //     const vehicleSelect = document.getElementById('vehicle');
+    //     const sizeSelect = document.getElementById('size');
+    //     const selectedVehicle = vehicleSelect.options[vehicleSelect.selectedIndex];
+        
+        
+    //     const sizes = JSON.parse(selectedVehicle.getAttribute('data-sizes'));
+
+       
+    //     sizeSelect.innerHTML = '<option value="">Select Size</option>';
+
+        
+    //     sizes.forEach(size => {
+            
+    //         const sizeLetter = size.trim(); 
+    //         if (sizeLetter.length > 0) {
+    //             sizeSelect.innerHTML += `<option value="${sizeLetter}">${sizeLetter}</option>`;
+    //         }
+    //     });
+    // }
 
 
 
@@ -630,7 +819,7 @@ button {
                 data.forEach(order => {
                     datetimeList.append(`
                         <li class="list-group-item">
-                            Occupied: ${order.service_datetime} - 
+                            Booked: ${order.service_datetime} - 
                             Status: <span style="color: ${order.status === 'Ongoing Service' ? 'skyblue' : order.status === 'In Queue' ? 'orange' : 'black'}; font-weight: bold;">
                                         ${order.status}
                                     </span>
@@ -703,7 +892,10 @@ button {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const dateTimeInput = document.getElementById('service_datetime');
+    const bookedTimesList = document.getElementById('bookedTimesList');  // Element to display booked times
+    let bookedTimes = [];  // Store booked times for the selected date
 
+    // Initialize the Flatpickr instance
     flatpickr(dateTimeInput, {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
@@ -714,34 +906,139 @@ document.addEventListener('DOMContentLoaded', function() {
         disableMobile: true,
         minTime: "08:00",  // Set minimum time to 8 AM
         maxTime: "17:00",  // Set maximum time to 5 PM
-
+        minuteIncrement: 30,  // Set interval to 30 minutes
         onChange: function(selectedDates, dateStr, instance) {
             const selectedDate = selectedDates[0];
-            const currentDate = new Date();
-            
-            // Check if selected date is today
-            if (selectedDate.toDateString() === currentDate.toDateString()) {
-                // Check if selected time is before the current time
-                if (selectedDate.getTime() < currentDate.getTime()) {
-                    alert("You cannot book a time earlier than the current time.");
-                    
-                    // Reset to the current time or the next available time
-                    const nextAvailableTime = new Date(currentDate);
-                    nextAvailableTime.setMinutes(Math.ceil(currentDate.getMinutes() / 15) * 15); // Round up to the next quarter hour
 
-                    if (nextAvailableTime.getHours() < 8) {
-                        nextAvailableTime.setHours(8, 0); // Set to 8 AM if before opening hours
-                    } else if (nextAvailableTime.getHours() >= 17) {
-                        nextAvailableTime.setDate(nextAvailableTime.getDate() + 1); // Move to the next day if past closing
-                        nextAvailableTime.setHours(8, 0); // Set to 8 AM
-                    }
+            // Adjust time to nearest 30-minute interval
+            adjustTimeToNearestInterval(selectedDate);
 
-                    instance.setDate(nextAvailableTime);
-                }
-            }
+            // Fetch and display the booked times for the selected day
+            fetchBookedTimes(selectedDate);
         }
     });
+
+    // Function to generate all 30-minute intervals between 8:00 AM and 5:00 PM
+    function generateAvailableTimes() {
+        const availableTimes = [];
+        const start = 8;  // Start from 8:00 AM
+        const end = 17;   // End at 5:00 PM (17:00)
+
+        for (let hour = start; hour < end; hour++) {
+            for (let minute = 0; minute < 60; minute += 30) {
+                const time = new Date();
+                time.setHours(hour, minute, 0, 0); // Set hour and minute
+                const timeString = time.toTimeString().substr(0, 5); // Format as "HH:mm"
+                availableTimes.push(timeString);
+            }
+        }
+
+        return availableTimes;
+    }
+
+    // Function to fetch and display the booked times for a selected day
+function fetchBookedTimes(date) {
+    const formattedDate = date.toISOString().split('T')[0]; // Format the date as "YYYY-MM-DD"
+
+    // Fetch the booked times for the selected day
+    $.ajax({
+        url: "/fetch-booked-times",  // Backend route to fetch booked times
+        method: "GET",
+        data: { date: formattedDate },
+        success: function(data) {
+            // Store the booked times
+            bookedTimes = data.bookedTimes;
+
+            // Generate all available times (8:00 AM to 5:00 PM in 30-minute intervals)
+            const allAvailableTimes = generateAvailableTimes();
+
+            // Clear the existing list of booked times
+            bookedTimesList.innerHTML = '';
+
+            // Loop through all times and display them, mark booked ones in red
+            allAvailableTimes.forEach(time => {
+                const listItem = document.createElement('div');
+                listItem.textContent = time;
+
+                // Check if the time is booked
+                if (bookedTimes.includes(time)) {
+                    listItem.classList.add('list-group-item', 'booked'); // Add class for booked times (red)
+                } else {
+                    listItem.classList.add('list-group-item', 'available'); // Add class for available times
+                }
+
+                bookedTimesList.appendChild(listItem);
+            });
+        },
+        error: function() {
+            toastr.error("Error fetching booked times.");
+        }
+    });
+}
+
+
+    // Function to adjust the selected time to the nearest 30-minute interval
+    function adjustTimeToNearestInterval(date) {
+        const minutes = date.getMinutes();
+
+        // If minutes are between 0-14, set to the hour (e.g. 8:14 becomes 8:00)
+        if (minutes >= 0 && minutes < 15) {
+            date.setMinutes(0); // Set minutes to 0
+        }
+        // If minutes are between 15-29, set to 30 (e.g. 8:16 becomes 8:30)
+        else if (minutes >= 15 && minutes < 45) {
+            date.setMinutes(30); // Set minutes to 30
+        }
+        // If minutes are between 45-59, set to the next hour (e.g. 8:46 becomes 9:00)
+        else {
+            date.setMinutes(0); // Set minutes to 0
+            date.setHours(date.getHours() + 1); // Increment the hour by 1
+        }
+
+        // Ensure that Flatpickr updates correctly after adjustment
+        dateTimeInput._flatpickr.setDate(date);  // This will update the Flatpickr input
+    }
+
+    // Handle the "All Occupied Datetimes" button click
+    function fetchServiceDatetimes() {
+        const selectedDate = dateTimeInput.value;
+        if (selectedDate) {
+            const dateObj = new Date(selectedDate);
+            fetchBookedTimes(dateObj);  // Fetch the booked times for the selected date
+        } else {
+            // toastr.error("Please select a valid date.");
+        }
+    }
+
+    // Handle the "Book Now" button click
+    function confirmation2(event) {
+        event.preventDefault();
+        const selectedTime = dateTimeInput.value;
+
+        // Check if the selected time is already booked
+        if (bookedTimes.includes(selectedTime)) {
+            toastr.error("The selected time is already booked. Please choose a different time.");
+        } else {
+            // Proceed with booking the appointment (submit form or make AJAX request)
+            $.ajax({
+                url: '/book-appointment',  // Your route for booking the appointment
+                method: 'POST',
+                data: {
+                    service_datetime: selectedTime,
+                    _token: $('meta[name="csrf-token"]').attr('content')  // Include CSRF token for security
+                },
+                success: function(response) {
+                    toastr.success("Appointment successfully booked!");
+                }
+            });
+        }
+    }
+
+    // Attach functions to buttons
+    document.querySelector('.btn-warning').addEventListener('click', fetchServiceDatetimes);
+    document.querySelector('.btn-primary').addEventListener('click', confirmation2);
 });
+
 </script>
 
 <script>
@@ -764,13 +1061,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const name = document.getElementById('name').value;
         const address = document.getElementById('address').value;
         const phone = document.getElementById('phone').value;
-        const staffId = document.getElementById('staff_id').value;
-        const vehicleId = document.getElementById('vehicle').value;
-        const size = document.getElementById('size').value;
+        // const staffId = document.getElementById('staff_id').value;
+        // const vehicleId = document.getElementById('vehicle').value;
+        // const size = document.getElementById('size').value;
         const serviceDatetime = document.getElementById('service_datetime').value;
 
         // Check if any of the required fields are empty
-        if (!name || !address || !phone || !staffId || !vehicleId || !size || !serviceDatetime) {
+        if (!name || !address || !phone || !serviceDatetime) {
+
+            // !staffId || !vehicleId || !size ||
             toastr.error("Please fill out all the required fields before proceeding.");
             return;  // Stop the function if the form is not complete
         }
@@ -778,7 +1077,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show the confirmation popup using SweetAlert
         swal({
             title: "Are You Sure You Want To Book This Service?",
-            text: "After booking a service, you must be on the site before the 20 minutes countdown runs out. Please wait for the finalization by the admin.",
+            text: "After booking a service, wait for our call for the finalization of your booking/s which we asks about your vehicle and its size. After finalizing, you must be on the site before the 20 minutes countdown runs out.",
             icon: "info",
             buttons: true,
             dangerMode: true,

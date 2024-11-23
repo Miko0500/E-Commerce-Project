@@ -270,13 +270,14 @@ header {
                 <option value="In Queue" {{ request('status') == 'In Queue' ? 'selected' : '' }}>In Queue</option>
                 <option value="Ongoing Service" {{ request('status') == 'Ongoing Service' ? 'selected' : '' }}>Ongoing Service</option>
                 <option value="Finished" {{ request('status') == 'Finished' ? 'selected' : '' }}>Finished</option>
+                <option value="Cancelled" {{ request('status') == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
             </select>
         </div>
         <div class="form-group">
             <label for="sort" class="form-label">Sort By:</label>
             <select name="sort" class="form-select" onchange="this.form.submit()">
-                <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>Newest Orders</option>
-                <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest Orders</option>
+                <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>Newest Bookings</option>
+                <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest Bookings</option>
                 
             </select>
         </div>
@@ -318,6 +319,8 @@ header {
                     Service Ongoing
                 @elseif($orders->status === 'Finished')
                     Service Completed
+                    @elseif($orders->status === 'Cancelled')
+    Service Cancelled
                 @elseif($orders->countdownTimer && $orders->countdownTimer->countdown_ends_at)
                     <span class="countdown-timer" data-countdown="{{ $orders->countdownTimer->countdown_ends_at }}">Loading...</span>
                 @else
@@ -344,11 +347,20 @@ header {
             <button class="btn btn-primary btn-sm mb-3" data-toggle="modal" data-target="#detailsModal-{{ $orders->id }}" style="border-radius: 20px; font-weight: bold; font-size: 14px; padding: 6px 12px;">Details</button>
             
             <!-- Finalization Details -->
-            @if($orders->finalization)
+            @if($orders->finalization && $orders->status != 'Finished' && $orders->status != 'Cancelled')
                 <div class="finalization-details" style="text-align: left;">
-                    <h4 style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">Finalized Details</h4>
-                    <p style="font-size: 14px; margin-bottom: 5px;"><strong>Total Price:</strong> ${{ $orders->finalization->total_price }}</p>
+                    <h4 style="font-size: 16px; font-weight: bold;">Finalized Details</h4>
+                    <p style="font-size: 14px;"><strong>Total Price:</strong> ${{ $orders->finalization->total_price }}</p>
                     <p style="font-size: 14px;"><strong>Description:</strong> {{ $orders->finalization->description }}</p>
+
+                    <!-- Display Staff -->
+        <p style="font-size: 14px;"><strong>Staff:</strong> {{ $orders->finalization->staff }}</p>
+
+<!-- Display Vehicle -->
+<p style="font-size: 14px;"><strong>Vehicle:</strong> {{ $orders->finalization->vehicle }}</p>
+
+<!-- Display Size -->
+<p style="font-size: 14px;"><strong>Size:</strong> {{ $orders->finalization->size }}</p>
                 </div>
             @endif
 
@@ -488,9 +500,9 @@ header {
                             <h6 class="text-primary">Service Information</h6>
                             <p><strong>Title:</strong> {{ $orders->product->title }}</p>
                             <p><strong>Price:</strong> ${{ $orders->product->price }}</p>
-                            <p><strong>Assigned Staff:</strong> {{ $orders->staff_id ? $orders->staff->name : 'N/A' }}</p>
+                            <!-- <p><strong>Assigned Staff:</strong> {{ $orders->staff_id ? $orders->staff->name : 'N/A' }}</p>
                             <p><strong>Vehicle Type:</strong> {{ $orders->vehicle ? $orders->vehicle->type : 'N/A' }}</p>
-                            <p><strong>Size:</strong> {{ $orders->size ? $orders->size : 'N/A' }}</p>
+                            <p><strong>Size:</strong> {{ $orders->size ? $orders->size : 'N/A' }}</p> -->
                             <p><strong>Service Date & Time:</strong> {{ \Carbon\Carbon::parse($orders->service_datetime)->format('F j, Y \a\t g:i A') }}</p>
                             <p><strong>Status:</strong>
                             @if($orders->status == 'In Queue')
@@ -522,6 +534,14 @@ header {
         <h6 class="text-primary">Finalized Order Information</h6>
         <p><strong>Total Price:</strong> {{ $orders->finalization->total_price }}</p>
         <p><strong>Description:</strong> {{ $orders->finalization->description }}</p>
+        <!-- Display Staff -->
+        <p><strong>Staff:</strong> {{ $orders->finalization->staff }}</p>
+
+        <!-- Display Vehicle -->
+        <p><strong>Vehicle:</strong> {{ $orders->finalization->vehicle }}</p>
+
+        <!-- Display Size -->
+        <p><strong>Size:</strong> {{ $orders->finalization->size }}</p>
     </div>
 </div>
 @endif

@@ -96,7 +96,7 @@
         /* Input Fields */
         .form-group {
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 7px;
             position: relative;
         }
 
@@ -113,10 +113,10 @@
             font-size: 16px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            margin-bottom: 5px;
+            margin-bottom: 1px;
             outline: none;
             transition: all 0.3s ease;
-            height: 2px;
+            height: 1px;
         }
 
         .form-group input:focus {
@@ -133,7 +133,7 @@
             font-size: 18px;
             color: #003366;
             cursor: pointer;
-            margin-top: 8px;
+            margin-top: 9px;
         }
 
         /* Submit Button */

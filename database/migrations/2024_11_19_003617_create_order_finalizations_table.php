@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('order_finalizations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id'); // Reference to the order
-            $table->string('total_price')->nullable(); // Total price as a flexible string
+            $table->decimal('total_price', 10, 2)->nullable(); // Total price as a decimal for proper calculation
+            $table->string('vehicle')->nullable(); // Vehicle info
+            $table->string('staff')->nullable(); // Staff info
+            $table->string('size')->nullable(); // Size info
             $table->text('description')->nullable(); // Additional description
             $table->timestamps();
 
