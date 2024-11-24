@@ -4,6 +4,17 @@
     @include('admin.css')
 
     <style type="text/css">
+
+input[type='search'] {
+            width: 500px;
+            height: 50px;
+            padding: 10px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #fff;
+            color: #333;
+        }
          /* Container and Card Layout */
         .filter-sort-container {
             display: flex;
@@ -192,7 +203,7 @@
 
     <div class="page-content">
         <div class="page-header">
-            <h1>All Vehicles</h1>
+            <h1 style="margin-bottom: 30px; text-align: center;">All Vehicles</h1>
             <div class="container-fluid">
                 <form action="{{ url('search_vehicles') }}" method="get">
                     @csrf

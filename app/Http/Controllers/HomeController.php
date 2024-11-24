@@ -28,6 +28,49 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+
+    public function updateUser(Request $request, $id)
+    {
+        // Validate the user type
+        $request->validate([
+            'usertype' => 'required|string|in:user,admin', // assuming user types are 'user' or 'admin'
+        ]);
+    
+        // Find the user by ID
+        $user = User::findOrFail($id);
+    
+        // Store the old usertype to check if it has changed
+        $oldUserType = $user->usertype;
+    
+        // Update the user type
+        $user->usertype = $request->usertype;
+        $user->save();
+    
+        // If the usertype has been updated and it's not the same as the old one,
+        // log the user out and redirect them to the login page.
+        if ($oldUserType !== $user->usertype) {
+            // Check if the user whose type has changed is the logged-in user
+            if ($user->id == Auth::id()) {
+                // Log the user out whose type was changed
+                Auth::logout();
+    
+                // Invalidate the session
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+    
+                // Show success message and redirect to login
+                toastr()->success('Your user type has been updated. Please log in again.');
+                return redirect()->route('login'); // Redirect to login page
+            }
+    
+            toastr()->success('User type updated successfully!');
+        }
+    
+        // Redirect back to the users list
+        return redirect()->route('admin.users'); // Redirect back to the users list page
+    }
+    
+
     
     public function index()
     {
@@ -261,33 +304,43 @@ public function product()
     }
     
     public function add_cart($id)
-    {
-        // Get the authenticated user
-        $user = Auth::user();
-    
-        // Check if the user already has the product in the cart
-        $existingCart = Cart::where('user_id', $user->id)
-                            ->where('product_id', $id)
-                            ->first();  // Check if product already exists for this user
-    
-        if ($existingCart) {
-            // Product already exists in the cart, return an error message or redirect
-            toastr()->error('This product is already in your cart!');
-            return redirect('mycart');  // Redirect to the cart page
-        }
-    
-        // Add the new service to the cart if no existing item is found
-        $data = new Cart;
-        $data->user_id = $user->id;
-        $data->product_id = $id;
-        $data->save();
-    
-        // Show success message
-        // toastr()->success('Product added to your cart successfully!');
-        
-        // Redirect to the "my cart" page
-        return redirect('mycart');  // Use the URL of your "My Cart" page
+{
+    // Get the authenticated user
+    $user = Auth::user();
+
+    // Check if the user already has 3 items in the cart
+    $cartCount = Cart::where('user_id', $user->id)->count();
+
+    if ($cartCount >= 3) {
+        // User already has 3 items in their cart, show an error message
+        toastr()->error('You can only add up to 3 services in your pending.');
+        return back();  // Redirect to the cart page
     }
+
+    // Check if the user already has the product in the cart
+    $existingCart = Cart::where('user_id', $user->id)
+                        ->where('product_id', $id)
+                        ->first();  // Check if product already exists for this user
+
+    if ($existingCart) {
+        // Product already exists in the cart, return an error message or redirect
+        toastr()->error('This service is already in your pending!');
+        return back();  // Redirect to the cart page
+    }
+
+    // Add the new product to the cart if no existing item is found
+    $data = new Cart;
+    $data->user_id = $user->id;
+    $data->product_id = $id;
+    $data->save();
+
+    // Show success message
+    // toastr()->success('Product added to your cart successfully!');
+
+    // Redirect to the "my cart" page
+    return redirect('mycart');  // Use the URL of your "My Cart" page
+}
+
     
     
     
@@ -367,7 +420,7 @@ public function confirm_order(Request $request)
     if ($existingOrder) {
         // If an active order exists for this user, show an error message and redirect back
         toastr()->timeOut(10000)->closeButton()->error('You can only have one active booking at a time.');
-        return redirect()->back();
+        return redirect()->route('myorders');
     }
 
     // Capture the input data
@@ -375,6 +428,37 @@ public function confirm_order(Request $request)
     $address = $request->address;
     $phone = $request->phone;
     $service_datetime = $request->service_datetime;
+
+    // Get the current time in Manila timezone
+    $currentTime = \Carbon\Carbon::now()->setTimezone('Asia/Manila'); // Set to Manila timezone
+    $startOfDay = $currentTime->copy()->setHour(7)->setMinute(59)->setSecond(0); // 8 AM today
+    $endOfDay = $currentTime->copy()->setHour(17)->setMinute(0)->setSecond(0); // 5 PM today
+    $selectedDate = \Carbon\Carbon::parse($service_datetime);  // Parse the selected service date
+
+    // Condition to allow booking at 8 AM if current time is before 8 AM
+    if ($selectedDate->isToday()) {
+        // Allow booking at 8 AM if current time is before 8 AM
+        if ($currentTime->lt($startOfDay) && $selectedDate->eq($startOfDay)) {
+            // Allow booking at 8 AM
+        }
+        // Allow booking from the current time until 5 PM
+        elseif ($selectedDate->gt($currentTime) && $selectedDate->between($startOfDay, $endOfDay)) {
+            // Booking is allowed
+        } else {
+            toastr()->timeOut(10000)->closeButton()->error('You cannot book a service in the past time or outside the allowed window of 8 AM to 5 PM.');
+            return redirect()->route('myorders');
+        }
+    }
+
+    // If the selected time is after 5 PM, the booking is allowed for the next day starting from 12:01 AM
+    if ($currentTime->gt($endOfDay)) {
+        $nextAvailableDay = $currentTime->copy()->addDay()->setHour(0)->setMinute(1)->setSecond(0);
+
+        if ($selectedDate->lt($nextAvailableDay)) {
+            toastr()->timeOut(10000)->closeButton()->error('You cannot book a service before 12:01 AM tomorrow. Please select a valid time.');
+            return redirect()->route('myorders');
+        }
+    }
 
     // Check if the chosen datetime is already taken by another user
     $conflictingOrder = Order::where('service_datetime', $service_datetime)
@@ -385,7 +469,7 @@ public function confirm_order(Request $request)
     if ($conflictingOrder) {
         // If a conflicting order exists, show an error message and prevent the order
         toastr()->timeOut(10000)->closeButton()->error('The selected date and time is already taken by another user. Please choose a different time.');
-        return redirect()->back();
+        return redirect()->route('myorders');
     }
 
     // Check if the user has already 3 cancelled orders today
@@ -396,8 +480,8 @@ public function confirm_order(Request $request)
 
     // If the user has 3 cancelled orders today, prevent them from booking
     if ($cancelledOrdersCount >= 3) {
-        toastr()->timeOut(10000)->closeButton()->error('You cannot book a service because you already have 3 cancelled bookings today.');
-        return redirect()->back();
+        toastr()->timeOut(10000)->closeButton()->error('You cannot book a service because you already have 3 cancelled bookings today. Please wait for the next day.');
+        return redirect()->route('myorders');
     }
 
     // Fetch the cart items for the user
@@ -427,14 +511,18 @@ public function confirm_order(Request $request)
 
 
 
+
+
+
+
 public function delete_cart($id)
 {
     $data = Cart::find($id);
     if ($data) {
         $data->delete();
-        toastr()->timeOut(10000)->closeButton()->success('Service Removed From The Pending Page Successfully');
+        // toastr()->timeOut(10000)->closeButton()->success('Service Removed From The Pending Page Successfully');
     } else {
-        toastr()->timeOut(10000)->closeButton()->error('Service not found in the Pending Page.');
+        // toastr()->timeOut(10000)->closeButton()->error('Service not found in the Pending Page.');
     }
     return redirect()->back();
 }
@@ -720,6 +808,29 @@ public function search_staff(Request $request)
         ->paginate(5);
 
     return view('home.staffs', compact('count', 'staff', 'counts'));
+}
+
+public function cancelOrder($id)
+{
+    // Find the order by its ID
+    $order = Order::findOrFail($id);
+
+    // Check if the order is still in 'In Queue' status
+    if ($order->status === 'In Queue') {
+        // Update the order status to 'Cancelled'
+        $order->status = 'Cancelled';
+        $order->save();
+
+        // Display a success message
+        toastr()->success('Your booking has been cancelled successfully.');
+
+        // Redirect back to the order page
+        return redirect()->route('myorders');
+    }
+
+    // If order cannot be cancelled, show an error
+    toastr()->error('Booking cannot be cancelled at this stage.');
+    return redirect()->route('myorders');
 }
 
     

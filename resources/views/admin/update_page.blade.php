@@ -2,7 +2,7 @@
 <html>
 <head> 
     @include('admin.css')
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
     <style type="text/css">
         body {
             background-color: #f9f9f9;
@@ -182,7 +182,7 @@
                         </div>
 
                         <div class="input_deg">
-                            <input class="btn btn-success" type="submit" value="Update Product">
+                            <input class="btn btn-success" type="submit" value="Update Service">
                         </div>
 
                     </form>
@@ -192,7 +192,8 @@
             </div>
         </div>
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="{{ asset('/admincss/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('/admincss/vendor/popper.js/umd/popper.min.js') }}"></script>
     <script src="{{ asset('/admincss/vendor/bootstrap/js/bootstrap.min.js') }}"></script>

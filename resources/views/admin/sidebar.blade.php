@@ -21,6 +21,7 @@
     color: #fff;
 }
 
+
   
 </Style>
 <div class="d-flex align-items-stretch">
@@ -55,7 +56,7 @@
                   </ul>
                 </li>
                 
-                <li style="color: white;"><a href="#staffDropdown" class="{{ request()->is('add_staff') || request()->is('view_staff') ? 'active' : '' }}" aria-expanded="false" data-toggle="collapse"> <i style="color: #007bff;" class="bi bi-person-fill-check"></i>Staffs </a>
+                <li style="color: white;"><a href="#staffDropdown" class="{{ request()->is('add_staff') || request()->is('view_staff') ? 'active' : '' }}" aria-expanded="false" data-toggle="collapse"> <i style="color: #007bff;" class="bi bi-person-fill-check"></i>Staff </a>
                   <ul id="staffDropdown" class="collapse list-unstyled ">
                     <li style="color: white;"><a href="{{url('add_staff')}}" class="{{ request()->is('add_staff') ? 'active' : '' }}">Add Staff</a></li>
                     <li style="color: white;"><a href="{{url('view_staff')}}" class="{{ request()->is('view_staff') ? 'active' : '' }}">View Staff</a></li>
@@ -84,6 +85,13 @@
                 </a>
 
                 </li>
+
+                <li style="color: white;">
+    <a href="{{ route('admin.users') }}" class="{{ request()->is('admin/users') ? 'active' : '' }}"> 
+        <i style="color: #007bff;" class="fa fa-user"></i> User 
+    </a>
+</li>
+
 
                 
                 <li style="color: red;">

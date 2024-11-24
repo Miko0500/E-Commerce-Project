@@ -363,7 +363,7 @@
                         <a class="btn" onclick="confirmation(event)" href="{{ url('add_cart', $products->id) }}">Book Service</a>
                     @else
                         <!-- If the user is not logged in, direct them to the login page -->
-                        <a class="btn" href="{{ route('login') }}">Add Service</a>
+                        <a class="btn" href="{{ route('login') }}">Book Service</a>
                     @endif</div>
           </div>
         </a>

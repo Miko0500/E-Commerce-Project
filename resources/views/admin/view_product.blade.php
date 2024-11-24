@@ -326,7 +326,7 @@
 
     <div class="page-content">
   <div class="page-header">
-    <h1>All Products</h1>
+    <h1 style="margin-bottom: 30px;">All Services</h1>
     <div class="container-fluid">
       <form action="{{ url('product_search') }}" method="get">
         @csrf
@@ -338,7 +338,7 @@
         <table class="custom-table">
           <thead>
             <tr>
-              <th>Product Image</th>
+              <th>Service Image</th>
               <th>Title</th>
               <th>Description</th>
               <th>Category</th>
@@ -407,7 +407,7 @@
           </tbody>
         </table>
 
-        <div class="pagination">
+        <div style="justify-content: center; margin-top: 50px;" class="pagination">
             {{ $product->onEachSide(1)->links() }}
         </div>
 

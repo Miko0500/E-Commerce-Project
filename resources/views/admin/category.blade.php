@@ -11,6 +11,17 @@
             background-color: #f0f0f0;
             color: #333;
         }
+
+        #categoryInput {
+            width: 300px;
+            height: 50px;
+            padding: 10px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #fff;
+            color: #333;
+        }
         .page-content {
             padding: 20px;
         }
@@ -68,9 +79,11 @@
             transition: background-color 0.3s ease;
             border: none;
         }
-        a.btn:hover, button.btn:hover {
-            background-color: #555;
-        }
+        /* a.btn:hover, button.btn:hover {
+            background-color: #fff;
+        } */
+
+        
     </style>
 </head>
 <body>
@@ -80,7 +93,7 @@
     <div class="page-content">
         <div class="page-header">
             <div class="container-fluid">
-                <h1 style="color: white;">Add Category</h1>
+            <h1 style="margin-bottom: 30px; text-align: center;">All Categories</h1>
                 <div class="div_deg">
                     <form id="categoryForm" method="post" action="{{ url('add_category') }}">
                         @csrf
@@ -96,7 +109,7 @@
                     <div class="category-card" id="category-{{ $category->id }}">
                         <div class="category-name">{{ $category->category_name }}</div>
                         <div class="card-actions">
-                            <button class="btn btn-success" onclick="openEditModal('{{ $category->id }}', '{{ $category->category_name }}')">Edit</button>
+                            <button  class="btn btn-success" onclick="openEditModal('{{ $category->id }}', '{{ $category->category_name }}')">Edit</button>
                             <button class="btn btn-danger" onclick="deleteCategory('{{ $category->id }}')">Delete</button>
                         </div>
                     </div>

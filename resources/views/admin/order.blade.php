@@ -224,8 +224,8 @@
                 <div class="filter-sort-container">
         <form method="GET" action="{{ route('view_orders') }}" style="display: flex; align-items: center; gap: 15px;">
             <div class="form-group">
-                <label for="status" class="form-label">Filter by Status:</label>
-                <select name="status" class="form-select" onchange="this.form.submit()">
+                <label style="color: #000;" for="status" class="form-label">Filter by Status:</label>
+                <select style="border-radius: 20px; border: 2px solid #007bff; background-color: white;" name="status" class="form-select" onchange="this.form.submit()">
                     <option value="all" {{ request('status', 'all') == 'all' ? 'selected' : '' }}>All</option>
                     <option value="In Queue" {{ request('status') == 'In Queue' ? 'selected' : '' }}>In Queue</option>
                     <option value="Ongoing Service" {{ request('status') == 'Ongoing Service' ? 'selected' : '' }}>Ongoing Service</option>
@@ -234,17 +234,17 @@
                 </select>
             </div>
             <div class="form-group">
-    <label for="sort" class="form-label">Sort By:</label>
-    <select name="sort" class="form-select" onchange="this.form.submit()">
-        <option value="" {{ request('sort') == '' ? 'selected' : '' }}>Select Order</option>
-        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest Orders</option>
-        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest Orders</option>
+    <label style="color: #000;" for="sort" class="form-label">Sort By:</label>
+    <select style="border-radius: 20px; border: 2px solid #007bff; background-color: white;" name="sort" class="form-select" onchange="this.form.submit()">
+        <option value="" {{ request('sort') == '' ? 'selected' : '' }}>Select Booking</option>
+        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest Bookings</option>
+        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest Bookings</option>
     </select>
 </div>
 
             <div class="form-group">
-                <label for="date_filter" class="form-label">Filter By Date:</label>
-                <select name="date_filter" class="form-select" onchange="this.form.submit()">
+                <label style="color: #000;" for="date_filter" class="form-label">Filter By Date:</label>
+                <select style="border-radius: 20px; border: 2px solid #007bff; background-color: white;" name="date_filter" class="form-select" onchange="this.form.submit()">
                     <option value="" disabled {{ request('date_filter') == '' ? 'selected' : '' }}>Select Date Range</option>
                     <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Today</option>
                     <option value="week" {{ request('date_filter') == 'week' ? 'selected' : '' }}>Last 7 Days</option>
@@ -260,7 +260,7 @@
                                 <tr>
                                     <th>Customer Name</th>
                                     <th>Address</th>
-                                    <th>Product Title</th>
+                                    <th>Service Title</th>
                                     <th>Status</th>
                                     <th>Service Date & Time</th>
                                     <th>Time Until Expiry</th>
@@ -352,7 +352,7 @@
                 @endif
 
             <!-- Show "Modify" button only if the status is not "Finished" -->
-            @if($datas->status != 'Finished' && $datas->status != 'Cancelled')
+            @if($datas->status != 'Finished')
                 <button class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target="#modifyModal-{{ $datas->id }}">Modify</button>
             @endif
 
@@ -362,7 +362,7 @@
             @endif
 
             <!-- Show "Finalize" button only if there is no finalization record -->
-            @if(!$datas->finalization && $datas->status != 'Finished')
+            @if(!$datas->finalization && $datas->status != 'Finished'  && $datas->status != 'Cancelled')
                 <button class="btn btn-success btn-sm mb-1" data-toggle="modal" data-target="#finalizeModal-{{ $datas->id }}">Finalize</button>
             @endif
         </div>
@@ -377,7 +377,7 @@
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div style="background-color: #fff; color: #000"  class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title text-dark" id="detailsModalLabel">Order Details</h5>
+                                                <h5 class="modal-title text-dark" id="detailsModalLabel">Booking Details</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -429,8 +429,8 @@
 @if($datas->finalization)
 <div class="row mb-3">
     <div class="col-md-12">
-        <h6 class="text-primary">Finalized Order Information</h6>
-        <p><strong>Total Price:</strong> {{ $datas->finalization->total_price }}</p>
+        <h6 class="text-primary">Finalized Booking Information</h6>
+        <p><strong>Total Price:</strong> P{{ $datas->finalization->total_price }}</p>
         <p><strong>Description:</strong> {{ $datas->finalization->description }}</p>
         
         <!-- Display Staff -->
@@ -495,6 +495,17 @@
             <button type="submit" class="btn btn-danger">Cancel</button>
         </form>
                         @endif
+
+                        @if($datas->status == 'Cancelled')
+                            <form method="POST" action="{{ route('update_status', $datas->id) }}">
+                                @csrf
+                                <input type="hidden" name="status" value="Ongoing Service">
+                                <button type="submit" class="btn btn-info">Ongoing Service</button>
+                            </form>
+
+                        @endif
+
+
 
                         <!-- Display "Finished" button only if the current status is "Ongoing Service" -->
                         @if($datas->status == 'Ongoing Service')
@@ -576,7 +587,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Finalize Order</h5>
+                <h5 class="modal-title">Finalize Booking</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

@@ -36,6 +36,12 @@ Route::get('/edit_profile', [HomeController::class, 'edit_profile']);
 
 Route::get('/dashboard', [HomeController::class, 'login_home'])->middleware(['auth', 'verified'])->name('dashboard');
 
+// Route for the login page
+Route::get('/login', [HomeController::class, 'showLoginForm'])->name('login');
+
+Route::get('/login', [AdminController::class, 'showLoginForm'])->name('login');
+
+
 Route::get('/myorders', [HomeController::class, 'myorders'])->name('myorders')->middleware(['auth', 'verified']);
 
 
@@ -216,5 +222,14 @@ Route::get('search_vehicle', [HomeController::class, 'search_vehicle'])->middlew
 Route::get('search_staff', [HomeController::class, 'search_staff'])->middleware(['auth', 'verified']);
 
 
+// Admin routes with the 'admin' prefix
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('users', [AdminController::class, 'showUsers'])->name('admin.users');
+    Route::get('edit-user/{id}', [AdminController::class, 'editUser'])->name('admin.edit.user');
+    Route::post('update-user/{id}', [AdminController::class, 'updateUser'])->name('admin.update.user');
+    Route::get('delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
+});
+
+Route::post('cancel-order/{id}', [HomeController::class, 'cancelOrder'])->name('orders.cancel');
 
 

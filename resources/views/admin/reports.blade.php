@@ -291,6 +291,7 @@
     }
 }
 
+
         </style>
 
     </head>
@@ -300,47 +301,45 @@
 
         <div class="page-content">
         <div class="page-header">
-            <h1 style="text-align: center; margin-bottom: 30px">Report of Customer Orders</h1>
+            <h1 style="text-align: center; margin-bottom: 30px">Report of Customer Bookings</h1>
             <div class="container-fluid">
                 <div class="filter-container">
                 <form method="GET" action="{{ route('reports') }}">
     @csrf
     <!-- Filter By Group Date -->
-    <div class="form-group">
-        <label for="group_date_filter" class="form-label">Filter By Group Date:</label>
-        <select name="group_date_filter" class="form-select" onchange="this.form.submit()">
-            <option value="">Select Option</option>
-            <option value="today" {{ request('group_date_filter') == 'today' ? 'selected' : '' }}>Today</option>
-            <option value="week" {{ request('group_date_filter') == 'week' ? 'selected' : '' }}>This Week</option>
-            <option value="month" {{ request('group_date_filter') == 'month' ? 'selected' : '' }}>This Month</option>
-        </select>
+    <div class="form-row mb-3">
+        <div class="col">
+            <label for="group_date_filter" class="form-label">Filter By Group Date:</label>
+            <select style="border-radius: 20px; border: 2px solid #007bff;" name="group_date_filter" class="form-control" onchange="this.form.submit()">
+                <option value="">Select Option</option>
+                <option value="today" {{ request('group_date_filter') == 'today' ? 'selected' : '' }}>Today</option>
+                <option value="week" {{ request('group_date_filter') == 'week' ? 'selected' : '' }}>This Week</option>
+                <option value="month" {{ request('group_date_filter') == 'month' ? 'selected' : '' }}>This Month</option>
+            </select>
+        </div>
+
+        <div class="col">
+            <label for="date_filter" class="form-label">Filter By Date(s):</label>
+            <!-- Flatpickr Input -->
+            <input style="border-radius: 20px; border: 2px solid #007bff; background-color: white;" type="text" name="date_filter" id="date_filter" class="form-control" value="{{ request('date_filter') }}" placeholder="Select multiple dates" onchange="this.form.submit()">
+        </div>
+
+        <div class="col">
+            <label for="staff_filter" class="form-label">Filter By Staff (Search):</label>
+            <input style="border-radius: 20px; border: 2px solid #007bff;" type="text" name="staff_filter" class="form-control" placeholder="Search by Staff Name" value="{{ request('staff_filter') }}" onkeyup="this.form.submit()">
+        </div>
+
+        <div class="col">
+            <label for="status_filter" class="form-label">Filter By Status:</label>
+            <select style="border-radius: 20px; border: 2px solid #007bff;" name="status_filter" class="form-control" onchange="this.form.submit()">
+                <option value="">Select Status</option>
+                <option value="Finished" {{ request('status_filter') == 'Finished' ? 'selected' : '' }}>Finished</option>
+                <option value="Cancelled" {{ request('status_filter') == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+            </select>
+        </div>
     </div>
-
-    <div class="form-group">
-    <label for="date_filter" class="form-label">Filter By Date(s):</label>
-    <!-- Flatpickr Input -->
-    <input type="text" name="date_filter" id="date_filter" class="form-select" value="{{ request('date_filter') }}" placeholder="Select multiple dates" onchange="this.form.submit()">
-</div>
-
-
- <!-- Input to filter by Staff Name -->
- <div class="form-group">
-        <label for="staff_filter" class="form-label">Filter By Staff (Search):</label>
-        <input type="text" name="staff_filter" class="form-select" placeholder="Search by Staff Name" value="{{ request('staff_filter') }}" onkeyup="this.form.submit()">
-    </div>
-
-   <!-- Filter By Status -->
-   <div class="form-group">
-        <label for="status_filter" class="form-label">Filter By Status:</label>
-        <select name="status_filter" class="form-select" onchange="this.form.submit()">
-            <option value="">Select Status</option>
-            <option value="Finished" {{ request('status_filter') == 'Finished' ? 'selected' : '' }}>Finished</option>
-            <option value="Cancelled" {{ request('status_filter') == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
-        </select>
-    </div>
-
-
 </form>
+
 
                 </div>
 
@@ -353,7 +352,7 @@
 </div>
 
 <div class="report-header">
-    <h3>Orders Report</h3>
+    <h3>Bookings Report</h3>
     <a href="javascript:void(0)" onclick="printReport()" class="btn-print">Print Report</a>
 </div>
 
@@ -363,7 +362,7 @@
             <tr>
                 <th>Customer Name</th>
                 <th>Address</th>
-                <th>Product Title</th>
+                <th>Service Title</th>
                 <th>Status</th>
                 <th>Service Date</th>
                 <th>Staff Assigned</th> <!-- Display staff name -->

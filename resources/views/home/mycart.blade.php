@@ -671,7 +671,50 @@ button {
     color: white;
     font-weight: bold;
 }
+.toastr {
+    z-index: 9999 !important; /* Ensures the toastr stays above other elements */
+}
 
+To achieve the following:
+
+Hover Effect on Clickable Time: You want the clickable times to have a hover effect so that the user knows they are interacting with them, and you want them to feel like buttons.
+Times Displayed in 8 AM, 9 AM, 2 PM, 3:30 PM, 4:30 PM format: You want the times to appear as more user-friendly, with only the times that are available in the 30-minute intervals (e.g., 8:00 AM, 9:00 AM, etc.).
+Here’s how you can modify the code:
+
+Updated CSS for Hover Effect:
+You will need to update the CSS for .list-group-item to make it look like a button with a hover effect.
+
+css
+Copy code
+/* Add hover effect for the clickable times */
+.list-group-item {
+    cursor: pointer; /* Indicate that the item is clickable */
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Hover effect */
+.available:hover {
+    background-color: #007bff; /* Blue background on hover */
+    color: white; /* Change text color to white */
+    transform: scale(1.05); /* Slightly enlarge the item */
+}
+
+.available {
+    background-color: #d4edda; /* Light green for available */
+    color: #155724;
+}
+
+.booked {
+    background-color: #f8d7da; /* Light red for booked */
+    color: #721c24;
+}
     </style>
 
     <div class="row">
@@ -795,93 +838,117 @@ button {
     let unavailableDatetimes = [];
 
     // Fetch unavailable datetimes on page load
-    function loadUnavailableDatetimes() {
-        $.ajax({
-            url: "{{ url('/fetch-unavailable-datetimes') }}",
-            method: "GET",
-            success: function(data) {
-                unavailableDatetimes = data;
-            },
-            error: function() {
-                toastr.error("Error loading unavailable datetimes.");
-            }
-        });
-    }
-
-   // Function to fetch unavailable datetimes and show them in the modal
-   function fetchServiceDatetimes() {
-        $.ajax({
-            url: "{{ route('fetchServiceDatetimes') }}",
-            method: "GET",
-            success: function(data) {
-                const datetimeList = $('#datetimeList');
-                datetimeList.empty();
-                data.forEach(order => {
-                    datetimeList.append(`
-                        <li class="list-group-item">
-                            Booked: ${order.service_datetime} - 
-                            Status: <span style="color: ${order.status === 'Ongoing Service' ? 'skyblue' : order.status === 'In Queue' ? 'orange' : 'black'}; font-weight: bold;">
-                                        ${order.status}
-                                    </span>
-                        </li>
-                    `);
-                });
-
-                // After a short delay, show the modal
-                setTimeout(function() {
-                    $('#allDatetimesModal').modal('show');  // Show the modal with updated data
-                }, 500);  // Delay time (in milliseconds), adjust if necessary
-            },
-            error: function() {
-                toastr.error("Failed to fetch datetimes.");
-            }
-        });
-    }
-
-    // Attach modal loading to button
-    $(document).ready(function() {
-        loadUnavailableDatetimes();
-
-        $('#viewDatetimesBtn').on('click', function() {
-            fetchServiceDatetimes();  // Load data when button is clicked
-        });
-
-       // Submit the order form and show the modal after order confirmation
-       $('#orderForm').on('submit', function(event) {
-            event.preventDefault();
-            const chosenDateTime = $('#service_datetime').val();
-
-            // Check if selected datetime is unavailable
-            if (unavailableDatetimes.includes(chosenDateTime)) {
-                toastr.error("The selected date and time is taken. Choose another.");
-            } else {
-                // AJAX order placement
-                $.ajax({
-                    url: "{{ url('confirm_order') }}",
-                    method: "POST",
-                    data: $(this).serialize(),
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    success: function(response) {
-                        // Ensure the toastr success message is shown before modal
-                        toastr.success("Order placed successfully.");
-                        toastr.success('Your service has been booked successfully! You will be notified once it is processed.');
-
-                        // Reload unavailable datetimes after the order is placed
-                        loadUnavailableDatetimes();
-
-                        // After a short delay, show the modal with updated data
-                        setTimeout(function() {
-                            $('#allDatetimesModal').modal('show');  // Show the modal with updated data
-                        }, 1000); // Short delay to ensure toastr is visible before modal appears
-                    },
-                    error: function() {
-                        toastr.error("Error placing order.");
-                    }
-                });
-            }
-        });
+function loadUnavailableDatetimes() {
+    $.ajax({
+        url: "{{ url('/fetch-unavailable-datetimes') }}",
+        method: "GET",
+        success: function(data) {
+            unavailableDatetimes = data;
+        },
+        error: function() {
+            toastr.error("Error loading unavailable datetimes.");
+        }
     });
+}
+
+// Function to fetch unavailable datetimes and show them in the modal
+function fetchServiceDatetimes() {
+    $.ajax({
+        url: "{{ route('fetchServiceDatetimes') }}",
+        method: "GET",
+        success: function(data) {
+            const datetimeList = $('#datetimeList');
+            datetimeList.empty();
+            data.forEach(order => {
+                datetimeList.append(`
+                    <li class="list-group-item">
+                        Booked: ${order.service_datetime} - 
+                        Status: <span style="color: ${order.status === 'Ongoing Service' ? 'skyblue' : order.status === 'In Queue' ? 'orange' : 'black'}; font-weight: bold;">
+                                    ${order.status}
+                                </span>
+                    </li>
+                `);
+            });
+
+            // After a short delay, show the modal
+            setTimeout(function() {
+                $('#allDatetimesModal').modal('show');  // Show the modal with updated data
+            }, 500);  // Delay time (in milliseconds), adjust if necessary
+        },
+        error: function() {
+            toastr.error("Failed to fetch datetimes.");
+        }
+    });
+}
+
+// Attach modal loading to button (use event delegation)
+$(document).ready(function() {
+    // Load unavailable datetimes
+    loadUnavailableDatetimes();
+
+    // On click, show unavailable datetimes
+    $(document).on('click', '#viewDatetimesBtn', function() {
+        fetchServiceDatetimes();  // Load data when button is clicked
+    });
+
+    // Submit the order form and show the modal after order confirmation
+    $(document).on('submit', '#orderForm', function(event) {
+        event.preventDefault();  // Prevent default form submission
+
+        const chosenDateTime = $('#service_datetime').val();
+
+        // Check if the selected datetime is unavailable
+        if (unavailableDatetimes.includes(chosenDateTime)) {
+            toastr.error("The selected date and time is taken. Choose another.");
+        } else {
+            // AJAX order placement
+            $.ajax({
+                url: "{{ url('confirm_order') }}",
+                method: "POST",
+                data: $(this).serialize(),
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                success: function(response) {
+                    // Show success message
+                    toastr.success("Order placed successfully.");
+                    toastr.success('Your service has been booked successfully! You will be notified once it is processed.');
+
+                    // Reload unavailable datetimes after the order is placed
+                    loadUnavailableDatetimes();
+
+                    // After a short delay, show the modal with updated data
+                    setTimeout(function() {
+                        $('#allDatetimesModal').modal('show');  // Show the modal with updated data
+                    }, 1000); // Short delay to ensure toastr is visible before modal appears
+                },
+                error: function() {
+                    toastr.error("Error placing order.");
+                }
+            });
+        }
+    });
+});
+
+// Function to add product to cart with AJAX
+function addToCart(productId) {
+    $.ajax({
+        url: '/add-cart/' + productId,  // Ensure this is the correct route
+        method: 'GET',
+        success: function(response) {
+            if (response.type === 'error') {
+                // Show error toastr message if the type is 'error'
+                toastr.error(response.message);
+            } else if (response.type === 'success') {
+                // Show success toastr message if the type is 'success'
+                toastr.success(response.message);
+            }
+        },
+        error: function() {
+            toastr.error("There was an error adding the product to your cart.");
+        }
+    });
+}
 </script>
+
 
 
 
@@ -935,47 +1002,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return availableTimes;
     }
+    
 
     // Function to fetch and display the booked times for a selected day
-function fetchBookedTimes(date) {
-    const formattedDate = date.toISOString().split('T')[0]; // Format the date as "YYYY-MM-DD"
+    function fetchBookedTimes(date) {
+        const formattedDate = date.toISOString().split('T')[0]; // Format the date as "YYYY-MM-DD"
 
-    // Fetch the booked times for the selected day
-    $.ajax({
-        url: "/fetch-booked-times",  // Backend route to fetch booked times
-        method: "GET",
-        data: { date: formattedDate },
-        success: function(data) {
-            // Store the booked times
-            bookedTimes = data.bookedTimes;
+        // Fetch the booked times for the selected day
+        $.ajax({
+            url: "/fetch-booked-times",  // Backend route to fetch booked times
+            method: "GET",
+            data: { date: formattedDate },
+            success: function(data) {
+                // Store the booked times
+                bookedTimes = data.bookedTimes;
 
-            // Generate all available times (8:00 AM to 5:00 PM in 30-minute intervals)
-            const allAvailableTimes = generateAvailableTimes();
+                // Generate all available times (8:00 AM to 5:00 PM in 30-minute intervals)
+                const allAvailableTimes = generateAvailableTimes();
 
-            // Clear the existing list of booked times
-            bookedTimesList.innerHTML = '';
+                // Clear the existing list of booked times
+                bookedTimesList.innerHTML = '';
 
-            // Loop through all times and display them, mark booked ones in red
-            allAvailableTimes.forEach(time => {
-                const listItem = document.createElement('div');
-                listItem.textContent = time;
+                // Loop through all times and display them, mark booked ones in red
+                allAvailableTimes.forEach(time => {
+                    const listItem = document.createElement('div');
+                    listItem.textContent = time;
 
-                // Check if the time is booked
-                if (bookedTimes.includes(time)) {
-                    listItem.classList.add('list-group-item', 'booked'); // Add class for booked times (red)
-                } else {
-                    listItem.classList.add('list-group-item', 'available'); // Add class for available times
-                }
+                    // Check if the time is booked
+                    if (bookedTimes.includes(time)) {
+                        listItem.classList.add('list-group-item', 'booked'); // Add class for booked times (red)
+                    } else {
+                        listItem.classList.add('list-group-item', 'available'); // Add class for available times
+                        
+                        // Add event listener to make the time clickable
+                        listItem.addEventListener('click', function() {
+                            dateTimeInput.value = formattedDate + " " + time; // Set the value of the input field
+                        });
+                    }
 
-                bookedTimesList.appendChild(listItem);
-            });
-        },
-        error: function() {
-            toastr.error("Error fetching booked times.");
-        }
-    });
-}
-
+                    bookedTimesList.appendChild(listItem);
+                });
+            },
+            error: function() {
+                toastr.error("Error fetching booked times.");
+            }
+        });
+    }
 
     // Function to adjust the selected time to the nearest 30-minute interval
     function adjustTimeToNearestInterval(date) {

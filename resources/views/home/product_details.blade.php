@@ -399,7 +399,7 @@ header {
           </div>
           <div class="detail-box">
             <h6>Name: {{$data->title}}</h6>
-            <h6>Price: <span>${{$data->price}}</span></h6>
+            <h6>Price: <span>{{$data->price}}</span></h6>
           </div>
           <div class="detail-box">
             <h6>Category: {{$data->category}}</h6>
@@ -410,7 +410,7 @@ header {
           <div class="detail-box">
             <button id="openModalBtn" class="btn2 btn-warning">Ratings & Reviews</button>
           </div>
-          <a class="btn2 btn-primary" onclick="confirmation(event)" href="{{ url('add_cart', $data->id) }}">Add Service</a>
+          <a class="btn2 btn-primary" onclick="confirmation(event)" href="{{ url('add_cart', $data->id) }}">Book Service</a>
         </div>
       </div>
     </div>

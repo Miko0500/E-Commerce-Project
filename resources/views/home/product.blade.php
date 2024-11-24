@@ -112,7 +112,7 @@
   }
 
   .shop_section .box {
-    transition: transform 2s ease-out, opacity 2s ease-out;
+    transition: transform .5s ease-out, opacity .5s ease-out;
     opacity: 0;
     transform: translateY(150px);
   }
@@ -320,7 +320,7 @@
               @if(Auth::check())
                 <a class="btn" onclick="confirmation(event)" href="{{ url('add_cart', $products->id) }}">Book Service</a>
               @else
-                <a class="btn" href="{{ route('login') }}">Add Service</a>
+                <a class="btn" href="{{ route('login') }}">Book Service</a>
               @endif
             </div>
           </div>

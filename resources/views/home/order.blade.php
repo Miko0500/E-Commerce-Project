@@ -343,6 +343,17 @@ header {
                 {{$orders->status}}
             </span>
 
+             <!-- Cancel Button (Only shows when status is In Queue) -->
+@if($orders->status === 'In Queue')
+    <form id="cancelForm{{ $orders->id }}" action="{{ route('orders.cancel', $orders->id) }}" method="POST" style="display:inline;">
+        @csrf
+        <button style="margin-bottom: 10px; border-radius: 18px; font-weight: bold;" type="button" onclick="confirmation(event, {{ $orders->id }})" class="btn btn-danger btn-sm" style="border-radius: 20px; font-size: 14px; padding: 6px 12px;">
+            Cancel Booking
+        </button>
+    </form>
+@endif
+
+
             <!-- Details Button -->
             <button class="btn btn-primary btn-sm mb-3" data-toggle="modal" data-target="#detailsModal-{{ $orders->id }}" style="border-radius: 20px; font-weight: bold; font-size: 14px; padding: 6px 12px;">Details</button>
             
@@ -350,7 +361,7 @@ header {
             @if($orders->finalization && $orders->status != 'Finished' && $orders->status != 'Cancelled')
                 <div class="finalization-details" style="text-align: left;">
                     <h4 style="font-size: 16px; font-weight: bold;">Finalized Details</h4>
-                    <p style="font-size: 14px;"><strong>Total Price:</strong> ${{ $orders->finalization->total_price }}</p>
+                    <p style="font-size: 14px;"><strong>Total Price:</strong> P{{ $orders->finalization->total_price }}</p>
                     <p style="font-size: 14px;"><strong>Description:</strong> {{ $orders->finalization->description }}</p>
 
                     <!-- Display Staff -->
@@ -677,6 +688,42 @@ header {
   
 
   @yield('content')
+
+  <script>
+    function confirmation(ev, orderId) {
+    ev.preventDefault();  // Prevent the default form submission
+    
+    // Show the confirmation popup using SweetAlert
+    swal({
+        title: "Are You Sure You Want To Cancel This Booking?",
+        text: "This change will be permanent.",
+        icon: "warning",
+        buttons: {
+            cancel: {
+                text: "Cancel",
+                value: null,
+                visible: true,
+                className: "swal-button--cancel",  // Custom class for Cancel button
+                closeModal: true
+            },
+            confirm: {
+                text: "Confirm",
+                value: true,
+                visible: true,
+                className: "swal-button--confirm",  // Custom class for Confirm button
+                closeModal: true
+            }
+        },
+        dangerMode: true, // Optional: makes the confirm button red
+    }).then((willCancel) => {
+        if (willCancel) {
+            // If the user confirms, submit the form
+            document.getElementById('cancelForm' + orderId).submit();
+        }
+    });
+}
+
+  </script>
   
 
 <script>

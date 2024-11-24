@@ -2,7 +2,7 @@
 <html>
 <head> 
     @include('admin.css')
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
     <style type="text/css">
         body {
             background-color: #f0f2f5;
@@ -130,7 +130,7 @@
     <div class="page-content">
         <div class="page-header">
             <div class="container-fluid">
-                <h1>Add Service</h1>
+                <h1 >Add Service</h1>
                 
                 <div class="div_deg">
                     <div class="form-container">
@@ -152,10 +152,10 @@
                                 <input type="text" name="price" placeholder="Enter price">
                             </div>
 
-                            <div class="input_deg">
+                            <!-- <div class="input_deg">
                                 <label for="qty">Quantity</label>
                                 <input type="number" name="qty" placeholder="Enter quantity">
-                            </div>
+                            </div> -->
 
                             <div class="input_deg">
                                 <label for="category">Service Category</label>
@@ -181,7 +181,8 @@
             </div>
         </div>
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <!-- JavaScript files-->
     <script src="{{asset('/admincss/vendor/jquery/jquery.min.js')}}"></script>
     <script src="{{asset('/admincss/vendor/popper.js/umd/popper.min.js')}}"></script>

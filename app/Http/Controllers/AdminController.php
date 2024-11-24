@@ -28,7 +28,7 @@ use App\Models\OrderFinalization;
 
 use App\Models\CountdownTimer;
 
-
+use Illuminate\Support\Facades\Auth;
 
 
 class AdminController extends Controller
@@ -81,20 +81,43 @@ class AdminController extends Controller
     }
 
     public function add_category(Request $request)
-    {
-        $request->validate([
-            'category' => 'required|string|max:255',
-        ]);
-    
+{
+    // Validate the input
+    $request->validate([
+        'category' => 'required|string|max:255',
+    ]);
+
+    // Normalize the input category to lowercase
+    $categoryName = strtolower($request->category);
+
+    // Check if a category with the same name (case-insensitive) already exists
+    $existingCategory = Category::whereRaw('LOWER(category_name) = ?', [$categoryName])->first();
+
+    if ($existingCategory) {
+        // If category exists, return specific error message
+        return response()->json([
+            'error' => 'Category with the same name already exists.',
+        ], 400); // 400 indicates a client-side error
+    }
+
+    // If no existing category, proceed to add the new category
+    try {
         $category = new Category;
-        $category->category_name = $request->category;
+        $category->category_name = $request->category; // Store the original input
         $category->save();
-    
+
         return response()->json([
             'success' => 'Category Added Successfully',
             'category' => $category,
         ]);
+    } catch (\Exception $e) {
+        // Return a generic error message if something goes wrong
+        return response()->json([
+            'error' => 'Error adding category: ' . $e->getMessage(),
+        ], 500); // 500 indicates server error
     }
+}
+
     
 
 
@@ -121,20 +144,47 @@ class AdminController extends Controller
     }
 
     public function update_category(Request $request, $id)
-{
-    $request->validate([
-        'category' => 'required|string|max:255',
-    ]);
-
-    $data = Category::find($id);
-    $data->category_name = $request->category;
-    $data->save();
-
-    return response()->json([
-        'success' => 'Category Updated Successfully',
-        'category' => $data,
-    ]);
-}
+    {
+        // Validate the input
+        $request->validate([
+            'category' => 'required|string|max:255',
+        ]);
+    
+        // Normalize the input category to lowercase for case-insensitive comparison
+        $categoryName = strtolower($request->category);
+    
+        // Check if a category with the same name (case-insensitive) already exists, excluding the current category being updated
+        $existingCategory = Category::whereRaw('LOWER(category_name) = ?', [$categoryName])
+            ->where('id', '!=', $id) // Exclude the current category being updated
+            ->first();
+    
+        if ($existingCategory) {
+            // If category exists, return a specific error message
+            return response()->json([
+                'error' => 'Category with the same name already exists.',
+            ], 400); // 400 indicates a client-side error
+        }
+    
+        // Find the category by ID
+        $data = Category::find($id);
+    
+        // Check if category exists in the database
+        if (!$data) {
+            return response()->json([
+                'error' => 'Category not found.',
+            ], 404); // 404 indicates not found error
+        }
+    
+        // Update the category name
+        $data->category_name = $request->category; // Use the original category name (case-sensitive)
+        $data->save();
+    
+        return response()->json([
+            'success' => 'Category Updated Successfully',
+            'category' => $data,
+        ]);
+    }
+    
 
 
 
@@ -156,14 +206,28 @@ class AdminController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
     
+        // Normalize the vehicle type to lowercase for case-insensitive comparison
+        $vehicleType = strtolower($request->type);
+    
+        // Check if a vehicle with the same type already exists (case-insensitive)
+        $existingVehicle = Vehicle::whereRaw('LOWER(type) = ?', [$vehicleType])->first();
+    
+        if ($existingVehicle) {
+            // If a vehicle with the same type exists, return an error message
+            toastr()->timeOut(10000)->closeButton()->error('A vehicle with this type already exists.');
+            return redirect()->back();
+        }
+    
+        // Proceed to create the new vehicle
         $vehicle = new Vehicle;
         $vehicle->type = $request->type;
-        
-        // Store sizes directly as an array, no need to use json_encode
-        $vehicle->sizes = $request->sizes; 
+    
+        // Store sizes directly as an array
+        $vehicle->sizes = $request->sizes;
     
         $vehicle->status = $request->status;
     
+        // Handle image upload if there is one
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imagename = time() . '.' . $image->getClientOriginalExtension();
@@ -176,6 +240,7 @@ class AdminController extends Controller
         toastr()->timeOut(10000)->closeButton()->success('Vehicle Added Successfully');
         return redirect()->back();
     }
+    
     
 
 
@@ -245,45 +310,61 @@ class AdminController extends Controller
 
     // Method to handle the form submission for editing a vehicle
     public function edit_vehicle(Request $request, $id)
-{
-    // Validate the request
-    $request->validate([
-        'type' => 'required|string|max:255',
-        'sizes' => 'required|array',
-        'sizes.*' => 'in:S,M,L,XL,XXL',
-        'status' => 'required|boolean',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-    ]);
-
-    $vehicle = Vehicle::findOrFail($id);
-    $vehicle->type = $request->type;
-    $vehicle->sizes = $request->sizes; 
-    $vehicle->status = $request->status;
+    {
+        // Validate the request
+        $request->validate([
+            'type' => 'required|string|max:255',
+            'sizes' => 'required|array',
+            'sizes.*' => 'in:S,M,L,XL,XXL',
+            'status' => 'required|boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
     
-
-
-
-
-    if ($request->hasFile('image')) {
-        // Remove old image if it exists
-        if ($vehicle->image) {
-            $old_image_path = public_path('vehicles/' . $vehicle->image);
-            if (file_exists($old_image_path)) {
-                unlink($old_image_path);
-            }
+        // Find the vehicle by ID
+        $vehicle = Vehicle::findOrFail($id);
+    
+        // Normalize the vehicle type to lowercase for case-insensitive comparison
+        $vehicleType = strtolower($request->type);
+    
+        // Check if another vehicle with the same type already exists (case-insensitive), excluding the current vehicle
+        $existingVehicle = Vehicle::whereRaw('LOWER(type) = ?', [$vehicleType])
+            ->where('id', '!=', $id) // Exclude the current vehicle from the check
+            ->first();
+    
+        if ($existingVehicle) {
+            // If a vehicle with the same type exists, return an error message
+            toastr()->timeOut(10000)->closeButton()->error('A vehicle with this type already exists.');
+            return redirect()->back();
         }
-
-        $image = $request->file('image');
-        $imagename = time() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('vehicles'), $imagename);
-        $vehicle->image = $imagename;
+    
+        // Update the vehicle details
+        $vehicle->type = $request->type;
+        $vehicle->sizes = $request->sizes;
+        $vehicle->status = $request->status;
+    
+        // Handle image upload if there is a new image
+        if ($request->hasFile('image')) {
+            // Remove old image if it exists
+            if ($vehicle->image) {
+                $old_image_path = public_path('vehicles/' . $vehicle->image);
+                if (file_exists($old_image_path)) {
+                    unlink($old_image_path);
+                }
+            }
+    
+            $image = $request->file('image');
+            $imagename = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('vehicles'), $imagename);
+            $vehicle->image = $imagename;
+        }
+    
+        // Save the updated vehicle details
+        $vehicle->save();
+    
+        toastr()->timeOut(10000)->closeButton()->success('Vehicle Updated Successfully');
+        return redirect('/view_vehicle');
     }
-
-    $vehicle->save();
-
-    toastr()->timeOut(10000)->closeButton()->success('Vehicle Updated Successfully');
-    return redirect('/view_vehicle');
-}
+    
 
 
 
@@ -295,38 +376,54 @@ class AdminController extends Controller
     }
     
     public function upload_staff(Request $request)
-    {
-        // Validate the request
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'age' => 'required|integer',
-            'birthday' => 'required|date',
-            'sex' => 'required|in:male,female,other',
-            'contact' => 'required|string|max:20',
-            'address' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
-    
-        $data = new Staff;
-        $data->name = $request->name;
-        $data->age = $request->age;
-        $data->birthday = $request->birthday;
-        $data->sex = $request->sex;
-        $data->contact = $request->contact;
-        $data->address = $request->address;
-    
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imagename = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('staff'), $imagename);
-            $data->image = $imagename;
-        }
-    
-        $data->save();
-    
-        toastr()->timeOut(10000)->closeButton()->success('Staff Added Successfully');
+{
+    // Validate the request
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'age' => 'required|integer',
+        'birthday' => 'required|date',
+        'sex' => 'required|in:male,female,other',
+        'contact' => 'required|string|max:20',
+        'address' => 'required|string',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
+
+    // Normalize the staff name to lowercase for case-insensitive comparison
+    $staffName = strtolower($request->name);
+
+    // Check if a staff member with the same name already exists (case-insensitive)
+    $existingStaff = Staff::whereRaw('LOWER(name) = ?', [$staffName])->first();
+
+    if ($existingStaff) {
+        // If a staff member with the same name exists, show an error message
+        toastr()->timeOut(10000)->closeButton()->error('A staff member with this name already exists.');
         return redirect()->back();
     }
+
+    // Create a new staff member
+    $data = new Staff;
+    $data->name = $request->name;
+    $data->age = $request->age;
+    $data->birthday = $request->birthday;
+    $data->sex = $request->sex;
+    $data->contact = $request->contact;
+    $data->address = $request->address;
+
+    // Handle image upload if present
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $imagename = time() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('staff'), $imagename);
+        $data->image = $imagename;
+    }
+
+    // Save the new staff member
+    $data->save();
+
+    toastr()->timeOut(10000)->closeButton()->success('Staff Added Successfully');
+    return redirect()->back();
+}
+
     
     public function view_staff()
     {
@@ -389,47 +486,66 @@ public function update_staff($id)
 }
 
     
-    public function edit_staff(Request $request, $id)
-    {
-        // Validate the request
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'age' => 'required|integer',
-            'birthday' => 'required|date',
-            'sex' => 'required|in:male,female,other',
-            'contact' => 'required|string|max:20',
-            'address' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
-    
-        $data = Staff::findOrFail($id);
-        $data->name = $request->name;
-        $data->age = $request->age;
-        $data->birthday = $request->birthday;
-        $data->sex = $request->sex;
-        $data->contact = $request->contact;
-        $data->address = $request->address;
-    
-        if ($request->hasFile('image')) {
-            // Remove old image if it exists
-            if ($data->image) {
-                $old_image_path = public_path('staff/' . $data->image);
-                if (file_exists($old_image_path)) {
-                    unlink($old_image_path);
-                }
-            }
-    
-            $image = $request->file('image');
-            $imagename = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('staff'), $imagename);
-            $data->image = $imagename;
-        }
-    
-        $data->save();
-    
-        toastr()->timeOut(10000)->closeButton()->success('Staff Updated Successfully');
-        return redirect('/view_staff');
+public function edit_staff(Request $request, $id)
+{
+    // Validate the request
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'age' => 'required|integer',
+        'birthday' => 'required|date',
+        'sex' => 'required|in:male,female,other',
+        'contact' => 'required|string|max:20',
+        'address' => 'required|string',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
+
+    // Normalize the staff name to lowercase for case-insensitive comparison
+    $staffName = strtolower($request->name);
+
+    // Check if another staff member with the same name exists, excluding the current staff being edited
+    $existingStaff = Staff::whereRaw('LOWER(name) = ?', [$staffName])
+        ->where('id', '!=', $id)  // Exclude the current staff being edited
+        ->first();
+
+    if ($existingStaff) {
+        // If a staff member with the same name exists, show an error message
+        toastr()->timeOut(10000)->closeButton()->error('A staff member with this name already exists.');
+        return redirect()->back();
     }
+
+    // Find the staff member to be updated
+    $data = Staff::findOrFail($id);
+    $data->name = $request->name;
+    $data->age = $request->age;
+    $data->birthday = $request->birthday;
+    $data->sex = $request->sex;
+    $data->contact = $request->contact;
+    $data->address = $request->address;
+
+    // Handle image upload if a new image is provided
+    if ($request->hasFile('image')) {
+        // Remove old image if it exists
+        if ($data->image) {
+            $old_image_path = public_path('staff/' . $data->image);
+            if (file_exists($old_image_path)) {
+                unlink($old_image_path);
+            }
+        }
+
+        // Save the new image
+        $image = $request->file('image');
+        $imagename = time() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('staff'), $imagename);
+        $data->image = $imagename;
+    }
+
+    // Save the updated staff data
+    $data->save();
+
+    toastr()->timeOut(10000)->closeButton()->success('Staff Updated Successfully');
+    return redirect('/view_staff');
+}
+
     
 
 
@@ -475,7 +591,7 @@ public function update_staff($id)
 
         $data->save();
 
-        toastr()->timeOut(10000)->closeButton()->success('Product Added Successfully');
+        toastr()->timeOut(10000)->closeButton()->success('Service Added Successfully');
 
         return redirect()->back();
 
@@ -484,20 +600,23 @@ public function update_staff($id)
 
 
     public function view_product()
-{
-    // Paginate the products and eager load the ratings
-    $product = Product::with('ratings')->paginate(10);
-    
-    // Calculate the average rating for each product
-    $product->getCollection()->transform(function ($products) {
+    {
+        // Paginate the products and eager load the ratings, order by created_at descending to show new products first
+        $product = Product::with('ratings')
+            ->latest()  // Order products by the 'created_at' column in descending order (newest first)
+            ->paginate(10);
+        
         // Calculate the average rating for each product
-        $averageRating = $products->ratings->isNotEmpty() ? $products->ratings->avg('rating') : null;
-        $products->average_rating = $averageRating ? number_format($averageRating, 1) : null; // Format if available
-        return $products;
-    });
-
-    return view('admin.view_product', compact('product'));
-}
+        $product->getCollection()->transform(function ($products) {
+            // Calculate the average rating for each product
+            $averageRating = $products->ratings->isNotEmpty() ? $products->ratings->avg('rating') : null;
+            $products->average_rating = $averageRating ? number_format($averageRating, 1) : null; // Format if available
+            return $products;
+        });
+    
+        return view('admin.view_product', compact('product'));
+    }
+    
 
 
     public function delete_product($id)
@@ -506,7 +625,7 @@ public function update_staff($id)
         
         // Check if product exists
         if (!$data) {
-            toastr()->timeOut(10000)->closeButton()->error('Product not found.');
+            toastr()->timeOut(10000)->closeButton()->error('Service not found.');
             return redirect()->back();
         }
         
@@ -516,7 +635,7 @@ public function update_staff($id)
             ->exists();
             
         if ($hasOngoingOrFinishedOrders) {
-            toastr()->timeOut(10000)->closeButton()->error('Cannot delete product: it is currently in use.');
+            toastr()->timeOut(10000)->closeButton()->error('Cannot delete service: it is currently in use.');
             return redirect()->back();
         }
     
@@ -527,7 +646,7 @@ public function update_staff($id)
         }
     
         $data->delete();
-        toastr()->timeOut(10000)->closeButton()->success('Product Deleted Successfully');
+        toastr()->timeOut(10000)->closeButton()->success('Service Deleted Successfully');
         
         return redirect()->back();
     }
@@ -562,13 +681,15 @@ public function update_staff($id)
         ->exists();
 
     if ($hasOngoingOrFinishedOrders) {
-        toastr()->error('Product is currently in use and cannot be edited.');
+        toastr()->error('Service is currently in use and cannot be edited.');
         return redirect()->back();
     }
 
     // If not in use, proceed with loading the edit form
     $data = Product::findOrFail($id);
     $category = Category::all();
+
+    
 
     
     return view('admin.update_page', compact('data', 'category'));
@@ -604,7 +725,7 @@ public function update_staff($id)
 
         $data->save();
 
-        toastr()->timeOut(10000)->closeButton()->success('Product Updated Successfully');
+        toastr()->timeOut(10000)->closeButton()->success('Service Updated Successfully');
 
 
         return redirect('/view_product');
@@ -807,7 +928,7 @@ public function cancel($id)
     $order->save();
 
     // Redirect back with a success message
-    toastr()->timeOut(10000)->closeButton()->success('Order has been cancelled successfully.');
+    toastr()->timeOut(10000)->closeButton()->success('Booking has been cancelled successfully.');
     return redirect()->back();
 }
 
@@ -955,8 +1076,87 @@ public function updateOrderFinalization(Request $request, $id)
 }
 
 
+public function showUsers()
+{
+    // Fetch all users from the database
+    $users = User::paginate(10);
 
-    
+    // Pass the users to the view
+    return view('admin.user', compact('users'));
+}
 
+public function editUser($id)
+{
+    // Find the user by ID
+    $user = User::findOrFail($id);
+
+    // Return the modal view (this will be used inside a modal)
+    return response()->json(['user' => $user]);
+}
+
+public function updateUser(Request $request, $id)
+{
+    // Validate the user type
+    $request->validate([
+        'usertype' => 'required|string|in:user,admin', // assuming user types are 'user' or 'admin'
+    ]);
+
+    // Find the user by ID
+    $user = User::findOrFail($id);
+
+    // Store the old usertype to check if it has changed
+    $oldUserType = $user->usertype;
+
+    // Update the user type
+    $user->usertype = $request->usertype;
+    $user->save();
+
+    // If the usertype has been updated and it's not the same as the old one,
+    // log the user out and redirect them to the login page.
+    if ($oldUserType !== $user->usertype) {
+        // Check if the user whose type has changed is the logged-in user
+        if ($user->id == Auth::id()) {
+            // Log the user out whose type was changed
+            Auth::logout();
+
+            // Invalidate the session
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            // Show success message and redirect to login
+            toastr()->success('Your user type has been updated. Please log in again.');
+            return redirect()->route('login'); // Laravel’s default login route
+        }
+
+        toastr()->success('User type updated successfully!');
+    }
+
+    // Redirect back to the users list
+    return redirect()->route('admin.users'); // Redirect back to the users list page
+}
+
+
+
+
+
+
+
+public function deleteUser($id)
+{
+    // Find the user by ID
+    $user = User::findOrFail($id);
+
+    // Delete the user
+    $user->delete();
+
+    // Return success message
+    toastr()->success('User deleted successfully!');
+
+    // Fetch the updated list of users
+    $users = User::paginate(10);
+
+    // Return the view with updated users list
+    return view('admin.user', compact('users'));
+}
     
 }
