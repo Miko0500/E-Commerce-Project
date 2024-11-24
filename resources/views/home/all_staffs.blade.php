@@ -257,25 +257,24 @@
             </div>
 
             <div class="row">
-                @foreach($staff as $index => $member)
-                    <div class="col-sm-12">
-                        <!-- Staff Member 1 (Image on left, description on right) -->
-                        <div class="staff-card {{ $index % 2 == 0 ? '' : 'reverse' }}">
-                            <div class="img-box">
-                                <img src="{{ asset('staff/' . $member->image) }}" alt="{{ $member->name }}">
-                            </div>
-                            <div class="detail-box">
-                                <h6>{{ $member->name }}</h6>
-                                <!-- <p class="info"><strong>Age:</strong> {{ $member->age }}</p>
-                                <p class="info"><strong>Birthday:</strong> {{ \Carbon\Carbon::parse($member->birthday)->format('d M, Y') }}</p> -->
-                                <p class="info"><strong>Sex:</strong> {{ ucfirst($member->sex) }}</p>
-                                <p class="info"><strong>Contact:</strong> {{ $member->contact }}</p>
-                                <p class="info"><strong>Address:</strong> {{ $member->address }}</p>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
+    @foreach($staff as $index => $member)
+        <div class="col-sm-12">
+            <!-- Staff Member 1 (Image on left, description on right) -->
+            <div class="staff-card {{ $index % 2 == 0 ? '' : 'reverse' }}">
+                <div class="img-box">
+                    <img src="{{ asset('staff/' . $member->image) }}" alt="{{ $member->name }}">
+                </div>
+                <div class="detail-box">
+                    <h6>{{ $member->name }}</h6>
+                    <!-- Displaying years of expertise and field of expertise -->
+                    <p class="info"><strong>Years of Expertise:</strong> {{ $member->years_of_expertise }}</p>
+                    <p class="info"><strong>Field of Expertise:</strong> {{ $member->field_of_expertise }}</p>
+                </div>
             </div>
+        </div>
+    @endforeach
+</div>
+
         </div>
     </section>
 

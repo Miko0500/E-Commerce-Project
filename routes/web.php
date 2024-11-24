@@ -113,7 +113,8 @@ Route::get('delete_staff/{id}', [AdminController::class, 'delete_staff'])->middl
 Route::get('update_staff/{id}', [AdminController::class, 'update_staff'])->middleware(['auth', 'admin']);
 
 // Route to handle the form submission for updating staff (POST request)
-Route::post('edit_staff/{id}', [AdminController::class, 'edit_staff'])->middleware(['auth', 'admin']);
+Route::put('edit_staff/{id}', [AdminController::class, 'edit_staff'])->middleware(['auth', 'admin']);
+
 
 
 Route::get('add_product', [AdminController::class, 'add_product'])->middleware(['auth','admin']);
@@ -157,23 +158,9 @@ Route::post('/orders/{order}/rate', [HomeController::class, 'rate'])->name('orde
 
 Route::get('/service-details/{productId}', [HomeController::class, 'serviceDetails'])->name('service.details');
 
-Route::get('/fetch-available-dates', [HomeController::class, 'fetchAvailableDates']);
 
-Route::get('/fetch-booked-times', function(Request $request) {
-    $date = $request->input('date');  // Get the selected date from the request
 
-    // Fetch unique booked times for the given date with status 'In Queue' or 'Ongoing Service'
-    $bookedTimes = Order::whereDate('service_datetime', $date)
-        ->whereIn('status', ['In Queue', 'Ongoing Service'])  // Filter by status
-        ->pluck('service_datetime')
-        ->map(function ($datetime) {
-            return \Carbon\Carbon::parse($datetime)->format('H:i'); // Format time as "HH:mm"
-        })
-        ->unique()  // Remove duplicates
-        ->toArray();
 
-    return response()->json(['bookedTimes' => $bookedTimes]); // Return booked times as JSON
-});
 
 Route::post('/orders/{id}/finalize', [AdminController::class, 'finalizeOrder'])->name('finalize_order');
 
@@ -191,6 +178,24 @@ Route::get('/fetch-service-datetimes', [HomeController::class, 'fetchServiceDate
 // In web.php
 Route::get('/fetch-unavailable-datetimes', [HomeController::class, 'fetchUnavailableDatetimes']);
 
+// Fetch booked times for a specific date
+Route::get('/fetch-booked-times', function(Request $request) {
+    $date = $request->input('date');  // Get the selected date from the request
+
+    // Fetch unique booked times for the given date with status 'In Queue' or 'Ongoing Service'
+    $bookedTimes = Order::whereDate('service_datetime', $date) // Ensure it's only for the selected date
+        ->whereIn('status', ['In Queue', 'Ongoing Service'])  // Filter by status
+        ->pluck('service_datetime')
+        ->map(function ($datetime) {
+            return \Carbon\Carbon::parse($datetime)->format('H:i'); // Format time as "HH:mm"
+        })
+        ->unique()  // Remove duplicates
+        ->toArray();
+
+    return response()->json(['bookedTimes' => $bookedTimes]); // Return booked times as JSON
+});
+
+Route::get('/fetch-available-dates', [HomeController::class, 'fetchAvailableDates']);
 
 // In your web.php file
 Route::get('view_orders', [AdminController::class, 'view_orders'])
@@ -233,3 +238,13 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 Route::post('cancel-order/{id}', [HomeController::class, 'cancelOrder'])->name('orders.cancel');
 
 
+// Route to fetch booked times for a selected date
+Route::get('/fetch-booked-times', [AdminController::class, 'fetchBookedTimes'])->name('slot.fetchBookedTimes');
+
+// Route::post('/disable-time-slot', [AdminController::class, 'disableTimeSlot']);
+// Route::post('/enable-time-slot', [AdminController::class, 'enableTimeSlot']);
+
+
+Route::get('slot', [AdminController::class, 'slot'])
+->middleware(['auth', 'admin'])
+->name('slot'); // This should match the name used in the form action

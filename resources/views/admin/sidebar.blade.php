@@ -87,6 +87,12 @@
                 </li>
 
                 <li style="color: white;">
+                    <a href="{{url('slot')}}" class="{{ request()->is('slot') ? 'active' : '' }}"> <i style="color: #007bff;" class="bi bi-card-checklist"></i>Slot Available 
+                </a>
+
+                </li>
+
+                <li style="color: white;">
     <a href="{{ route('admin.users') }}" class="{{ request()->is('admin/users') ? 'active' : '' }}"> 
         <i style="color: #007bff;" class="fa fa-user"></i> User 
     </a>

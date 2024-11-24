@@ -140,62 +140,45 @@
                 <button onclick="history.back()" class="btn-back">Back</button>
                 <div class="div_deg">
 
-                    <form action="{{ url('edit_staff', $data->id) }}" method="post" enctype="multipart/form-data">
-                        @csrf
+                <form action="{{ url('edit_staff', $data->id) }}" method="post" enctype="multipart/form-data">
+    @csrf
+    @method('PUT') <!-- Use PUT method for updating -->
 
-                        <div class="input_deg">
-                            <label for="name">Name</label>
-                            <input type="text" name="name" id="name" value="{{ $data->name }}" required>
-                        </div>
+    <div class="input_deg">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name" value="{{ $data->name }}" required>
+    </div>
 
-                        <div class="input_deg">
-                            <label for="age">Age</label>
-                            <input type="number" name="age" id="age" value="{{ $data->age }}" required>
-                        </div>
+    <div class="input_deg">
+        <label for="years_of_expertise">Years of Expertise</label>
+        <input type="number" name="years_of_expertise" id="years_of_expertise" value="{{ $data->years_of_expertise }}" required placeholder="Enter years of expertise">
+    </div>
 
-                        <div class="input_deg">
-                            <label for="birthday">Birthday</label>
-                            <input type="date" name="birthday" id="birthday" value="{{ $data->birthday }}" required>
-                        </div>
+    <div class="input_deg">
+        <label for="field_of_expertise">Field of Expertise</label>
+        <input type="text" name="field_of_expertise" id="field_of_expertise" value="{{ $data->field_of_expertise }}" required placeholder="Enter field of expertise">
+    </div>
 
-                        <div class="input_deg">
-                            <label for="sex">Sex</label>
-                            <select name="sex" id="sex" required>
-                                <option value="male" {{ $data->sex == 'male' ? 'selected' : '' }}>Male</option>
-                                <option value="female" {{ $data->sex == 'female' ? 'selected' : '' }}>Female</option>
-                                <option value="other" {{ $data->sex == 'other' ? 'selected' : '' }}>Other</option>
-                            </select>
-                        </div>
+    <div class="input_deg staff-image-preview">
+        <label for="current_image">Current Image</label><br>
+        @if($data->image)
+            <img src="{{ asset('staff/' . $data->image) }}" alt="Current Staff Image" width="100">
+        @else
+            <p>No image available</p>
+        @endif
+    </div>
 
-                        <div class="input_deg">
-                            <label for="contact">Contact</label>
-                            <input type="text" name="contact" id="contact" value="{{ $data->contact }}" required>
-                        </div>
+    <div class="input_deg">
+        <label for="image">New Image (optional)</label>
+        <input type="file" name="image" id="image">
+    </div>
 
-                        <div class="input_deg">
-                            <label for="address">Address</label>
-                            <textarea name="address" id="address" required>{{ $data->address }}</textarea>
-                        </div>
+    <div class="input_deg">
+        <input class="btn btn-success" type="submit" value="Update Staff">
+    </div>
 
-                        <div class="input_deg staff-image-preview">
-                            <label for="current_image">Current Image</label><br>
-                            @if($data->image)
-                                <img src="{{ asset('staff/' . $data->image) }}" alt="Current Staff Image">
-                            @else
-                                <p>No image available</p>
-                            @endif
-                        </div>
+</form>
 
-                        <div class="input_deg">
-                            <label for="image">New Image</label>
-                            <input type="file" name="image" id="image">
-                        </div>
-
-                        <div class="input_deg">
-                            <input class="btn btn-success" type="submit" value="Update Staff">
-                        </div>
-
-                    </form>
 
                 </div>
 

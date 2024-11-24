@@ -675,17 +675,10 @@ button {
     z-index: 9999 !important; /* Ensures the toastr stays above other elements */
 }
 
-To achieve the following:
-
-Hover Effect on Clickable Time: You want the clickable times to have a hover effect so that the user knows they are interacting with them, and you want them to feel like buttons.
-Times Displayed in 8 AM, 9 AM, 2 PM, 3:30 PM, 4:30 PM format: You want the times to appear as more user-friendly, with only the times that are available in the 30-minute intervals (e.g., 8:00 AM, 9:00 AM, etc.).
-Here’s how you can modify the code:
-
-Updated CSS for Hover Effect:
-You will need to update the CSS for .list-group-item to make it look like a button with a hover effect.
-
-css
-Copy code
+.past-time {
+    background-color: #e0e0e0; /* Gray color for past times */
+    color: #9e9e9e;
+}
 /* Add hover effect for the clickable times */
 .list-group-item {
     cursor: pointer; /* Indicate that the item is clickable */
@@ -714,6 +707,12 @@ Copy code
 .booked {
     background-color: #f8d7da; /* Light red for booked */
     color: #721c24;
+}
+
+.selected {
+    background-color: #007bff !important; /* Highlight color for selected time */
+    color: #fff;
+    font-weight: bold;
 }
     </style>
 
@@ -965,7 +964,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the Flatpickr instance
     flatpickr(dateTimeInput, {
         enableTime: true,
-        dateFormat: "Y-m-d H:i",
+        dateFormat: "Y-m-d H:i",  // Ensure the format includes both date and time
         minDate: "today",  // Set minimum date to today
         defaultHour: 8,  // Default to 8 AM
         defaultMinute: 0,
@@ -993,16 +992,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         for (let hour = start; hour < end; hour++) {
             for (let minute = 0; minute < 60; minute += 30) {
-                const time = new Date();
-                time.setHours(hour, minute, 0, 0); // Set hour and minute
-                const timeString = time.toTimeString().substr(0, 5); // Format as "HH:mm"
-                availableTimes.push(timeString);
+                const time = `${hour}:${minute < 10 ? '0' + minute : minute}`;
+                availableTimes.push(time);
             }
         }
 
         return availableTimes;
     }
-    
 
     // Function to fetch and display the booked times for a selected day
     function fetchBookedTimes(date) {
@@ -1028,15 +1024,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     const listItem = document.createElement('div');
                     listItem.textContent = time;
 
-                    // Check if the time is booked
-                    if (bookedTimes.includes(time)) {
+                    const currentTime = new Date();
+                    const timeSlot = new Date();
+                    const [hour, minute] = time.split(':');
+                    const selectedDateTime = new Date(formattedDate + ' ' + time); // Combine date and time for comparison
+
+                    // Check if the selected time has passed compared to current time
+                    if (selectedDateTime < currentTime) {
+                        listItem.classList.add('list-group-item', 'past-time'); // Add class for past times (gray)
+                        listItem.style.pointerEvents = 'none'; // Disable click for past times
+                    }
+                    // Check if the time is booked for the selected day
+                    else if (bookedTimes.includes(time)) {
                         listItem.classList.add('list-group-item', 'booked'); // Add class for booked times (red)
+                        listItem.style.pointerEvents = 'none'; // Disable click for booked times
                     } else {
-                        listItem.classList.add('list-group-item', 'available'); // Add class for available times
-                        
+                        listItem.classList.add('list-group-item', 'available'); // Add class for available times (green)
                         // Add event listener to make the time clickable
                         listItem.addEventListener('click', function() {
-                            dateTimeInput.value = formattedDate + " " + time; // Set the value of the input field
+                            // Set the value of the input field
+                            dateTimeInput.value = formattedDate + " " + time;
+
+                            // Remove the selected class from all time slots
+                            const allTimeSlots = document.querySelectorAll('.available');
+                            allTimeSlots.forEach(slot => slot.classList.remove('selected'));
+
+                            // Add the selected class to the clicked time slot
+                            listItem.classList.add('selected');
                         });
                     }
 

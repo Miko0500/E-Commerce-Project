@@ -380,11 +380,8 @@ class AdminController extends Controller
     // Validate the request
     $request->validate([
         'name' => 'required|string|max:255',
-        'age' => 'required|integer',
-        'birthday' => 'required|date',
-        'sex' => 'required|in:male,female,other',
-        'contact' => 'required|string|max:20',
-        'address' => 'required|string',
+        'years_of_expertise' => 'required|integer',  // New validation rule for years of expertise
+        'field_of_expertise' => 'required|string|max:255',  // New validation rule for field of expertise
         'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
     ]);
 
@@ -403,11 +400,8 @@ class AdminController extends Controller
     // Create a new staff member
     $data = new Staff;
     $data->name = $request->name;
-    $data->age = $request->age;
-    $data->birthday = $request->birthday;
-    $data->sex = $request->sex;
-    $data->contact = $request->contact;
-    $data->address = $request->address;
+    $data->years_of_expertise = $request->years_of_expertise;  // Store years of expertise
+    $data->field_of_expertise = $request->field_of_expertise;  // Store field of expertise
 
     // Handle image upload if present
     if ($request->hasFile('image')) {
@@ -423,6 +417,7 @@ class AdminController extends Controller
     toastr()->timeOut(10000)->closeButton()->success('Staff Added Successfully');
     return redirect()->back();
 }
+
 
     
     public function view_staff()
@@ -491,11 +486,8 @@ public function edit_staff(Request $request, $id)
     // Validate the request
     $request->validate([
         'name' => 'required|string|max:255',
-        'age' => 'required|integer',
-        'birthday' => 'required|date',
-        'sex' => 'required|in:male,female,other',
-        'contact' => 'required|string|max:20',
-        'address' => 'required|string',
+        'years_of_expertise' => 'required|integer',  // New validation rule for years of expertise
+        'field_of_expertise' => 'required|string|max:255',  // New validation rule for field of expertise
         'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
     ]);
 
@@ -516,11 +508,8 @@ public function edit_staff(Request $request, $id)
     // Find the staff member to be updated
     $data = Staff::findOrFail($id);
     $data->name = $request->name;
-    $data->age = $request->age;
-    $data->birthday = $request->birthday;
-    $data->sex = $request->sex;
-    $data->contact = $request->contact;
-    $data->address = $request->address;
+    $data->years_of_expertise = $request->years_of_expertise;  // Update years of expertise
+    $data->field_of_expertise = $request->field_of_expertise;  // Update field of expertise
 
     // Handle image upload if a new image is provided
     if ($request->hasFile('image')) {
@@ -545,6 +534,7 @@ public function edit_staff(Request $request, $id)
     toastr()->timeOut(10000)->closeButton()->success('Staff Updated Successfully');
     return redirect('/view_staff');
 }
+
 
     
 
@@ -906,8 +896,88 @@ public function reports(Request $request)
 
 
 
+public function slot()
+    {
+        // Return the view where the admin can manage the slots
+        return view('admin.slot');
+    }
 
 
+ // Method to fetch booked times for a selected date
+ public function fetchBookedTimes(Request $request)
+ {
+     // Validate the input date
+     $request->validate([
+         'date' => 'required|date'
+     ]);
+
+     // Get the booked times for the selected date
+     $date = $request->input('date');
+
+     // Fetch all orders (or bookings) on the selected date
+     $bookedTimes = Order::whereDate('service_datetime', $date)
+                         ->pluck('service_datetime')
+                         ->map(function($datetime) {
+                             return \Carbon\Carbon::parse($datetime)->format('H:i');
+                         })
+                         ->toArray();
+
+     return response()->json(['bookedTimes' => $bookedTimes]);
+ }
+
+//  public function disableTimeSlot(Request $request)
+// {
+    
+//     $request->validate([
+//         'date' => 'required|date',
+//         'time' => 'required|string'
+//     ]);
+
+//     $date = $request->input('date');
+//     $time = $request->input('time');
+//     $serviceDateTime = $date . ' ' . $time;
+
+    
+//     $order = Order::where('service_datetime', $serviceDateTime)->first();
+
+//     if (!$order) {
+        
+//         $order = new Order();
+//         $order->service_datetime = $serviceDateTime;
+//         $order->status = 'Booked';
+//         $order->save();
+
+//         return response()->json(['success' => true, 'message' => 'Time slot disabled successfully.']);
+//     }
+
+//     return response()->json(['success' => false, 'message' => 'Time slot is already booked.']);
+// }
+
+// public function enableTimeSlot(Request $request)
+// {
+    
+//     $request->validate([
+//         'date' => 'required|date',
+//         'time' => 'required|string'
+//     ]);
+
+//     $date = $request->input('date');
+//     $time = $request->input('time');
+//     $serviceDateTime = $date . ' ' . $time;
+
+    
+//     $order = Order::where('service_datetime', $serviceDateTime)->first();
+
+//     if ($order) {
+        
+//         $order->status = 'Available';
+//         $order->save();
+
+//         return response()->json(['success' => true, 'message' => 'Time slot is now available.']);
+//     }
+
+//     return response()->json(['success' => false, 'message' => 'Time slot not found.']);
+// }
 
 
 
@@ -1159,4 +1229,7 @@ public function deleteUser($id)
     return view('admin.user', compact('users'));
 }
     
+
+
+
 }

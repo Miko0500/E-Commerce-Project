@@ -136,53 +136,34 @@
                 <h1>Add Staff</h1>
                 <div class="div_deg">
                     <div class="form-container">
-                        <form action="{{ url('add_staff') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
+                    <form action="{{ url('add_staff') }}" method="POST" enctype="multipart/form-data">
+    @csrf
 
-                            <div class="input_deg">
-                                <label for="image">Staff Image</label>
-                                <input type="file" name="image">
-                            </div>
+    <div class="input_deg">
+        <label for="image">Staff Image</label>
+        <input type="file" name="image">
+    </div>
 
-                            <div class="input_deg">
-                                <label for="name">Name</label>
-                                <input type="text" name="name" required placeholder="Enter staff name">
-                            </div>
+    <div class="input_deg">
+        <label for="name">Name</label>
+        <input type="text" name="name" required placeholder="Enter staff name">
+    </div>
 
-                            <div class="input_deg">
-                                <label for="age">Age</label>
-                                <input type="number" name="age" required placeholder="Enter age">
-                            </div>
+    <div class="input_deg">
+        <label for="years_of_expertise">Years of Expertise</label>
+        <input type="number" name="years_of_expertise" required placeholder="Enter years of expertise">
+    </div>
 
-                            <div class="input_deg">
-                                <label for="birthday">Birthday</label>
-                                <input type="date" name="birthday" required>
-                            </div>
+    <div class="input_deg">
+        <label for="field_of_expertise">Field of Expertise</label>
+        <input type="text" name="field_of_expertise" required placeholder="Enter field of expertise">
+    </div>
 
-                            <div class="input_deg">
-                                <label for="sex">Sex</label>
-                                <select name="sex" required>
-                                    <option value="">Select an Option</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
+    <div class="input_deg">
+        <input class="btn btn-success" type="submit" value="Add Staff">
+    </div>
+</form>
 
-                            <div class="input_deg">
-                                <label for="contact">Contact</label>
-                                <input type="text" name="contact" required placeholder="Enter contact number">
-                            </div>
-
-                            <div class="input_deg">
-                                <label for="address">Address</label>
-                                <textarea name="address" required placeholder="Enter staff address"></textarea>
-                            </div>
-
-                            <div class="input_deg">
-                                <input class="btn btn-success" type="submit" value="Add Staff">
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>

@@ -165,14 +165,11 @@
                     <table class="custom-table">
                         <thead>
                             <tr>
-                                <th>Staff Image</th>
-                                <th>Name</th>
-                                <th>Age</th>
-                                <th>Birthday</th>
-                                <th>Sex</th>
-                                <th>Contact</th>
-                                <th>Address</th>
-                                <th>Actions</th>
+                            <th>Staff Image</th>
+            <th>Name</th>
+            <th>Years of Expertise</th>
+            <th>Field of Expertise</th>
+            <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -180,15 +177,15 @@
                             <tr>
                                 <td><img src="{{ $member->image ? asset('staff/' . $member->image) : asset('staff/default.png') }}" alt="Staff Image" class="img-fluid" style="max-width: 100px; border-radius: 5px;"></td>
                                 <td>{{ $member->name }}</td>
-                                <td>{{ $member->age }}</td>
-                                <td>{{ $member->birthday }}</td>
-                                <td>{{ $member->sex }}</td>
-                                <td>{{ $member->contact }}</td>
-                                <td>{{ Str::limit($member->address, 50) }}</td>
-                                <td>
-                                    <a class="btn btn-success" href="{{ url('update_staff', $member->id) }}">Edit</a>
-                                    <a class="btn btn-danger" onclick="confirmation(event, {{ $member->id }})" href="{{ url('delete_staff', $member->id) }}">Delete</a>
-                                </td>
+            <td>{{ $member->years_of_expertise }}</td> <!-- Displaying Years of Expertise -->
+            <td>{{ $member->field_of_expertise }}</td> <!-- Displaying Field of Expertise -->
+            <td>
+    <div class="d-flex justify-content-start">
+        <a class="btn btn-success me-2" href="{{ url('update_staff', $member->id) }}">Edit</a>
+        <a class="btn btn-danger" onclick="confirmation(event, {{ $member->id }})" href="{{ url('delete_staff', $member->id) }}">Delete</a>
+    </div>
+</td>
+
                             </tr>
                             @endforeach
                         </tbody>
