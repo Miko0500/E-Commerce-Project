@@ -349,29 +349,29 @@
             </div>
 
             <!-- Vehicle Items Section -->
-            <div class="vehicle-list">
-                @foreach($vehicles as $index => $vehicle)
-                    <div class="vehicle-item {{ $index % 2 == 0 ? 'p-style' : 'j-style' }}">
-                        <div class="vehicle-image">
-                            <img src="{{ asset('vehicles/' . $vehicle->image) }}" alt="{{ $vehicle->type }}">
-                        </div>
-                        <div class="vehicle-details">
-                            <h3>{{ $vehicle->type }}</h3>
-                            <p><strong>Size:</strong> 
-                                @if(is_array($vehicle->sizes))
-                                    {{ implode(', ', $vehicle->sizes) }}
-                                @else
-                                    @php
-                                        $sizes = json_decode($vehicle->sizes, true);
-                                    @endphp
-                                    {{ implode(', ', $sizes) }}
-                                @endif
-                            </p>
-                            <!-- <p><strong>Status:</strong> {{ $vehicle->status ? 'Available' : 'Not Available' }}</p> -->
-                        </div>
-                    </div>
-                @endforeach
+<div class="vehicle-list">
+    @foreach($vehicles as $index => $vehicle)
+        <div class="vehicle-item {{ $index % 2 == 0 ? 'p-style' : 'j-style' }}">
+            <div class="vehicle-image">
+                <img src="{{ asset('vehicles/' . $vehicle->image) }}" alt="{{ $vehicle->type }}">
             </div>
+            <div class="vehicle-details">
+                <h3>{{ $vehicle->type }}</h3>
+                <p><strong>Size:</strong> 
+                    @if(is_array($vehicle->sizes))
+                        {{ implode(', ', $vehicle->sizes) }}
+                    @else
+                        @php
+                            $sizes = json_decode($vehicle->sizes, true);
+                        @endphp
+                        {{ implode(', ', $sizes) }}
+                    @endif
+                </p>
+                <p><strong>Description:</strong> {{ $vehicle->description }}</p> <!-- Added description -->
+            </div>
+        </div>
+    @endforeach
+</div>
         </div>
     </section>
 

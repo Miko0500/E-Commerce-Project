@@ -92,7 +92,8 @@ Route::get('delete_vehicle/{id}', [AdminController::class, 'delete_vehicle'])->m
 Route::get('update_vehicle/{id}', [AdminController::class, 'update_vehicle'])->middleware(['auth', 'admin']);
 
 // Route to handle the form submission for updating staff (POST request)
-Route::post('edit_vehicle/{id}', [AdminController::class, 'edit_vehicle'])->middleware(['auth', 'admin']);
+Route::put('edit_vehicle/{id}', [AdminController::class, 'edit_vehicle'])->middleware(['auth', 'admin']);
+
 
 
 
@@ -178,22 +179,30 @@ Route::get('/fetch-service-datetimes', [HomeController::class, 'fetchServiceDate
 // In web.php
 Route::get('/fetch-unavailable-datetimes', [HomeController::class, 'fetchUnavailableDatetimes']);
 
-// Fetch booked times for a specific date
+use Carbon\Carbon;
+
 Route::get('/fetch-booked-times', function(Request $request) {
     $date = $request->input('date');  // Get the selected date from the request
+
+    // Validate the date format to ensure it's in the correct format (YYYY-MM-DD)
+    $date = Carbon::createFromFormat('Y-m-d', $date)->format('Y-m-d');
 
     // Fetch unique booked times for the given date with status 'In Queue' or 'Ongoing Service'
     $bookedTimes = Order::whereDate('service_datetime', $date) // Ensure it's only for the selected date
         ->whereIn('status', ['In Queue', 'Ongoing Service'])  // Filter by status
         ->pluck('service_datetime')
         ->map(function ($datetime) {
-            return \Carbon\Carbon::parse($datetime)->format('H:i'); // Format time as "HH:mm"
+            return Carbon::parse($datetime)->format('H:i'); // Format time as "HH:mm"
         })
         ->unique()  // Remove duplicates
         ->toArray();
 
+    // Log the booked times for debugging purposes
+    \Log::info("Booked Times: ", $bookedTimes);
+
     return response()->json(['bookedTimes' => $bookedTimes]); // Return booked times as JSON
 });
+
 
 Route::get('/fetch-available-dates', [HomeController::class, 'fetchAvailableDates']);
 
@@ -248,3 +257,6 @@ Route::get('/fetch-booked-times', [AdminController::class, 'fetchBookedTimes'])-
 Route::get('slot', [AdminController::class, 'slot'])
 ->middleware(['auth', 'admin'])
 ->name('slot'); // This should match the name used in the form action
+
+Route::get('slot_availability', [AdminController::class, 'showSlotAvailability'])->middleware(['auth', 'admin']);
+Route::post('update_slot_availability', [AdminController::class, 'updateSlotAvailability'])->middleware(['auth', 'admin']);

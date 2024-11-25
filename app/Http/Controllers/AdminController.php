@@ -16,6 +16,8 @@ use App\Models\Staff;
 
 use App\Models\Order;
 
+use App\Models\SlotAvailability;
+
 use Barryvdh\DomPDF\Facade\Pdf;
 
 use Flasher\Toastr\Prime\ToastrInterface;
@@ -194,7 +196,6 @@ class AdminController extends Controller
         return view('admin.add_vehicle', compact('vehicles'));
     }
 
-    // Method to handle the form submission for adding a new vehicle
     public function upload_vehicle(Request $request)
     {
         // Validate the request
@@ -202,7 +203,7 @@ class AdminController extends Controller
             'type' => 'required|string|max:255',
             'sizes' => 'required|array', // Accept an array of sizes
             'sizes.*' => 'in:S,M,L,XL,XXL', // Validate each size in the array
-            'status' => 'required|boolean',
+            'description' => 'nullable|string|max:255', // New description field
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
     
@@ -225,7 +226,7 @@ class AdminController extends Controller
         // Store sizes directly as an array
         $vehicle->sizes = $request->sizes;
     
-        $vehicle->status = $request->status;
+        $vehicle->description = $request->description; // Save description
     
         // Handle image upload if there is one
         if ($request->hasFile('image')) {
@@ -240,6 +241,7 @@ class AdminController extends Controller
         toastr()->timeOut(10000)->closeButton()->success('Vehicle Added Successfully');
         return redirect()->back();
     }
+    
     
     
 
@@ -308,62 +310,62 @@ class AdminController extends Controller
 }
 
 
-    // Method to handle the form submission for editing a vehicle
-    public function edit_vehicle(Request $request, $id)
-    {
-        // Validate the request
-        $request->validate([
-            'type' => 'required|string|max:255',
-            'sizes' => 'required|array',
-            'sizes.*' => 'in:S,M,L,XL,XXL',
-            'status' => 'required|boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
-    
-        // Find the vehicle by ID
-        $vehicle = Vehicle::findOrFail($id);
-    
-        // Normalize the vehicle type to lowercase for case-insensitive comparison
-        $vehicleType = strtolower($request->type);
-    
-        // Check if another vehicle with the same type already exists (case-insensitive), excluding the current vehicle
-        $existingVehicle = Vehicle::whereRaw('LOWER(type) = ?', [$vehicleType])
-            ->where('id', '!=', $id) // Exclude the current vehicle from the check
-            ->first();
-    
-        if ($existingVehicle) {
-            // If a vehicle with the same type exists, return an error message
-            toastr()->timeOut(10000)->closeButton()->error('A vehicle with this type already exists.');
-            return redirect()->back();
-        }
-    
-        // Update the vehicle details
-        $vehicle->type = $request->type;
-        $vehicle->sizes = $request->sizes;
-        $vehicle->status = $request->status;
-    
-        // Handle image upload if there is a new image
-        if ($request->hasFile('image')) {
-            // Remove old image if it exists
-            if ($vehicle->image) {
-                $old_image_path = public_path('vehicles/' . $vehicle->image);
-                if (file_exists($old_image_path)) {
-                    unlink($old_image_path);
-                }
-            }
-    
-            $image = $request->file('image');
-            $imagename = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('vehicles'), $imagename);
-            $vehicle->image = $imagename;
-        }
-    
-        // Save the updated vehicle details
-        $vehicle->save();
-    
-        toastr()->timeOut(10000)->closeButton()->success('Vehicle Updated Successfully');
-        return redirect('/view_vehicle');
+public function edit_vehicle(Request $request, $id)
+{
+    // Validate the request
+    $request->validate([
+        'type' => 'required|string|max:255',
+        'sizes' => 'required|array',
+        'sizes.*' => 'in:S,M,L,XL,XXL',
+        'description' => 'nullable|string|max:255', // New description field
+        'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
+
+    // Find the vehicle by ID
+    $vehicle = Vehicle::findOrFail($id);
+
+    // Normalize the vehicle type to lowercase for case-insensitive comparison
+    $vehicleType = strtolower($request->type);
+
+    // Check if another vehicle with the same type already exists (case-insensitive), excluding the current vehicle
+    $existingVehicle = Vehicle::whereRaw('LOWER(type) = ?', [$vehicleType])
+        ->where('id', '!=', $id) // Exclude the current vehicle from the check
+        ->first();
+
+    if ($existingVehicle) {
+        // If a vehicle with the same type exists, return an error message
+        toastr()->timeOut(10000)->closeButton()->error('A vehicle with this type already exists.');
+        return redirect()->back();
     }
+
+    // Update the vehicle details
+    $vehicle->type = $request->type;
+    $vehicle->sizes = $request->sizes;
+    $vehicle->description = $request->description; // Update description field
+
+    // Handle image upload if there is a new image
+    if ($request->hasFile('image')) {
+        // Remove old image if it exists
+        if ($vehicle->image) {
+            $old_image_path = public_path('vehicles/' . $vehicle->image);
+            if (file_exists($old_image_path)) {
+                unlink($old_image_path);
+            }
+        }
+
+        $image = $request->file('image');
+        $imagename = time() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('vehicles'), $imagename);
+        $vehicle->image = $imagename;
+    }
+
+    // Save the updated vehicle details
+    $vehicle->save();
+
+    toastr()->timeOut(10000)->closeButton()->success('Vehicle Updated Successfully');
+    return redirect('/view_vehicle');
+}
+
     
 
 
@@ -1231,5 +1233,44 @@ public function deleteUser($id)
     
 
 
+    // Show slot availability to admin
+    public function showSlotAvailability()
+    {
+        // Fetch the first record, or create one if it doesn't exist
+        $slotAvailability = SlotAvailability::first();
+
+        // If no record, create a default entry
+        if (!$slotAvailability) {
+            $slotAvailability = SlotAvailability::create(['status' => 'all_available']);
+        }
+
+        // Pass the slotAvailability variable to the view
+        return view('admin.slot_availability', compact('slotAvailability'));
+    }
+
+    public function updateSlotAvailability(Request $request)
+    {
+        $request->validate([
+            'status' => 'required|in:all_available,one_available,no_available',
+        ]);
+    
+        // Find the first record or create a new one
+        $slotAvailability = SlotAvailability::first();
+    
+        if (!$slotAvailability) {
+            $slotAvailability = SlotAvailability::create(['status' => $request->status]);
+        } else {
+            // Update the status
+            $slotAvailability->update(['status' => $request->status]);
+        }
+    
+        // Return JSON response for frontend
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Slot availability updated successfully!',
+            'newStatus' => ucfirst($slotAvailability->status),  // Capitalize the first letter for display
+        ]);
+    }
+    
 
 }

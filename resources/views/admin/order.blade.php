@@ -362,7 +362,7 @@
             @endif
 
             <!-- Show "Finalize" button only if there is no finalization record -->
-            @if(!$datas->finalization && $datas->status != 'Finished'  && $datas->status != 'Cancelled')
+            @if(!$datas->finalization && $datas->status != 'Finished'  && $datas->status != 'Cancelled' && $datas->status != 'Ongoing Service')
                 <button class="btn btn-success btn-sm mb-1" data-toggle="modal" data-target="#finalizeModal-{{ $datas->id }}">Finalize</button>
             @endif
         </div>

@@ -122,6 +122,14 @@
                 font-size: 16px;
             }
         }
+
+        .input_deg label {
+    display: block;
+            font-size: 18px; /* Increased font size for better readability */
+            color: black; /* Black text color for maximum visibility */
+            margin-bottom: 10px;
+            font-weight: bold;
+}
     </style>
 </head>
 <body>

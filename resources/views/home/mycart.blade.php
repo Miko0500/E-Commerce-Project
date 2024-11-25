@@ -539,6 +539,63 @@ button {
                     </div>
                      -->
 
+                     <!-- resources/views/home.blade.php -->
+
+
+
+
+<div class="container mt-5">
+    
+
+ <!-- Slot Availability Status -->
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="slot-status text-center">
+            <h5 class="text-center">Current Slot Availability</h5>
+            <p>
+                @if($slotAvailability)
+                    @if($slotAvailability->status == 'all_available')
+                        <span class="badge badge-success">All Slots Available</span>
+                    @elseif($slotAvailability->status == 'one_available')
+                        <span class="badge badge-warning">Only One Slot Available</span>
+                    @elseif($slotAvailability->status == 'no_available')
+                        <span class="badge badge-danger">No Slot Available</span>
+                        <p class="adjust-time-message">Adjust your time to 1 hour after the current time to avoid conflicts.</p>
+
+<style>
+    .adjust-time-message {
+        background-color: #f9f9f9; /* Light gray background */
+        border: 1px solid #ddd; /* Light border */
+        padding: 15px; /* Padding around the text */
+        border-radius: 8px; /* Rounded corners */
+        font-size: 16px; /* Slightly larger font */
+        font-weight: bold; /* Bold text */
+        color: #333; /* Dark text color */
+        text-align: center; /* Center align the text */
+        max-width: 400px; /* Maximum width */
+        margin: 20px auto; /* Center the message */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    }
+
+    .adjust-time-message {
+        background-color: #d4edda; /* Light green background */
+        color: #155724; /* Dark green text */
+        border: 1px solid #c3e6cb; /* Light green border */
+    }
+</style>
+
+                    @endif
+                @else
+                    <span class="badge badge-secondary">No Data Available</span>
+                @endif
+            </p>
+        </div>
+    </div>
+</div>
+
+
+
+
                      <div class="container">
     <div class="row">
         <div class="col-md-6">

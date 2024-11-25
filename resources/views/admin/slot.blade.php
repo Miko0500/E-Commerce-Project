@@ -213,7 +213,7 @@
         <div class="col-md-6">
             <!-- Flatpickr input for selecting date and time -->
             <div class="form-group">
-            <label for="service_datetime" style="display: block; text-align: center; font-size: 1.1rem; margin-bottom: 10px;">Preferred Date & Time (30mins interval)</label>
+            <label for="service_datetime" style="display: block; text-align: center; font-size: 1.1rem; margin-bottom: 10px;">Select a Date to View Available Slot</label>
 
                 <input style="background-color: #fff;" type="text" name="service_datetime" id="service_datetime" class="form-control" placeholder="Select Date & Time" required>
             </div>
@@ -223,7 +223,7 @@
 
         <div class="col-md-6">
             <!-- Display booked times for the selected day -->
-            <h5 style="font-size: medium; text-align: center; margin-bottom: 20px;">Choose on this Times Available for Selected Day</h5>
+            <h5 style="font-size: medium; text-align: center; margin-bottom: 20px;">Times Available for Selected Day</h5>
 
             <!-- Container to display booked times in 3 columns -->
             <div id="bookedTimesList" class="times-grid">
@@ -233,12 +233,25 @@
     </div>
 </div>
 
- <!-- Disable and Enable Buttons -->
- <div class="col-md-6 mt-3">
-            <button id="disableTimeBtn" class="btn btn-danger" style="display: none;">Disable Time</button>
-            <button id="enableTimeBtn" class="btn btn-success" style="display: none;">Enable Time</button>
-        </div>
-    </div>
+<!-- resources/views/admin/slot_availability.blade.php -->
+
+<h1>Slot Availability</h1>
+
+<form action="{{ url('update_slot_availability') }}" method="POST">
+    @csrf
+    <label for="status">Slot Availability</label>
+    <select name="status" id="status">
+        <option value="all_available" {{ $slotAvailability->status == 'all_available' ? 'selected' : '' }}>All Slots Available</option>
+        <option value="one_available" {{ $slotAvailability->status == 'one_available' ? 'selected' : '' }}>Only One Slot Available</option>
+        <option value="no_available" {{ $slotAvailability->status == 'no_available' ? 'selected' : '' }}>No Slot Available</option>
+    </select>
+    <button type="submit">Update Availability</button>
+</form>
+
+<h2>Current Availability Status: {{ ucfirst($slotAvailability->status) }}</h2>
+
+
+ 
 
 <script>
         (function() {
@@ -324,75 +337,8 @@
                 });
             }
 
-            // Disable selected time (mark as booked)
-            document.getElementById('disableTimeBtn').addEventListener('click', function () {
-                if (selectedTime) {
-                    $.ajax({
-                        url: "/disable-time-slot",
-                        method: "POST",
-                        data: {
-                            date: selectedDate.toISOString().split('T')[0],
-                            time: selectedTime,
-                            _token: $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                toastr.success(response.message);
-                                const slots = document.querySelectorAll('.available');
-                                slots.forEach(slot => {
-                                    if (slot.textContent === selectedTime) {
-                                        slot.classList.add('booked');
-                                        slot.classList.remove('available');
-                                        slot.style.pointerEvents = 'none';
-                                    }
-                                });
-                                document.getElementById('disableTimeBtn').style.display = 'none';
-                                document.getElementById('enableTimeBtn').style.display = 'inline-block';
-                            } else {
-                                toastr.error(response.message);
-                            }
-                        },
-                        error: function () {
-                            toastr.error("Error disabling time slot.");
-                        }
-                    });
-                }
-            });
-
-            // Enable selected time (mark as available again)
-            document.getElementById('enableTimeBtn').addEventListener('click', function () {
-                if (selectedTime) {
-                    $.ajax({
-                        url: "/enable-time-slot",
-                        method: "POST",
-                        data: {
-                            date: selectedDate.toISOString().split('T')[0],
-                            time: selectedTime,
-                            _token: $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                toastr.success(response.message);
-                                const slots = document.querySelectorAll('.booked');
-                                slots.forEach(slot => {
-                                    if (slot.textContent === selectedTime) {
-                                        slot.classList.add('available');
-                                        slot.classList.remove('booked');
-                                        slot.style.pointerEvents = 'auto';
-                                    }
-                                });
-                                document.getElementById('enableTimeBtn').style.display = 'none';
-                                document.getElementById('disableTimeBtn').style.display = 'inline-block';
-                            } else {
-                                toastr.error(response.message);
-                            }
-                        },
-                        error: function () {
-                            toastr.error("Error enabling time slot.");
-                        }
-                    });
-                }
-            });
+            
+            
         });
     </script>
 

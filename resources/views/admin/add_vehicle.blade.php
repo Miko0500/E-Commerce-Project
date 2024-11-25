@@ -124,6 +124,37 @@
                 font-size: 16px;
             }
         }
+
+        /* Styling the textarea */
+.input_deg textarea {
+    width: 100%; /* Make textarea fill the width of its container */
+    padding: 12px; /* Add padding inside the textarea */
+    font-size: 14px; /* Set font size */
+    border: 1px solid #ddd; /* Light gray border */
+    border-radius: 5px; /* Rounded corners */
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 120px; /* Set minimum height */
+    outline: none; /* Remove outline on focus */
+    transition: all 0.3s ease; /* Smooth transition for focus effects */
+}
+
+.input_deg textarea:focus {
+    border-color: #3498db; /* Blue border when focused */
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Light blue shadow */
+}
+
+.input_deg label {
+    display: block;
+            font-size: 18px; /* Increased font size for better readability */
+            color: black; /* Black text color for maximum visibility */
+            margin-bottom: 10px;
+            font-weight: bold;
+}
+
+.input_deg {
+    margin-bottom: 15px; /* Add space between input fields */
+}
+
     </style>
 </head>
 <body>
@@ -138,43 +169,40 @@
                 <h1>Add Vehicle</h1>
                 <div class="div_deg">
                     <div class="form-container">
-                        <form action="{{ url('add_vehicle') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
+                    <form action="{{ url('add_vehicle') }}" method="POST" enctype="multipart/form-data">
+    @csrf
 
-                            <div class="input_deg">
-                                <label for="type">Vehicle Type</label>
-                                <input type="text" name="type" required placeholder="Enter vehicle type">
-                            </div>
+    <div class="input_deg">
+        <label for="type">Vehicle Type</label>
+        <input type="text" name="type" required placeholder="Enter vehicle type">
+    </div>
 
-                            <div class="input_deg">
-                                <label for="image">Vehicle Image</label>
-                                <input type="file" name="image">
-                            </div>
+    <div class="input_deg">
+        <label for="image">Vehicle Image</label>
+        <input type="file" name="image">
+    </div>
 
-                            <div class="input_deg">
-                                <label for="sizes">Sizes</label>
-                                <div class="checkbox-container">
-                                    <label><input type="checkbox" name="sizes[]" value="S"> Small (S)</label>
-                                    <label><input type="checkbox" name="sizes[]" value="M"> Medium (M)</label>
-                                    <label><input type="checkbox" name="sizes[]" value="L"> Large (L)</label>
-                                    <label><input type="checkbox" name="sizes[]" value="XL"> Extra Large (XL)</label>
-                                    <label><input type="checkbox" name="sizes[]" value="XXL"> Extra Extra Large (XXL)</label>
-                                </div>
-                            </div>
+    <div class="input_deg">
+        <label for="sizes">Sizes</label>
+        <div class="checkbox-container">
+            <label><input type="checkbox" name="sizes[]" value="S"> Small (S)</label>
+            <label><input type="checkbox" name="sizes[]" value="M"> Medium (M)</label>
+            <label><input type="checkbox" name="sizes[]" value="L"> Large (L)</label>
+            <label><input type="checkbox" name="sizes[]" value="XL"> Extra Large (XL)</label>
+            <label><input type="checkbox" name="sizes[]" value="XXL"> Extra Extra Large (XXL)</label>
+        </div>
+    </div>
 
-                            <div class="input_deg">
-                                <label for="status">Status</label>
-                                <select name="status" required>
-                                    <option value="">Select Status</option>
-                                    <option value="1">Available</option>
-                                    <option value="0">Not Available</option>
-                                </select>
-                            </div>
+    <div class="input_deg">
+        <label for="description">Description</label>
+        <textarea name="description" required placeholder="Enter vehicle description"></textarea>
+    </div>
 
-                            <div class="input_deg">
-                                <input class="btn btn-success" type="submit" value="Add Vehicle">
-                            </div>
-                        </form>
+    <div class="input_deg">
+        <input class="btn btn-success" type="submit" value="Add Vehicle">
+    </div>
+</form>
+
                     </div>
                 </div>
             </div>

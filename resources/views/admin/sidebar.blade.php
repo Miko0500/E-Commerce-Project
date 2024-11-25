@@ -32,7 +32,7 @@
         <!-- Sidebar Header-->
         <div class="sidebar-header d-flex align-items-center">
           
-          <div class="avatar"><img src="{{asset('/images/bg3.jpg')}}" alt="..." class="img-fluid rounded-circle"></div>
+          <div class="avatar"><img src="{{asset('/images/logo.jpg')}}" alt="..." class="img-fluid rounded-circle"></div>
           <div class="title">
             <h1 style="color: #007bff;" class="h5">Admin</h1>
             <p style="color: #007bff;">The Owner</p>
@@ -87,7 +87,7 @@
                 </li>
 
                 <li style="color: white;">
-                    <a href="{{url('slot')}}" class="{{ request()->is('slot') ? 'active' : '' }}"> <i style="color: #007bff;" class="bi bi-card-checklist"></i>Slot Available 
+                    <a href="{{url('slot_availability')}}" class="{{ request()->is('slot_availability') ? 'active' : '' }}"> <i style="color: #007bff;" class="bi bi-card-checklist"></i>Slot Available 
                 </a>
 
                 </li>

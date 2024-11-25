@@ -212,43 +212,47 @@ input[type='search'] {
                 </form>
 
                 <!-- Table Container -->
-                <div class="table-container">
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Vehicle Image</th>
-                                <th>Vehicle Type</th>
-                                <th>Sizes</th>
-                                
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($vehicles as $vehicle)
-                            <tr>
-                                <td>
-                                    <img src="{{ $vehicle->image ? asset('vehicles/' . $vehicle->image) : asset('vehicles/default.png') }}" alt="Vehicle Image" class="img-fluid" style="max-width: 100px; border-radius: 5px;">
-                                </td>
-                                <td>{{ $vehicle->type }}</td>
-                                <td>
-                                    @if(is_array($vehicle->sizes))
-                                        {{ implode(', ', $vehicle->sizes) }}
-                                    @else
-                                        @php
-                                            $sizes = json_decode($vehicle->sizes, true);
-                                        @endphp
-                                        {{ implode(', ', $sizes) }}
-                                    @endif
-                                </td>
-                                
-                                <td>
-                                    <a class="btn btn-success" href="{{ url('update_vehicle', $vehicle->id) }}">Edit</a>
-                                    <a class="btn btn-danger" onclick="confirmation(event, {{ $vehicle->id }})" href="{{ url('delete_vehicle', $vehicle->id) }}">Delete</a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+<div class="table-container">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Vehicle Image</th>
+                <th>Vehicle Type</th>
+                <th>Sizes</th>
+                <th>Description</th> <!-- New column for Description -->
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($vehicles as $vehicle)
+            <tr>
+                <td>
+                    <img src="{{ $vehicle->image ? asset('vehicles/' . $vehicle->image) : asset('vehicles/default.png') }}" alt="Vehicle Image" class="img-fluid" style="max-width: 100px; border-radius: 5px;">
+                </td>
+                <td>{{ $vehicle->type }}</td>
+                <td>
+                    @if(is_array($vehicle->sizes))
+                        {{ implode(', ', $vehicle->sizes) }}
+                    @else
+                        @php
+                            $sizes = json_decode($vehicle->sizes, true);
+                        @endphp
+                        {{ implode(', ', $sizes) }}
+                    @endif
+                </td>
+                <td>{{ $vehicle->description }}</td> <!-- Display the description here -->
+                <td>
+                <div class="d-flex justify-content-start">
+                    <a class="btn btn-success" href="{{ url('update_vehicle', $vehicle->id) }}">Edit</a>
+                    <a class="btn btn-danger" onclick="confirmation(event, {{ $vehicle->id }})" href="{{ url('delete_vehicle', $vehicle->id) }}">Delete</a>
+                    </div>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+
 
                     <!-- Pagination -->
                     <div class="pagination">

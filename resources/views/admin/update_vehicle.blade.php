@@ -131,6 +131,37 @@
         .btn-back:active {
             background-color: #495057;
         }
+
+         /* Styling the textarea */
+.input_deg textarea {
+    width: 100%; /* Make textarea fill the width of its container */
+    padding: 12px; /* Add padding inside the textarea */
+    font-size: 14px; /* Set font size */
+    border: 1px solid #ddd; /* Light gray border */
+    border-radius: 5px; /* Rounded corners */
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 120px; /* Set minimum height */
+    outline: none; /* Remove outline on focus */
+    transition: all 0.3s ease; /* Smooth transition for focus effects */
+}
+
+.input_deg textarea:focus {
+    border-color: #3498db; /* Blue border when focused */
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Light blue shadow */
+}
+
+.input_deg label {
+    display: block;
+            font-size: 18px; /* Increased font size for better readability */
+            color: black; /* Black text color for maximum visibility */
+            margin-bottom: 10px;
+            font-weight: bold;
+}
+
+.input_deg {
+    margin-bottom: 15px; /* Add space between input fields */
+}
+
     </style>
 </head>
 <body>
@@ -149,54 +180,53 @@
 
                 
 
-                    <form action="{{ url('edit_vehicle', $vehicle->id) }}" method="post" enctype="multipart/form-data">
-                        @csrf
+                <form action="{{ url('edit_vehicle', $vehicle->id) }}" method="post" enctype="multipart/form-data">
+    @csrf
+    @method('PUT') <!-- Spoof the PUT method for updating -->
 
-                        <div class="input_deg">
-                            <label for="type">Vehicle Type</label>
-                            <input type="text" id="type" name="type" value="{{ $vehicle->type }}" required>
-                        </div>
+    <div class="input_deg">
+        <label for="type">Vehicle Type</label>
+        <input type="text" id="type" name="type" value="{{ $vehicle->type }}" required>
+    </div>
 
-                        <div class="input_deg">
-                            <label for="sizes">Size</label>
-                            @php
-                                $sizes = $vehicle->sizes;
-                            @endphp
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="sizes[]" value="S" {{ in_array('S', $sizes) ? 'checked' : '' }}> Small (S)</label>
-                                <label><input type="checkbox" name="sizes[]" value="M" {{ in_array('M', $sizes) ? 'checked' : '' }}> Medium (M)</label>
-                                <label><input type="checkbox" name="sizes[]" value="L" {{ in_array('L', $sizes) ? 'checked' : '' }}> Large (L)</label>
-                                <label><input type="checkbox" name="sizes[]" value="XL" {{ in_array('XL', $sizes) ? 'checked' : '' }}> Extra Large (XL)</label>
-                                <label><input type="checkbox" name="sizes[]" value="XXL" {{ in_array('XXL', $sizes) ? 'checked' : '' }}> Extra Extra Large (XXL)</label>
-                            </div>
-                        </div>
+    <div class="input_deg">
+        <label for="sizes">Size</label>
+        @php
+            $sizes = $vehicle->sizes;
+        @endphp
+        <div class="checkbox-group">
+            <label><input type="checkbox" name="sizes[]" value="S" {{ in_array('S', $sizes) ? 'checked' : '' }}> Small (S)</label>
+            <label><input type="checkbox" name="sizes[]" value="M" {{ in_array('M', $sizes) ? 'checked' : '' }}> Medium (M)</label>
+            <label><input type="checkbox" name="sizes[]" value="L" {{ in_array('L', $sizes) ? 'checked' : '' }}> Large (L)</label>
+            <label><input type="checkbox" name="sizes[]" value="XL" {{ in_array('XL', $sizes) ? 'checked' : '' }}> Extra Large (XL)</label>
+            <label><input type="checkbox" name="sizes[]" value="XXL" {{ in_array('XXL', $sizes) ? 'checked' : '' }}> Extra Extra Large (XXL)</label>
+        </div>
+    </div>
 
-                        <div class="input_deg">
-                            <label for="status">Status</label>
-                            <select id="status" name="status" required>
-                                <option value="1" {{ $vehicle->status ? 'selected' : '' }}>Available</option>
-                                <option value="0" {{ !$vehicle->status ? 'selected' : '' }}>Not Available</option>
-                            </select>
-                        </div>
+    <div class="input_deg">
+        <label for="description">Description</label>
+        <textarea name="description" required>{{ $vehicle->description }}</textarea>
+    </div>
 
-                        <div class="input_deg vehicle-image-preview">
-                            <label for="current_image">Current Image</label><br>
-                            @if($vehicle->image)
-                                <img src="{{ asset('vehicles/' . $vehicle->image) }}" alt="Current Vehicle Image">
-                            @else
-                                <p>No image available</p>
-                            @endif
-                        </div>
+    <div class="input_deg vehicle-image-preview">
+        <label for="current_image">Current Image</label><br>
+        @if($vehicle->image)
+            <img src="{{ asset('vehicles/' . $vehicle->image) }}" alt="Current Vehicle Image">
+        @else
+            <p>No image available</p>
+        @endif
+    </div>
 
-                        <div class="input_deg">
-                            <label for="image">New Image</label>
-                            <input type="file" name="image" id="image">
-                        </div>
+    <div class="input_deg">
+        <label for="image">New Image</label>
+        <input type="file" name="image" id="image">
+    </div>
 
-                        <div class="input_deg">
-                            <input class="btn btn-success" type="submit" value="Update Vehicle">
-                        </div>
-                    </form>
+    <div class="input_deg">
+        <input class="btn btn-success" type="submit" value="Update Vehicle">
+    </div>
+</form>
+
 
                 </div>
             </div>

@@ -18,6 +18,8 @@ use App\Models\Order;
 
 use App\Models\Rating;
 
+use App\Models\SlotAvailability;
+
 use Carbon\Carbon; 
 
 
@@ -346,7 +348,7 @@ public function product()
     
 
 
-    public function mycart()
+public function mycart()
 {
     if (Auth::id()) {
         $user = Auth::user();
@@ -361,16 +363,21 @@ public function product()
 
         // Fetch vehicle details
         $vehicles = Vehicle::all(); // Fetch all vehicles including type and sizes
+
+        // Fetch the current slot availability status
+        $slotAvailability = SlotAvailability::first(); // Assuming there's only one record for slot availability
     } else {
         $cart = [];
         $count = 0;
         $counts = 0;
         $staff = [];
         $vehicles = []; // No vehicles if not logged in
+        $slotAvailability = null; // No availability status if not logged in
     }
 
-    return view('home.mycart', compact('count', 'cart', 'counts', 'staff', 'vehicles'));
+    return view('home.mycart', compact('count', 'cart', 'counts', 'staff', 'vehicles', 'slotAvailability'));
 }
+
 
 public function fetchServiceDatetimes()
 {
